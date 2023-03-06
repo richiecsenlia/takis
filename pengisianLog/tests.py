@@ -13,7 +13,9 @@ class PengisianLogTestCase(TestCase):
             uraian = "Membuat soal PR",
             periode = "Semester Kuliah",
             bulan_pengerjaan = "MAR",
-            rencana_kinerja = 4
+            jumlah_rencana_kinerja = 4,
+            satuan_rencana_kinerja = "Tugas",
+            konversi_jam_rencana_kinerja = 1
         )
 
         logTA_1 = LogTA.objects.create(
@@ -24,7 +26,9 @@ class PengisianLogTestCase(TestCase):
             uraian = "Rapat persiapan",
             periode = "Adhoc",
             bulan_pengerjaan = "SEP",
-            rencana_kinerja = 1
+            jumlah_rencana_kinerja = 2,
+            satuan_rencana_kinerja = "Tugas",
+            konversi_jam_rencana_kinerja = 2
         )
 
         all_logTA = LogTA.objects.all()
