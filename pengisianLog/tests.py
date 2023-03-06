@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .models import LogTA
+from django.urls import reverse
 
 # Create your tests here.
 class PengisianLogTestCase(TestCase):
@@ -36,3 +37,7 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_logTA.count(), 2)
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
         self.assertEquals(all_logTA[1].kategori, "Persiapan Kuliah")
+
+    def test_display_form_LogTA(self):
+        response = self.client.get(reverse("pengisian_log:form-log-kerja"))
+        self.assertTemplateUsed(response, 'form_log.html')
