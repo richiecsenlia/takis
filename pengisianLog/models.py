@@ -36,3 +36,6 @@ class LogTA(models.Model):
     jumlah_rencana_kinerja = models.IntegerField()
     satuan_rencana_kinerja = models.CharField(max_length=20)
     konversi_jam_rencana_kinerja = models.IntegerField()
+    jumlah_realisasi_kinerja = models.IntegerField(default=0, blank=True)
+    satuan_realisasi_kinerja = models.CharField(default="", max_length=20,blank=True)
+    konversi_jam_realisasi_kinerja = models.IntegerField(default=0, blank=True)
