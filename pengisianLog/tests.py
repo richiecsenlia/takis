@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.urls import reverse
 from .models import LogTA
 
 # Create your tests here.
@@ -43,7 +44,7 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
         self.assertEquals(all_logTA[1].kategori, "Persiapan Kuliah")
 
-def test_create_LogTA_with_realisasi(self):
+    def test_create_LogTA_with_realisasi(self):
         logTA_1 = LogTA.objects.create(
             kategori = "Penyelenggaraan Kuliah",
             jenis_pekerjaan = "Membuat Soal",
@@ -82,7 +83,7 @@ def test_create_LogTA_with_realisasi(self):
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
         self.assertEquals(all_logTA[1].kategori, "Persiapan Kuliah")
 
-def test_create_LogTA_with_realisasi(self):
+    def test_create_LogTA_with_realisasi(self):
         logTA_1 = LogTA.objects.create(
             kategori = "Penyelenggaraan Kuliah",
             jenis_pekerjaan = "Membuat Soal",
@@ -120,3 +121,8 @@ def test_create_LogTA_with_realisasi(self):
         self.assertEquals(all_logTA.count(), 2)
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
         self.assertEquals(all_logTA[1].kategori, "Persiapan Kuliah")
+    
+    def test_view_LogTA_response(self):
+        response = self.client.get(reverse('pengisianLog:daftarLog'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'daftarLog.html')
