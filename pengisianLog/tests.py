@@ -1,9 +1,10 @@
 from django.test import TestCase
+from .models import LogTA
 
 # Create your tests here.
 class PengisianLogTestCase(TestCase):
 
-    def test_create_LogTA():
+    def test_create_LogTA(self):
         logTA_1 = LogTA.objects.create(
             kategori = "Penyelenggaraan Kuliah",
             jenis_pekerjaan = "Membuat Soal",
