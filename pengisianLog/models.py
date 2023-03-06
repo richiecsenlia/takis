@@ -33,4 +33,6 @@ class LogTA(models.Model):
     uraian = models.CharField(max_length=200)
     periode = models.CharField(max_length=20,choices=PERIODE_CHOICES)
     bulan_pengerjaan = models.CharField(max_length=20,choices=BULAN_CHOICES)
-    rencana_kinerja = models.IntegerField()
+    jumlah_rencana_kinerja = models.IntegerField()
+    satuan_rencana_kinerja = models.CharField(max_length=20)
+    konversi_jam_rencana_kinerja = models.IntegerField()
