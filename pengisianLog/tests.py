@@ -16,9 +16,9 @@ class PengisianLogTestCase(TestCase):
             jumlah_rencana_kinerja = 4,
             satuan_rencana_kinerja = "Tugas",
             konversi_jam_rencana_kinerja = 1,
-            jumlah_realisasi_kinerja = "",
-            satuan_realisasi_kinerja = "Tugas",
-            konversi_jam_realisasi_kinerja = ""
+            jumlah_realisasi_kinerja = 0,
+            satuan_realisasi_kinerja = "",
+            konversi_jam_realisasi_kinerja = 0
         )
 
         logTA_2 = LogTA.objects.create(
@@ -32,9 +32,9 @@ class PengisianLogTestCase(TestCase):
             jumlah_rencana_kinerja = 2,
             satuan_rencana_kinerja = "Tugas",
             konversi_jam_rencana_kinerja = 2,
-            jumlah_realisasi_kinerja = "",
-            satuan_realisasi_kinerja = "Tugas",
-            konversi_jam_realisasi_kinerja = ""
+            jumlah_realisasi_kinerja = 0,
+            satuan_realisasi_kinerja = "",
+            konversi_jam_realisasi_kinerja = 0
         )
 
         all_logTA = LogTA.objects.all()
