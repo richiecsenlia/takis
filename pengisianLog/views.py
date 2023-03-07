@@ -3,4 +3,4 @@ from django.http import HttpResponse
 
 # Create your views here.
 def form_log_TA(request):
-    return HttpResponse('')
+    return render(request, 'form_log.html', {})
