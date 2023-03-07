@@ -41,3 +41,6 @@ class PengisianLogTestCase(TestCase):
     def test_display_form_LogTA(self):
         response = self.client.get(reverse("pengisian_log:form-log-kerja"))
         self.assertTemplateUsed(response, 'form_log.html')
+        self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
+        self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
+        self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
