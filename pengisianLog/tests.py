@@ -44,3 +44,22 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
         self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
         self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
+
+    def test_post_form_logTA(self):
+        response = self.client.post(reverse("pengisian_log:form-log-kerja"), {
+            'kategori' : "Penyelenggaraan Kuliah",
+            'pekerjaan' : "Membuat Soal",
+            'detail_kegiatan' : "Essay dan Pilgan",
+            'pemberi_tugas' : "Ibu Ika Alfina",
+            'uraian' : "Membuat soal PR",
+            'periode' : "Semester Kuliah",
+            'bulan_pengerjaan' : "MAR",
+            'jumlah_kinerja' : "4",
+            'satuan_kinerja' : "Tugas",
+            'jam_rencana_kinerja' : "4"
+        })
+
+        all_logTA = LogTA.objects.all()
+
+        self.assertEquals(all_logTA.count(), 1)
+        self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
