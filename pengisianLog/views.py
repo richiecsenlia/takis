@@ -1,13 +1,15 @@
 from django.shortcuts import render
+
+from authentication.views import ta_required, admin_required
 from .models import LogTA
 
 # Create your views here.
 def daftarLogTA(request):
-    log = LogTA.objects.filter(user=request.user)
-    context = {'log': log}
+    logs = LogTA.objects.filter(user=request.user)
+    context = {'logs': logs}
     return render(request, 'daftarLogTA.html', context)
 
 def daftarLogEvaluator(request):
-    log = LogTA.objects.all()
-    context = {'log': log}
+    logs = LogTA.objects.all()
+    context = {'logs': logs}
     return render(request, 'daftarLogEvaluator.html', context)
