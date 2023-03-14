@@ -4,5 +4,6 @@ from pengisianLog.views import *
 app_name = 'pengisianLog'
 
 urlpatterns = [
-    path('daftarLog/', daftarLog, name='daftarLog'),
+    path('daftarLog/<int:userID>', daftarLogTA, name='daftarLogTA'),
+    path('daftarLog/', daftarLogEvaluator, name='daftarLogEvaluator'),
 ]
