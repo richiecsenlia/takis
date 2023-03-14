@@ -122,7 +122,12 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
         self.assertEquals(all_logTA[1].kategori, "Persiapan Kuliah")
     
-    def test_view_LogTA_response(self):
-        response = self.client.get(reverse('pengisianLog:daftarLog'))
+    def test_view_LogTA_response_as_TA(self):
+        response = self.client.get(reverse('pengisianLog:daftarLogTA', kwargs={'userID':1}))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'daftarLog.html')
+        self.assertTemplateUsed(response, 'daftarLogTA.html')
+    
+    def test_view_LogTA_response_as_evaluator(self):
+        response = self.client.get(reverse('pengisianLog:daftarLogEvaluator'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'daftarLogEvaluator.html')
