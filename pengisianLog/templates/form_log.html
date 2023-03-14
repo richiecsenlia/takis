@@ -1,87 +1,97 @@
 <head>
-    Pengisian LOG
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
-    <table>
-        <tr>
-            <td>
-                Kategori
-            </td>
-            <td>
-                <select name="kategori">
-                    <option value="kat">Kategori</option>
-                </select>
-            </td>
-            <td>
-                Jenis Pekerjaan
-            </td>
-            <td>
-                <select name="pekerjaan">
-                    <option value="kerja">Pekerjaan</option>
-                </select>
-            </td>
+    {% include 'navbar.html' %}
+    Pengisian LOG
+    <form method="post">
+        <table>
+            <tr>
+                <td>
+                    Kategori
+                </td>
+                <td>
+                    <select name="kategori" required>
+                        {% for kat in kategori_choice %}
+                            <option value="{{ kat.1 }}">{{ kat.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    Jenis Pekerjaan
+                </td>
+                <td>
+                    <select name="pekerjaan" required>
+                        <option value="kerja">kerja</option>
+                    </select>
+                </td>
 
-        </tr>
-        <tr>
-            <td>
-                Detail Kegiatan
-            </td>
-            <td>
-                <input type="text" name="detail_kegiatan">
-            </td>
-            <td>
-                Pemberi Tugas
-            </td>
-            <td>
-                <input type="text" name="pemberi_tugas">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Uraian
-            </td>
-            <td>
-                <input type="text" name="uraian">
-            </td>
-            <td>
-                Periode
-            </td>
-            <td>
-                <select name="periode">
-                    <option value="periode">periode</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Bulan Pengerjaan
-            </td>
-            <td>
-                <select name="bulan_pengerjaan">
-                    <option value="januari">jan</option>
-                </select>
-            </td>
-            <td>
-                Jumlah Rencana Kinerja
-            </td>
-            <td>
-                <input type="text" name="jumlah_kinerja">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Satuan Rencana Kinerja
-            </td>
-            <td>
-                <input type="text" name="satuan_kinerja">
-            </td>
-            <td>
-                Konversi Jam Rencana Kinerja
-            </td>
-            <td>
-                <input type="text" name="jam_rencana_kinerja">
-            </td>
-        </tr>
-    </table>
-    <input type="submit" name="submit">
+            </tr>
+            <tr>
+                <td>
+                    Detail Kegiatan
+                </td>
+                <td>
+                    <input type="text" name="detail_kegiatan" required>
+                </td>
+                <td>
+                    Pemberi Tugas
+                </td>
+                <td>
+                    <input type="text" name="pemberi_tugas" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Uraian
+                </td>
+                <td>
+                    <input type="text" name="uraian" required>
+                </td>
+                <td>
+                    Periode
+                </td>
+                <td>
+                    <select name="periode" required>
+                        {% for periode in periode_choice %}
+                        <option value="{{ periode.1 }}">{{ periode.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Bulan Pengerjaan
+                </td>
+                <td>
+                    <select name="bulan_pengerjaan" required>
+                        {% for bulan in bulan_choice %}
+                        <option value="{{ bulan.1 }}">{{ bulan.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    Jumlah Rencana Kinerja
+                </td>
+                <td>
+                    <input type="text" name="jumlah_kinerja" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Satuan Rencana Kinerja
+                </td>
+                <td>
+                    <input type="text" name="satuan_kinerja" required>
+                </td>
+                <td>
+                    Konversi Jam Rencana Kinerja
+                </td>
+                <td>
+                    <input type="text" name="jam_rencana_kinerja" required> 
+                </td>
+            </tr>
+        </table>
+        <input type="submit" name="submit">
+    </form>
 </body>
