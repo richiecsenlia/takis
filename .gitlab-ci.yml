@@ -1,5 +1,22 @@
 stages:
+  - test
   - sonarqube
+
+test-coverage:
+  stage: test
+  image: python:3.10-alpine
+  before_script:
+    - pip install -r requirements.txt
+    - python manage.py makemigrations
+    - python manage.py migrate
+  script:
+    - coverage run manage.py test
+    - coverage report -m
+    - coverage xml -i
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - $CI_PROJECT_DIR/coverage.xml
 
 sonarqube-check:
   stage: sonarqube
