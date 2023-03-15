@@ -1,6 +1,7 @@
 stages:
   - test
   - sonarqube
+  - deploy
 
 test-coverage:
   stage: test
@@ -33,3 +34,15 @@ sonarqube-check:
   script:
     - sonar-scanner -Dsonar.qualitygate.wait=true
   allow_failure: true
+
+deploy-railway:
+  stage: deploy
+  image: ubuntu
+  only:
+    - staging
+  script:
+    - apt-get update && apt-get install -y curl
+    - curl -fsSL https://railway.app/install.sh | sh
+    - railway link --environment production 62dc03ef-d0cf-4ee7-9436-11dc17e27968
+    - RAILWAY_TOKEN=$RAILWAY_TOKEN railway up --service=$RAILWAY_SERVICE_NAME -d
+
