@@ -17,7 +17,11 @@ class AuthTest(TestCase):
     DUMMY = {
         "nama":"richie senlia"
     }
-
+    LOGIN_URL = reverse("authentication:login")
+    REGISTER_URL = reverse("authentication:register")
+    CHANGE_PASSWORD_URL = reverse("authentication:change_password")
+    CHANGE_ROLE_URL = reverse("authentication:change_role")
+    UPDATE_ROLE_URL = "authentication:update_role"
     def setUp(self):
         self.user = User.objects.create_superuser(
             username='username', password='password', email='username@test.com'
@@ -26,12 +30,15 @@ class AuthTest(TestCase):
 
         self.admin_user = User.objects.create(username='admin', password='admin', email='admin@admin.com')
         self.admin_user.role.role = 'admin'
+        self.admin_user.role.save()
 
         self.na_user = User.objects.create(username='na', password='na', email='na@na.com')
         self.na_user.role.role = 'not-assign'
+        self.na_user.role.save()
 
         self.ta_user = User.objects.create(username='ta', password='ta', email='ta@ta.com')
         self.ta_user.role.role = 'TA'
+        self.ta_user.role.save()
 
     def test_sso_login_url_exist(self):
         response = self.client.get(reverse("authentication:ssologin"))
@@ -45,67 +52,94 @@ class AuthTest(TestCase):
         self.assertTrue(response.url.startswith(settings.CAS_SERVER_URL))
     
     def test_get_login(self):
-        response = self.client.get(reverse("authentication:login"))
+        response = self.client.get(self.LOGIN_URL)
         user = auth.get_user(self.client)
         self.assertFalse(user.is_authenticated)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/login.html")
     
     def test_login_success(self):
-        response = self.client.post(reverse("authentication:login"), {'username': 'username', 'password': 'password'})
+        response = self.client.post(self.LOGIN_URL, {'username': 'username', 'password': 'password'})
         self.assertEquals(response.status_code,302)
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
         self.assertRedirects(response,reverse("main:homepage"))
     
     def test_login_unsuccessfull(self):
-        response = self.client.post(reverse("authentication:login"), {'username': 'username', 'password': 'password2'})
+        response = self.client.post(self.LOGIN_URL, {'username': 'username', 'password': 'password2'})
         user = auth.get_user(self.client)
         self.assertFalse(user.is_authenticated)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/login.html")
     
     def test_get_register(self):
-        response = self.client.get(reverse('authentication:register'))
+        response = self.client.get(self.REGISTER_URL)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/register.html")
     
     def test_register_success(self):
-        response = self.client.post(reverse('authentication:register'), {'username': 'richie5', 'password1': 'senlia25','password2':'senlia25'})
+        response = self.client.post(self.REGISTER_URL, {'username': 'richie5', 'password1': 'senlia25','password2':'senlia25'})
         self.assertEquals(response.status_code,302)
         user = User.objects.filter(username="richie5")
         self.assertTrue(len(user)==1)
-        self.assertRedirects(response,reverse("authentication:login"))
+        self.assertRedirects(response,self.LOGIN_URL)
     
     def test_register_fail(self):
-        response = self.client.post(reverse('authentication:register'),{'username':'richie','password1':'richie','password2':'richie'})
+        response = self.client.post(self.REGISTER_URL,{'username':'richie','password1':'richie','password2':'richie'})
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/register.html")
     
     def test_change_password_old_user(self):
         self.client.login(username='username',password='password')
-        response = self.client.get(reverse('authentication:change_password'))
+        response = self.client.get(self.CHANGE_PASSWORD_URL)
         self.assertRedirects(response,reverse('main:homepage'))
     
     def test_change_password_new_user(self):
         user = User.objects.create(username='richie',email='richie@gmail.com')
         self.client.force_login(user=user)
-        response = self.client.get(reverse('authentication:change_password'))
+        response = self.client.get(self.CHANGE_PASSWORD_URL)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/change_password.html")
     
     def test_change_password_post_success(self):
         user = User.objects.create(username='richie',email='richie@gmail.com')
+        user.role.role = "TA"
         self.client.force_login(user=user)
-        response = self.client.post(reverse('authentication:change_password'),{'password':"senlia25"})
+        response = self.client.post(self.CHANGE_PASSWORD_URL,{'password':"senlia25"})
         client_user = auth.get_user(self.client)
         self.assertTrue(check_password("senlia25",client_user.password))
         self.assertTrue(client_user.is_authenticated)
         self.assertRedirects(response,reverse("main:homepage"))
 
     def test_change_password_no_user(self):
-        response = self.client.get(reverse('authentication:change_password'),fetch_redirect_response=False)
-        self.assertRedirects(response,reverse('authentication:login'),fetch_redirect_response=False)
+        response = self.client.get(self.CHANGE_PASSWORD_URL,fetch_redirect_response=False)
+        self.assertRedirects(response,self.LOGIN_URL,fetch_redirect_response=False)
+    
+    def test_change_role_admin_user(self):
+        self.client.force_login(user=self.admin_user)
+        response = self.client.get(self.CHANGE_ROLE_URL)
+        self.assertEquals(response.status_code,200)
+        self.assertEquals(response.templates[0].name,"registration/change_role.html")
+
+    def test_change_role_ta_user(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(self.CHANGE_ROLE_URL)
+        self.assertEquals(response.status_code,403)
+    def test_update_role(self):
+        self.client.force_login(user=self.admin_user)
+        response = self.client.get(reverse(self.UPDATE_ROLE_URL,kwargs={'id':1,'role':'TA'}))
+        user = User.objects.get(id=1)
+        self.assertEquals(user.role.role,'TA')
+        self.assertRedirects(response,self.CHANGE_ROLE_URL)
+    def test_update_role_user_not_found(self):
+        self.client.force_login(user=self.admin_user)
+        response = self.client.get(reverse(self.UPDATE_ROLE_URL,kwargs={'id':10,'role':'TA'}))
+        self.assertInHTML('user tidak ditemukan',response.content.decode())
+    
+    def test_update_role_ta_user(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse(self.UPDATE_ROLE_URL,kwargs={'id':10,'role':'TA'}))
+        self.assertEquals(response.status_code,403)
     
     def test_create_role(self):
         user = User.objects.create(username='username2', password='password2', email='username@test.com2')

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block content%}
+    <h2> Ubah role </h2>
+    <table>
+        <caption>Select user to change role</caption>
+        <th id ='username'>username</th>
+        <th id="role">role</th>
+        <th id="action">action</th>
+        {% for user in users %}
+        <tr>
+            <td>{{user.username}}</td>
+            <td>{{user.role.role}}</td>
+            <td><a href="/auth/change_role/{{user.id}}/TA" class="btn btn-primary">TA</a>
+                <a href="/auth/change_role/{{user.id}}/admin" class="btn btn-primary">admin</a>
+                <a href="/auth/change_role/{{user.id}}/not-assign" class="btn btn-primary">not-assign</a>
+                
+        </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
