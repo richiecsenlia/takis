@@ -1,9 +1,39 @@
 from django.test import TestCase
 from .models import LogTA
+from .views import *
 from django.urls import reverse
+from django.test import RequestFactory
+from django.contrib.auth.models import User, AnonymousUser
 
 # Create your tests here.
+
+context_dict = {
+            'kategori' : "Penyelenggaraan Kuliah",
+            'pekerjaan' : "Membuat Soal",
+            'detail_kegiatan' : "Essay dan Pilgan",
+            'pemberi_tugas' : "Ibu Ika Alfina",
+            'uraian' : "Membuat soal PR",
+            'periode' : "Semester Kuliah",
+            'bulan_pengerjaan' : "MAR",
+            'jumlah_kinerja' : "4",
+            'satuan_kinerja' : "Tugas",
+            'jam_rencana_kinerja' : "4"
+        }
 class PengisianLogTestCase(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.ta_user = User.objects.create(username='ta', password='ta', email='ta@ta.com')
+        self.ta_user.role.role = 'TA'
+        self.ta_user.role.save()
+
+        self.admin_user = User.objects.create(username='admin', password='admin', email='admin@admin.com')
+        self.admin_user.role.role = 'admin'
+        self.admin_user.role.save()
+
+        self.na_user = User.objects.create(username='na', password='na', email='na@na.com')
+        self.na_user.role.role = 'not-assign'
+        self.na_user.role.save()
 
     def test_create_LogTA(self):
         logTA_1 = LogTA.objects.create(
@@ -38,28 +68,35 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
         self.assertEquals(all_logTA[1].kategori, "Persiapan Kuliah")
 
-    def test_display_form_LogTA(self):
+    def test_display_form_LogTA_as_TA(self):
+        self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse("pengisian_log:form-log-kerja"))
+
         self.assertTemplateUsed(response, 'form_log.html')
         self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
         self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
         self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
 
-    def test_post_form_logTA(self):
-        response = self.client.post(reverse("pengisian_log:form-log-kerja"), {
-            'kategori' : "Penyelenggaraan Kuliah",
-            'pekerjaan' : "Membuat Soal",
-            'detail_kegiatan' : "Essay dan Pilgan",
-            'pemberi_tugas' : "Ibu Ika Alfina",
-            'uraian' : "Membuat soal PR",
-            'periode' : "Semester Kuliah",
-            'bulan_pengerjaan' : "MAR",
-            'jumlah_kinerja' : "4",
-            'satuan_kinerja' : "Tugas",
-            'jam_rencana_kinerja' : "4"
-        })
+    def test_display_form_LogTA_unregistered(self):
+        response = self.client.get(reverse("pengisian_log:form-log-kerja"))
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_post_form_logTA_as_TA(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.post(reverse("pengisian_log:form-log-kerja"), context_dict)
 
         all_logTA = LogTA.objects.all()
 
         self.assertEquals(all_logTA.count(), 1)
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
+
+    def test_post_form_logTA_as_unregistered(self):
+        response = self.client.post(reverse("pengisian_log:form-log-kerja"), context_dict)
+
+        all_logTA = LogTA.objects.all()
+
+        self.assertEquals(all_logTA.count(), 0)
+        self.assertEqual(response.status_code, 302)
+
+    
