@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import LogTA
+from authentication.views import admin_required, ta_required, ta_role_check, admin_role_check
 
 # Create your views here.
+@ta_required
 def form_log_TA(request):
     if request.method == 'GET':
         return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
