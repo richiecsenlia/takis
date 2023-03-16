@@ -25,7 +25,6 @@ def create_user_role(instance, created, **kwargs):
 def save_user_attributes(user, attributes, **kwargs):
     user.save()
     user.email = f'{user.username}@ui.ac.id'
-    role = Role()
     full_name = attributes['nama']
     i = full_name.rfind(' ')
     user.first_name, user.last_name = full_name[:i], full_name[i + 1:]
