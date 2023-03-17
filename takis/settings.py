@@ -42,13 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'main',
+    'pengisianLog',
     'django_cas_ng',
     'crispy_forms',
     'crispy_bootstrap5',
-
     'authentication',
-    'main',
 ]
 
 MIDDLEWARE = [
