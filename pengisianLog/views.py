@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from .models import LogTA
 from authentication.views import admin_required, ta_required, ta_role_check, admin_role_check
 
+from authentication.views import ta_required, admin_required
+from .models import LogTA
+
 # Create your views here.
 @ta_required
 def form_log_TA(request):
@@ -26,3 +29,13 @@ def form_log_TA(request):
         return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
             'periode_choice': LogTA.periode.field.choices, 
             'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
+def daftarLogTA(request):
+    logs = LogTA.objects.filter(user=request.user)
+    context = {'logs': logs}
+    return render(request, 'daftarLogTA.html', context)
+
+@admin_required
+def daftarLogEvaluator(request):
+    logs = LogTA.objects.all()
+    context = {'logs': logs}
+    return render(request, 'daftarLogEvaluator.html', context)

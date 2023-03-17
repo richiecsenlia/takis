@@ -45,9 +45,12 @@ INSTALLED_APPS = [
     'django_cas_ng',
     'crispy_forms',
     'crispy_bootstrap5',
-    'pengisianLog',
-    'authentication',
     'main',
+    'pengisianLog',
+    'django_cas_ng',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'authentication',
 ]
 
 MIDDLEWARE = [

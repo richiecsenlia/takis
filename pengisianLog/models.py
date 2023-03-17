@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 KATEGORI_CHOICES = [('Persiapan Kuliah','Persiapan Kuliah'),
                     ('Penyelenggaraan Kuliah','Penyelenggaraan Kuliah'),
@@ -26,6 +27,7 @@ BULAN_CHOICES = [('JAN','JAN'),
 
 # Create your models here.
 class LogTA(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     kategori = models.CharField(max_length=30,choices=KATEGORI_CHOICES)
     jenis_pekerjaan = models.CharField(max_length=20)
     detail_kegiatan = models.CharField(max_length=100)
@@ -36,3 +38,6 @@ class LogTA(models.Model):
     jumlah_rencana_kinerja = models.IntegerField()
     satuan_rencana_kinerja = models.CharField(max_length=20)
     konversi_jam_rencana_kinerja = models.IntegerField()
+    jumlah_realisasi_kinerja = models.IntegerField(default=0, blank=True)
+    satuan_realisasi_kinerja = models.CharField(default="", max_length=20,blank=True)
+    konversi_jam_realisasi_kinerja = models.IntegerField(default=0, blank=True)

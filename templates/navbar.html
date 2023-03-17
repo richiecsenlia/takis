@@ -27,9 +27,13 @@
             Log TA
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Lihat Daftar Log</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Tambah Log Baru</a></li>
+            {% if user.is_superuser %}
+              <li><a class="dropdown-item" href="{% url 'pengisianLog:daftarLogEvaluator' %}">Lihat Seluruh Daftar Log</a></li>
+            {% else %}
+              <li><a class="dropdown-item" href="{% url 'pengisianLog:daftarLogTA' %}">Lihat Daftar Log</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="#">Tambah Log Baru</a></li>              
+            {% endif %}
           </ul>
         </li>
       </ul>
