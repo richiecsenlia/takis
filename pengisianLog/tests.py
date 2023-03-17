@@ -142,6 +142,7 @@ class PengisianLogTestCase(TestCase):
 
         self.assertEquals(all_logTA.count(), 1)
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
+        self.assertTemplateUsed(response, 'daftarLogTA.html')
 
     def test_post_form_logTA_as_unregistered(self):
         response = self.client.post(reverse("pengisianLog:form-log-kerja"), context_dict)
