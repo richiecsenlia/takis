@@ -15,6 +15,7 @@ def form_log_TA(request):
             'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
     else:
         LogTA.objects.create(
+            user = request.user,
             kategori = request.POST.get('kategori'),
             jenis_pekerjaan = request.POST.get('pekerjaan'),
             detail_kegiatan = request.POST.get('detail_kegiatan'),
