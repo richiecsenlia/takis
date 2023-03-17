@@ -10,9 +10,11 @@ class PengisianLogTestCase(TestCase):
     def setUp(self):
         self.admin_user = User.objects.create(username='admin', password='admin', email='admin@admin.com')
         self.admin_user.role.role = 'admin'
+        self.admin_user.role.save()
 
         self.ta_user = User.objects.create(username='ta', password='ta', email='ta@ta.com')
         self.ta_user.role.role = 'TA'
+        self.ta_user.role.save()
 
     def test_create_LogTA(self):
         logTA_1 = LogTA.objects.create(
