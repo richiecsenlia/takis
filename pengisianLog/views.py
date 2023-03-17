@@ -29,6 +29,7 @@ def form_log_TA(request):
         return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
             'periode_choice': LogTA.periode.field.choices, 
             'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
+
 def daftarLogTA(request):
     logs = LogTA.objects.filter(user=request.user)
     context = {'logs': logs}
