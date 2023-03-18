@@ -22,6 +22,19 @@ context_dict = {
             'satuan_kinerja' : "Tugas",
             'jam_rencana_kinerja' : "4"
         }
+
+context_wrong = {
+            'kategori' : "Penyelenggaraan Kuliah",
+            'pekerjaan' : "Membuat Soal",
+            'detail_kegiatan' : "Essay dan Pilgan",
+            'pemberi_tugas' : "Ibu Ika Alfina",
+            'uraian' : "Membuat soal PR",
+            'periode' : "Semester Kuliah",
+            'bulan_pengerjaan' : "MAR",
+            'jumlah_kinerja' : "Empat",
+            'satuan_kinerja' : "Tugas",
+            'jam_rencana_kinerja' : "Empat"
+        }
 class PengisianLogTestCase(TestCase):
 
     def setUp(self):
@@ -143,6 +156,15 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_logTA.count(), 1)
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
         self.assertTemplateUsed(response, 'daftarLogTA.html')
+
+    def test_post_form_logTA_as_TA_wrong_input(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.post(reverse("pengisianLog:form-log-kerja"), context_wrong)
+
+        all_logTA = LogTA.objects.all()
+
+        self.assertEquals(all_logTA.count(), 0)
+        self.assertTemplateUsed(response, 'form_log.html')
 
     def test_post_form_logTA_as_unregistered(self):
         response = self.client.post(reverse("pengisianLog:form-log-kerja"), context_dict)
