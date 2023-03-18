@@ -155,7 +155,7 @@ class PengisianLogTestCase(TestCase):
 
         self.assertEquals(all_logTA.count(), 1)
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
-        self.assertTemplateUsed(response, 'daftarLogTA.html')
+        self.assertRedirects(response, reverse("pengisianLog:daftarLogTA"))
 
     def test_post_form_logTA_as_TA_wrong_input(self):
         self.client.force_login(user=self.ta_user)
