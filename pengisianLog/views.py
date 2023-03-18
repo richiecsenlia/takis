@@ -8,10 +8,10 @@ from .models import LogTA
 def daftarLogTA(request):
     logs = LogTA.objects.filter(user=request.user)
     context = {'logs': logs}
-    return render(request, 'daftarLogTA.html', context)
+    return render(request, 'daftarLog.html', context)
 
 @admin_required
 def daftarLogEvaluator(request):
     logs = LogTA.objects.all()
     context = {'logs': logs}
-    return render(request, 'daftarLogEvaluator.html', context)
+    return render(request, 'daftarLog.html', context)
