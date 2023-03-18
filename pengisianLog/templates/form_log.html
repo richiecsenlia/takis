@@ -5,6 +5,7 @@
     {% include 'navbar.html' %}
     Pengisian LOG
     <form method="post">
+        {% csrf_token %}
         <table>
             <tr>
                 <td>

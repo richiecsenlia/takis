@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import LogTA
 from authentication.views import admin_required, ta_required, ta_role_check, admin_role_check
-
+from django.urls import reverse
 from authentication.views import ta_required, admin_required
 from .models import LogTA
 
@@ -27,9 +27,7 @@ def form_log_TA(request):
             satuan_rencana_kinerja = request.POST.get('satuan_kinerja'),
             konversi_jam_rencana_kinerja = int(request.POST.get('jam_rencana_kinerja'))
         )
-        return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
-            'periode_choice': LogTA.periode.field.choices, 
-            'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
+        return redirect(reverse("pengisianLog:daftarLogTA"))
 
 def daftarLogTA(request):
     logs = LogTA.objects.filter(user=request.user)
