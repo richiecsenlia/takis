@@ -109,7 +109,6 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
         self.assertEquals(all_logTA[1].kategori, "Persiapan Kuliah")
 
-<<<<<<< HEAD
     def test_display_form_LogTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse("pengisianLog:form-log-kerja"))
@@ -151,8 +150,6 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_logTA.count(), 0)
         self.assertEqual(response.status_code, 302)
     
-=======
->>>>>>> 512eee2823d894f44eb9370336d38ec85eb312aa
     def test_view_LogTA_response_as_TA(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse('pengisianLog:daftarLogTA'))
