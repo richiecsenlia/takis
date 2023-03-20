@@ -71,11 +71,20 @@ class AuthTest(TestCase):
         self.assertFalse(user.is_authenticated)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/login.html")
+    def test_login_authenticated_user(self):
+        self.client.login(username="username",password="password")
+        response = self.client.get(self.LOGIN_URL)
+        self.assertRedirects(response,reverse('main:homepage'))
     
     def test_get_register(self):
         response = self.client.get(self.REGISTER_URL)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/register.html")
+
+    def test_get_register_authenticated_user(self):
+        self.client.login(username="username",password="password")
+        response = self.client.get(self.REGISTER_URL)
+        self.assertRedirects(response,reverse('main:homepage'))
     
     def test_register_success(self):
         response = self.client.post(self.REGISTER_URL, {'username': 'richie5', 'password1': 'senlia25','password2':'senlia25'})
@@ -89,23 +98,19 @@ class AuthTest(TestCase):
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/register.html")
     
-    def test_change_password_old_user(self):
-        self.client.login(username='username',password='password')
-        response = self.client.get(self.CHANGE_PASSWORD_URL)
-        self.assertRedirects(response,reverse('main:homepage'))
-    
     def test_change_password_new_user(self):
         user = User.objects.create(username='richie',email='richie@gmail.com')
         self.client.force_login(user=user)
         response = self.client.get(self.CHANGE_PASSWORD_URL)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/change_password.html")
+
     
     def test_change_password_post_success(self):
         user = User.objects.create(username='richie',email='richie@gmail.com')
         user.role.role = "TA"
         self.client.force_login(user=user)
-        response = self.client.post(self.CHANGE_PASSWORD_URL,{'password':"senlia25"})
+        response = self.client.post(self.CHANGE_PASSWORD_URL,{'password1':"senlia25",'password2':'senlia25'})
         client_user = auth.get_user(self.client)
         self.assertTrue(check_password("senlia25",client_user.password))
         self.assertTrue(client_user.is_authenticated)

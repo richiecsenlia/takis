@@ -36,7 +36,13 @@
             {% endif %}
         </div>
     </div>
-    
+    {% if request.user.is_authenticated %}
+    {% if request.user.password|length == 0 %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Password belum dibuat</strong> <a href ="{% url 'authentication:change_password' %}">Silahkan ubah password agar dapat login tanpa menggunakan sso</a>
+        </div>
+     {% endif %}
+    {% endif %}
 
     <!-- Content -->
     <div id="content">

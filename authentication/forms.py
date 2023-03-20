@@ -11,7 +11,7 @@ class UserCreateForm(UserCreationForm):
         model = User
         fields = ['username','password1','password2']
     
-class PasswordForm(ModelForm):
+class PasswordForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['password']
+        fields = ['password1','password2']

@@ -126,7 +126,8 @@ AUTHENTICATION_BACKENDS = (
 
 CAS_SERVER_URL = os.getenv("CAS_SERVER_URL", 'https://sso.ui.ac.id/cas2/')
 CAS_LOGIN_URL_NAME = "authentication:login"
-CAS_REDIRECT_URL = "authentication:change_password"
+CAS_REDIRECT_URL = "main:homepage"
+CAS_IGNORE_REFERER = True
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 

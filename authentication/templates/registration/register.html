@@ -2,10 +2,10 @@
 {% load crispy_forms_tags %}
 
 {% block content%}
-    <h2>Register Form</h2>
-    {% if form.errors %}
-      <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
+    
+    <div class="container text-center">
+      <h2>Register Form</h2>
+    </div>
     <form method="post" action="{% url 'authentication:register' %}">
         {% csrf_token %}
         {{form|crispy}}

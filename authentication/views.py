@@ -34,17 +34,23 @@ def admin_required(function):
     return login_check(role_test(function))
 
 def login_handler(request):
+    error = None
+    if(request.user.is_authenticated):
+        return HttpResponseRedirect(reverse('main:homepage'))
     if request.method == "POST" :
         data = request.POST
         user = authenticate(username=data['username'],password=data['password'])
         if user is not None:
             login(request,user)
             return HttpResponseRedirect(reverse("main:homepage"))
+        error = 'username / password tidak sesuai'
     form = UserForm()
-    response = {'form':form}
+    response = {'form':form,'error' : error}
     return render(request,'registration/login.html',response)
 
 def register(request):
+    if(request.user.is_authenticated):
+        return HttpResponseRedirect(reverse('main:homepage'))
     form = UserCreateForm()
     if request.method == "POST" :
         form = UserCreateForm(request.POST)
@@ -57,14 +63,12 @@ def register(request):
 def change_password(request):
     if not request.user.is_authenticated  :
         return HttpResponseRedirect(reverse('authentication:login'))
-    if len(request.user.password) != 0:
-        return HttpResponseRedirect(reverse("main:homepage"))
     form = PasswordForm()
     if request.method == "POST":
         form = PasswordForm(request.POST)
         if (form.is_valid()):
             user = request.user
-            user.set_password(request.POST['password'])
+            user.set_password(request.POST['password1'])
             user.save()
             user = authenticate(username=user.username,password=user.password)
             login(request,user,backend='django.contrib.auth.backends.ModelBackend')
