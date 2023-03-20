@@ -10,6 +10,8 @@ def simple_middleware(get_response):
         reverse("main:homepage"),
         reverse("authentication:not_assign"),
         reverse("authentication:change_password"),
+        reverse("authentication:login"),
+        reverse("authentication:register"),
     ]
     def middleware(request):
         # Code to be executed for each request before
