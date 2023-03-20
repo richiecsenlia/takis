@@ -37,10 +37,14 @@ def form_log_TA(request):
 def daftarLogTA(request):
     logs = LogTA.objects.filter(user=request.user)
     context = {'logs': logs}
-    return render(request, 'daftarLogTA.html', context)
+    return render(request, 'daftarLog.html', context)
 
 @admin_required
 def daftarLogEvaluator(request):
     logs = LogTA.objects.all()
     context = {'logs': logs}
+<<<<<<< HEAD
     return render(request, 'daftarLogEvaluator.html', context)
+=======
+    return render(request, 'daftarLog.html', context)
+>>>>>>> 512eee2823d894f44eb9370336d38ec85eb312aa

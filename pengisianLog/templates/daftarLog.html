@@ -9,8 +9,12 @@ Daftar Log
 <h1>Daftar Log</h1>
 
 <table class="table">
+  <caption>Tabel Daftar Log TA</caption>
     <thead>
       <tr>
+        {% if user.is_superuser %}
+        <th scope="col">Akun TA</th>
+        {% endif %}
         <th scope="col">Kategori</th>
         <th scope="col">Jenis Pekerjaan</th>
         <th scope="col">Detail Kegiatan</th>
@@ -30,6 +34,9 @@ Daftar Log
     <tbody>
       {% for log in logs %}
       <tr>
+        {% if user.is_superuser %}
+        <td>{{ word.user }}</td>
+        {% endif %}
         <td>{{ word.kategori }}</td>
         <td>{{ word.jenis_pekerjaan }}</td>
         <td>{{ word.detail_kegiatan }}</td>
