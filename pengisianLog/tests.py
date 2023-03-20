@@ -129,7 +129,7 @@ class PengisianLogTestCase(TestCase):
 
         all_logTA = LogTA.objects.all()
 
-        self.assertEquals(all_logTA.count(), 1)
+        self.assertEquals(all_logTA.count(), 3)
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
         self.assertRedirects(response, reverse("pengisianLog:daftarLogTA"))
 
@@ -139,7 +139,7 @@ class PengisianLogTestCase(TestCase):
 
         all_logTA = LogTA.objects.all()
 
-        self.assertEquals(all_logTA.count(), 0)
+        self.assertEquals(all_logTA.count(), 2)
         self.assertTemplateUsed(response, 'form_log.html')
 
     def test_post_form_logTA_as_unregistered(self):
@@ -147,7 +147,7 @@ class PengisianLogTestCase(TestCase):
 
         all_logTA = LogTA.objects.all()
 
-        self.assertEquals(all_logTA.count(), 0)
+        self.assertEquals(all_logTA.count(), 2)
         self.assertEqual(response.status_code, 302)
     
     def test_view_LogTA_response_as_TA(self):
