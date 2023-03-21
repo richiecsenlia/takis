@@ -34,6 +34,7 @@ def form_log_TA(request):
                 'periode_choice': LogTA.periode.field.choices, 
                 'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
 
+@ta_required
 def daftarLogTA(request):
     logs = LogTA.objects.filter(user=request.user)
     context = {'logs': logs}
