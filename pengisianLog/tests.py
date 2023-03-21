@@ -20,7 +20,10 @@ context_dict = {
             'bulan_pengerjaan' : "MAR",
             'jumlah_kinerja' : "4",
             'satuan_kinerja' : "Tugas",
-            'jam_rencana_kinerja' : "4"
+            'jam_rencana_kinerja' : "4",
+            'jumlah_realisasi_kinerja' : "4",
+            'satuan_realisasi_kinerja' : "Tugas",
+            'konversi_jam_realisasi_kinerja' : "4"
         }
 
 context_wrong = {
@@ -33,7 +36,10 @@ context_wrong = {
             'bulan_pengerjaan' : "MAR",
             'jumlah_kinerja' : "Empat",
             'satuan_kinerja' : "Tugas",
-            'jam_rencana_kinerja' : "Empat"
+            'jam_rencana_kinerja' : "Empat",
+            'jumlah_realisasi_kinerja' : "Empat",
+            'satuan_realisasi_kinerja' : "Tugas",
+            'konversi_jam_realisasi_kinerja' : "Empat"
         }
 class PengisianLogTestCase(TestCase):
 
