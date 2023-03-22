@@ -42,7 +42,7 @@ def login_handler(request):
         user = authenticate(username=data['username'],password=data['password'])
         if user is not None:
             login(request,user)
-            return HttpResponseRedirect(reverse("main:homepage"))
+            return HttpResponseRedirect(request.GET.get('next','/'))
         error = 'username / password tidak sesuai'
     form = UserForm()
     response = {'form':form,'error' : error}
