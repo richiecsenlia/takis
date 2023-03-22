@@ -129,7 +129,7 @@ class PengisianLogTestCase(TestCase):
 
         self.assertEquals(all_logTA.count(), 3)
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
-        self.assertEquals(all_logTA[2].konversi_jam_rencana_kinerja, all_logTA[2].jumlah_kinerja / 4)
+        self.assertEquals(all_logTA[2].konversi_jam_rencana_kinerja, all_logTA[2].jumlah_rencana_kinerja / 4)
         self.assertRedirects(response, reverse("pengisianLog:daftarLogTA"))
 
     def test_post_form_logTA_as_TA_wrong_input(self):
