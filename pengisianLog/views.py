@@ -26,7 +26,7 @@ def form_log_TA(request):
                 bulan_pengerjaan = request.POST.get('bulan_pengerjaan'),
                 jumlah_rencana_kinerja = int(request.POST.get('jumlah_kinerja')),
                 satuan_rencana_kinerja = request.POST.get('satuan_kinerja'),
-                konversi_jam_rencana_kinerja = int(request.POST.get('jam_rencana_kinerja'))
+                konversi_jam_rencana_kinerja = int(request.POST.get('jumlah_kinerja')) / 4
             )
             return redirect(reverse("pengisianLog:daftarLogTA"))
     except ValueError:
