@@ -111,7 +111,7 @@ class PengisianLogTestCase(TestCase):
 
     def test_display_form_LogTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.get(reverse("pengisianLog:form-log-kerja"))
+        response = self.client.get(reverse("pengisianLog:mengisiLog"))
 
         self.assertTemplateUsed(response, 'form_log.html')
         self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
@@ -119,13 +119,13 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
 
     def test_display_form_LogTA_unregistered(self):
-        response = self.client.get(reverse("pengisianLog:form-log-kerja"))
+        response = self.client.get(reverse("pengisianLog:mengisiLog"))
 
         self.assertEqual(response.status_code, 302)
 
     def test_post_form_logTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.post(reverse("pengisianLog:form-log-kerja"), context_dict)
+        response = self.client.post(reverse("pengisianLog:mengisiLog"), context_dict)
 
         all_logTA = LogTA.objects.all()
 
@@ -135,7 +135,7 @@ class PengisianLogTestCase(TestCase):
 
     def test_post_form_logTA_as_TA_wrong_input(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.post(reverse("pengisianLog:form-log-kerja"), context_wrong)
+        response = self.client.post(reverse("pengisianLog:mengisiLog"), context_wrong)
 
         all_logTA = LogTA.objects.all()
 
@@ -143,7 +143,7 @@ class PengisianLogTestCase(TestCase):
         self.assertTemplateUsed(response, 'form_log.html')
 
     def test_post_form_logTA_as_unregistered(self):
-        response = self.client.post(reverse("pengisianLog:form-log-kerja"), context_dict)
+        response = self.client.post(reverse("pengisianLog:mengisiLog"), context_dict)
 
         all_logTA = LogTA.objects.all()
 
