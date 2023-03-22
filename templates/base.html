@@ -17,25 +17,14 @@
 </head>
 
 <body>
-    <div class="row">
+    
         <div class="col ">
             <!-- Navigation -->
     
             {% include 'navbar.html' %}
             <!-- end of navigation -->
         </div>
-        <div class ="col-xs">
-            {% if request.user.is_authenticated %}
-                {{request.user}}
-                {{request.user.role}}
-                <a href = "{% url 'authentication:ssologout' %}">logout</a>
-            {% else %}
-                <a href="{% url 'authentication:login' %}">Login</a>
-                <a href="{% url 'authentication:register' %}">Register</a>
-
-            {% endif %}
-        </div>
-    </div>
+     
     {% if request.user.is_authenticated %}
     {% if request.user.password|length == 0 %}
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
