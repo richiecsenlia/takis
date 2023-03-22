@@ -1,14 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-def create_daftar_matkul():
-    MataKuliah.objects.create(nama='Aljabar Linear')
-    MataKuliah.objects.create(nama='Basis Data')
-    MataKuliah.objects.create(nama='Jaringan Komputer')
-    MataKuliah.objects.create(nama='Rekayasa Perangkat Lunak')
-    MataKuliah.objects.create(nama='Proyek Perangkat Lunak')
-
-
 class AccountsModelTest(TestCase):
     
     def setUp(self):
@@ -28,31 +20,41 @@ class AccountsModelTest(TestCase):
         self.ta_user_2.role.role = 'TA'
         self.ta_user_2.role.save()
 
-        create_daftar_matkul()
-
-    def test_create_ta_profile(self):
-        ta_1_profile = TeachingAssistantProfile.objects.create(
-            user = self.ta_user_1
+        TeachingAssistantProfile.objects.create(
+            user = self.ta_user_1,
             nama = 'Immanuel Nadeak',
             kontrak = 'Part Time',
             status = 'Lulus S1',
-            prodi = 'Ilmu Komputer',
-            matkul = '',
+            prodi = 'Ilmu Komputer'
         )
 
-        ta_2_profile = TeachingAssistantProfile.objects.create(
-            user = self.ta_user_2
+        TeachingAssistantProfile.objects.create(
+            user = self.ta_user_2,
             nama = 'Virdian Harun',
             kontrak = 'Part Time',
             status = 'Lulus S1',
-            prodi = 'Sistem Informasi',
-            matkul = '',
+            prodi = 'Sistem Informasi'
         )
 
-        self.assertEquals(str(ta_1_profile), 'Immanuel Nadeak')
-        self.assertEquals(str(ta_2_profile), 'Virdian Harun')
+        MataKuliah.objects.create(nama='Aljabar Linear')
+        MataKuliah.objects.create(nama='Basis Data')
+        MataKuliah.objects.create(nama='Jaringan Komputer')
+        MataKuliah.objects.create(nama='Rekayasa Perangkat Lunak')
+        MataKuliah.objects.create(nama='Proyek Perangkat Lunak')
 
-    def test_get_all_ta_profile(self):
-        list_profil_ta = TeachingAssistantProfile.objects.all()
+    def test_total_mata_kuliah(self):
+        all_matkul = MataKuliah.objects.all()
 
-        self.assertEquals(list_profil_ta.count(), 2)
+        self.assertEquals(all_matkul.count(), 5)
+
+    def test_total_ta_profile(self):
+        all_profil_ta = TeachingAssistantProfile.objects.all()
+
+        self.assertEquals(all_profil_ta.count(), 2)
+
+    def test_ta_profile_name(self):
+        ta_1 = TeachingAssistantProfile.objects.get(id=1)
+        ta_2 = TeachingAssistantProfile.objects.get(id=2)
+
+        self.assertEquals(str(ta_1), 'Immanuel Nadeak')
+        self.assertEquals(str(ta_2), 'Virdian Harun')
