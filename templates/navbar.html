@@ -27,7 +27,7 @@
             Log TA
           </a>
           <ul class="dropdown-menu">
-            {% if user.is_superuser %}
+            {% if user.role.role == 'admin' %}
               <li><a class="dropdown-item" href="{% url 'pengisianLog:daftarLogEvaluator' %}">Lihat Seluruh Daftar Log</a></li>
             {% else %}
               <li><a class="dropdown-item" href="{% url 'pengisianLog:daftarLogTA' %}">Lihat Daftar Log</a></li>
