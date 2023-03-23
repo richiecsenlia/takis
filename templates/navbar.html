@@ -1,8 +1,8 @@
 {% load static %}
 
 <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'main:homepage' %}">Takis</a>
+  <div class="container-fluid mx-4">
+    <a class="navbar-brand fw-bold" href="{% url 'main:homepage' %}">TAKIS</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -65,9 +65,13 @@
           {{request.user}}
           </a>
           <ul class="dropdown-menu">
-            
-              <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">logout</a></li>
-              <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">change password</a></li>       
+              {% if user.teachingassistantprofile %}
+              <li><a class="dropdown-item" href="{% url 'accounts:profile' user.teachingassistantprofile.slug %}">Lihat Profil</a></li> 
+              {% else %}
+              <li><a class="dropdown-item" href="{% url 'accounts:fill_profile' %}">Atur Profil</a></li> 
+              {% endif %}
+              <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
+              <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
           </ul>
         </li>
         {% else %}
