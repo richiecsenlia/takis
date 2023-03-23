@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8" />
+{% block title %}
+403
+{% endblock title%}
 
-</head>
+{% block content%}
+    <h2>Oops, Anda tidak memiliki izin untuk mengakses halaman ini.</h2>
+    <a class="btn btn-success" href="{% url 'main:homepage' %}" role="button">Kembali ke Homepage</a>
 
-<body>
-    <h1>Status Code 403: Forbidden</h1>
-</body>
-
-</html>
+{% endblock %}

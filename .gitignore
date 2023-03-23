@@ -10,6 +10,7 @@ __pycache__
 
 # Served static
 myproject/static
+staticfiles
 
 # Coverage
 .coverage

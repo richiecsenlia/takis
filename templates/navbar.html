@@ -32,10 +32,62 @@
             {% else %}
               <li><a class="dropdown-item" href="{% url 'pengisianLog:daftarLogTA' %}">Lihat Daftar Log</a></li>
               <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="#">Tambah Log Baru</a></li>              
+              <li><a class="dropdown-item" href="{% url 'pengisianLog:mengisiLog' %}">Tambah Log Baru</a></li>              
             {% endif %}
           </ul>
         </li>
+        {% if user.role.role == 'admin' %}
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Admin
+          </a>
+          <ul class="dropdown-menu">
+            
+              <li><a class="dropdown-item" href="{% url 'authentication:change_role' %}">Assign Role</a></li>       
+          </ul>
+        </li>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+          {{request.user}}
+          </a>
+          <ul class="dropdown-menu">
+            
+              <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">logout</a></li>
+              <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">change password</a></li>       
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="{% url 'authentication:login' %}"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+          Guest
+          </a>
+          <ul class="dropdown-menu">
+            
+              <li><a class="dropdown-item" href="{% url 'authentication:login' %}">login</a></li>
+              <li><a class="dropdown-item" href="{% url 'authentication:register' %}">register</a></li>       
+          </ul>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>
