@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 from accounts.models import MataKuliah, TeachingAssistantProfile
 
-class AccountsModelTest(TestCase):
+class AccountsTest(TestCase):
     
     def setUp(self):
         self.ta_user_1 = User.objects.create_user(
