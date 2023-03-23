@@ -27,7 +27,7 @@
             Log TA
           </a>
           <ul class="dropdown-menu">
-            {% if user.is_superuser %}
+            {% if user.role.role == 'admin' %}
               <li><a class="dropdown-item" href="{% url 'pengisianLog:daftarLogEvaluator' %}">Lihat Seluruh Daftar Log</a></li>
             {% else %}
               <li><a class="dropdown-item" href="{% url 'pengisianLog:daftarLogTA' %}">Lihat Daftar Log</a></li>
@@ -87,8 +87,9 @@
           </a>
           <ul class="dropdown-menu">
             
-              <li><a class="dropdown-item" href="{% url 'authentication:login' %}">login</a></li>
-              <li><a class="dropdown-item" href="{% url 'authentication:register' %}">register</a></li>       
+              <li><a class="dropdown-item" href="{% url 'authentication:login' %}">Login</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="{% url 'authentication:register' %}">Register</a></li>       
           </ul>
         </li>
         {% endif %}
