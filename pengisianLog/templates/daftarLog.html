@@ -12,7 +12,7 @@ Daftar Log
   <caption>Tabel Daftar Log TA</caption>
     <thead>
       <tr>
-        {% if user.is_superuser %}
+        {% if user.role.role == 'admin' %}
         <th scope="col">Akun TA</th>
         {% endif %}
         <th scope="col">Kategori</th>
@@ -34,7 +34,7 @@ Daftar Log
     <tbody>
       {% for log in logs %}
       <tr>
-        {% if user.is_superuser %}
+        {% if user.role.role == 'admin' %}
         <td>{{ log.user }}</td>
         {% endif %}
         <td>{{ log.kategori }}</td>
