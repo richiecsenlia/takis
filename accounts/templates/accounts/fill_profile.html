@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit Profil
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+ 
+  <h1 class="text-center mt-5 mb-3">Isi Profil</h1>
+  <h6 class="text-center mb-3">Mulai dengan melengkapi biodata anda terlebih dahulu</h6>
+  <form method="post" class="row g-3">
+    {% csrf_token %}
+    <div class="col-md-12">
+      <label class="form-label">Nama Lengkap</label>
+      <input type="text" class="form-control" name="nama" required />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Jenis TA</label>
+      <select name="kontrak" class="form-select" required>
+        {% for kontrak in kontrak_choices %}
+        <option value="{{ kontrak.1 }}">{{ kontrak.1 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Program Studi</label>
+      <select name="prodi" class="form-select" required>
+        {% for prodi in prodi_choices %}
+        <option value="{{ prodi.1 }}">{{ prodi.1 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Status Kemahasiswaan</label>
+      <select name="status" class="form-select" required>
+        {% for status in status_choices %}
+        <option value="{{ status.1 }}">{{ status.1 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Mata Kuliah</label>
+      <select name="matkul_select" class="form-select" disabled>
+        {% for matkul in matkul_choices %}
+        <option value="{{ matkul.nama }}">{{ matkul.nama }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="d-grid gap-2 col-6 mx-auto mt-4">
+        <button type="submit" class="btn btn-success">Simpan</button>
+    </div>
+  </form>
+
+</div>
+
+{% endblock content %}
