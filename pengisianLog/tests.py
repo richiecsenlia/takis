@@ -20,7 +20,10 @@ context_dict = {
             'bulan_pengerjaan' : "MAR",
             'jumlah_kinerja' : "4",
             'satuan_kinerja' : "Tugas",
-            'jam_rencana_kinerja' : "4"
+            'jam_rencana_kinerja' : "4",
+            'jumlah_realisasi_kinerja' : "4",
+            'satuan_realisasi_kinerja' : "Tugas",
+            'konversi_jam_realisasi_kinerja' : "4"
         }
 
 context_wrong = {
@@ -33,7 +36,10 @@ context_wrong = {
             'bulan_pengerjaan' : "MAR",
             'jumlah_kinerja' : "Empat",
             'satuan_kinerja' : "Tugas",
-            'jam_rencana_kinerja' : "Empat"
+            'jam_rencana_kinerja' : "Empat",
+            'jumlah_realisasi_kinerja' : "Empat",
+            'satuan_realisasi_kinerja' : "Tugas",
+            'konversi_jam_realisasi_kinerja' : "Empat"
         }
 class PengisianLogTestCase(TestCase):
 
@@ -111,7 +117,7 @@ class PengisianLogTestCase(TestCase):
 
     def test_display_form_LogTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.get(reverse("pengisianLog:form-log-kerja"))
+        response = self.client.get(reverse("pengisianLog:mengisiLog"))
 
         self.assertTemplateUsed(response, 'form_log.html')
         self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
@@ -119,23 +125,25 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
 
     def test_display_form_LogTA_unregistered(self):
-        response = self.client.get(reverse("pengisianLog:form-log-kerja"))
+        response = self.client.get(reverse("pengisianLog:mengisiLog"))
 
         self.assertEqual(response.status_code, 302)
 
     def test_post_form_logTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.post(reverse("pengisianLog:form-log-kerja"), context_dict)
+        response = self.client.post(reverse("pengisianLog:mengisiLog"), context_dict)
 
         all_logTA = LogTA.objects.all()
 
         self.assertEquals(all_logTA.count(), 3)
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
+        self.assertEquals(all_logTA[2].konversi_jam_rencana_kinerja, all_logTA[2].jumlah_rencana_kinerja / 4)
+        self.assertEquals(all_logTA[2].konversi_jam_realisasi_kinerja, all_logTA[2].jumlah_realisasi_kinerja / 4)
         self.assertRedirects(response, reverse("pengisianLog:daftarLogTA"))
 
     def test_post_form_logTA_as_TA_wrong_input(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.post(reverse("pengisianLog:form-log-kerja"), context_wrong)
+        response = self.client.post(reverse("pengisianLog:mengisiLog"), context_wrong)
 
         all_logTA = LogTA.objects.all()
 
@@ -143,7 +151,7 @@ class PengisianLogTestCase(TestCase):
         self.assertTemplateUsed(response, 'form_log.html')
 
     def test_post_form_logTA_as_unregistered(self):
-        response = self.client.post(reverse("pengisianLog:form-log-kerja"), context_dict)
+        response = self.client.post(reverse("pengisianLog:mengisiLog"), context_dict)
 
         all_logTA = LogTA.objects.all()
 
