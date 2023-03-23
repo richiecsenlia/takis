@@ -6,8 +6,8 @@ Pengisian Log
 
 {% block content %}
 
-<h1>Pengisian Log</h1>
-<form method="post" class="row g-3">
+<h1 style="margin-left: 10px">Pengisian Log</h1>
+<form method="post" class="row g-3" style="margin-left: 10px; margin-right: 10px">
   {% csrf_token %}
     <div class="col-md-12">
         <label class="form-label">Kategori</label>
@@ -62,12 +62,12 @@ Pengisian Log
         <button type="button" class="btn btn-warning" onclick="myFunction()">Hide or Show Realisasi</button>
     </div>
 
-    <div id="realisasi_form">
-        <div class="col-6">
+    <div id="realisasi_form" class="row" style="margin-top: 10px">
+        <div class="col-md-6">
             <label class="form-label">Jumlah Realisasi Kinerja</label>
             <input type="text" class="form-control" name="jumlah_realisasi_kinerja"/>
         </div>
-        <div class="col-6">
+        <div class="col-md-6">
             <label class="form-label">Satuan Realisasi Kinerja</label>
             <input type="text" class="form-control" name="satuan_realisasi_kinerja" placeholder="Contoh: Tugas"/>
     
