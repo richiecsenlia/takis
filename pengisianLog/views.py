@@ -15,6 +15,14 @@ def form_log_TA(request):
                 'periode_choice': LogTA.periode.field.choices, 
                 'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
         else:
+            jumlah_realisasi_kinerja_validasi = 0
+            konversi_jam_realisasi_kinerja_validasi = 0
+            if (request.POST.get('jumlah_realisasi_kinerja')) == "":
+                 jumlah_realisasi_kinerja_validasi = 0
+                 konversi_jam_realisasi_kinerja_validasi = 0
+            else:
+                 jumlah_realisasi_kinerja_validasi = int(request.POST.get('jumlah_realisasi_kinerja'))
+                 konversi_jam_realisasi_kinerja_validasi = int(request.POST.get('jumlah_realisasi_kinerja')) / 4
             LogTA.objects.create(
                 user = request.user,
                 kategori = request.POST.get('kategori'),
@@ -26,7 +34,10 @@ def form_log_TA(request):
                 bulan_pengerjaan = request.POST.get('bulan_pengerjaan'),
                 jumlah_rencana_kinerja = int(request.POST.get('jumlah_kinerja')),
                 satuan_rencana_kinerja = request.POST.get('satuan_kinerja'),
-                konversi_jam_rencana_kinerja = int(request.POST.get('jumlah_kinerja')) / 4
+                konversi_jam_rencana_kinerja = int(request.POST.get('jumlah_kinerja')) / 4,
+                jumlah_realisasi_kinerja = jumlah_realisasi_kinerja_validasi,
+                satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja'),
+                konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi
             )
             return redirect(reverse("pengisianLog:daftarLogTA"))
     except ValueError:
