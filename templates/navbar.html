@@ -66,8 +66,9 @@
           </a>
           <ul class="dropdown-menu">
             
-              <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">logout</a></li>
-              <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">change password</a></li>       
+              <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Logout</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Change Password</a></li>       
           </ul>
         </li>
         {% else %}
@@ -83,8 +84,9 @@
           </a>
           <ul class="dropdown-menu">
             
-              <li><a class="dropdown-item" href="{% url 'authentication:login' %}">login</a></li>
-              <li><a class="dropdown-item" href="{% url 'authentication:register' %}">register</a></li>       
+              <li><a class="dropdown-item" href="{% url 'authentication:login' %}">Login</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="{% url 'authentication:register' %}">Register</a></li>       
           </ul>
         </li>
         {% endif %}
