@@ -9,7 +9,7 @@ from .models import LogTA
 # Create your views here.
 @ta_required
 def form_log_TA(request):
-    # try:
+    try:
         if request.method == 'GET':
             return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
                 'periode_choice': LogTA.periode.field.choices, 
@@ -40,10 +40,10 @@ def form_log_TA(request):
                 konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi
             )
             return redirect(reverse("pengisianLog:daftarLogTA"))
-    # except ValueError:
-    #     return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
-    #             'periode_choice': LogTA.periode.field.choices, 
-    #             'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
+    except ValueError:
+        return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
+                'periode_choice': LogTA.periode.field.choices, 
+                'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
 
 @ta_required
 def daftarLogTA(request):
