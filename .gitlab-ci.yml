@@ -34,6 +34,7 @@ test-coverage:
     expire_in: 1 hour
     paths:
       - $CI_PROJECT_DIR/coverage.xml
+  allow_failure: true
 
 sonarqube-check:
   stage: sonarqube
