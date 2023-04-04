@@ -4,7 +4,8 @@ from .models import LogTA
 from authentication.views import admin_required, ta_required, ta_role_check, admin_role_check
 from django.urls import reverse
 from authentication.views import ta_required, admin_required
-from .models import LogTA
+from django.views.decorators.http import require_GET
+from pengisianLog.models import LogTA
 
 # Create your views here.
 @ta_required
@@ -45,12 +46,14 @@ def form_log_ta(request):
                 'periode_choice': LogTA.periode.field.choices, 
                 'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
 
+@require_GET
 @ta_required
 def daftar_log_ta(request):
     logs = LogTA.objects.filter(user=request.user)
     context = {'logs': logs}
     return render(request, 'daftar_log.html', context)
 
+@require_GET
 @admin_required
 def daftar_log_evaluator(request):
     logs = LogTA.objects.all().order_by('user', 'id')
