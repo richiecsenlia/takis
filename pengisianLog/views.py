@@ -53,6 +53,6 @@ def daftarLogTA(request):
 
 @admin_required
 def daftarLogEvaluator(request):
-    logs = LogTA.objects.all()
+    logs = LogTA.objects.all().order_by('user', 'id')
     context = {'logs': logs}
     return render(request, 'daftar_log.html', context)

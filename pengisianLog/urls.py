@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import *
+from pengisianLog.views import form_log_TA, daftarLogTA, daftarLogEvaluator
 
 app_name = 'pengisianLog'
 
