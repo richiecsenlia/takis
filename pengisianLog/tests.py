@@ -164,7 +164,7 @@ class PengisianLogTestCase(TestCase):
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'daftarLog.html')
+        self.assertTemplateUsed(response, 'daftar_log.html')
     
     def test_view_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
@@ -172,4 +172,4 @@ class PengisianLogTestCase(TestCase):
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'daftarLog.html')
+        self.assertTemplateUsed(response, 'daftar_log.html')

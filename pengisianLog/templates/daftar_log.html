@@ -17,16 +17,8 @@ Daftar Log
         {% endif %}
         <th scope="col">Kategori</th>
         <th scope="col">Jenis Pekerjaan</th>
-        <th scope="col">Detail Kegiatan</th>
-        <th scope="col">Pemberi Tugas</th>
         <th scope="col">Uraian</th>
-        <th scope="col">Periode Pengerjaan</th>
-        <th scope="col">Bulan Pengerjaan</th>
-        <th scope="col">Jumlah Rencana Kinerja</th>
-        <th scope="col">Satuan Rencana Kinerja</th>
         <th scope="col">Konversi Jam Rencana Kinerja</th>
-        <th scope="col">Jumlah Realisasi Kinerja</th>
-        <th scope="col">Satuan Realisasi Kinerja</th>
         <th scope="col">Konversi Jam Realisasi Kinerja</th>
         <th scope="col">Aksi</th>
       </tr>
@@ -39,23 +31,20 @@ Daftar Log
         {% endif %}
         <td>{{ log.kategori }}</td>
         <td>{{ log.jenis_pekerjaan }}</td>
-        <td>{{ log.detail_kegiatan }}</td>
-        <td>{{ log.pemberi_tugas }}</td>
         <td>{{ log.uraian }}</td>
-        <td>{{ log.periode }}</td>
-        <td>{{ log.bulan_pengerjaan }}</td>
-        <td>{{ log.jumlah_rencana_kinerja }}</td>
-        <td>{{ log.satuan_rencana_kinerja }}</td>
         <td>{{ log.konversi_jam_rencana_kinerja }}</td>
-        <td>{{ log.jumlah_realisasi_kinerja }}</td>
-        <td>{{ log.satuan_realisasi_kinerja }}</td>
         <td>{{ log.konversi_jam_realisasi_kinerja }}</td>
         <td>
             <a href="#">
                 <button type="button" class="btn btn-success">
-                    Edit
+                  Edit
                 </button>
             </a>
+            <a href="#">
+              <button type="button" class="btn btn-danger">
+                  Hapus
+              </button>
+          </a>
         </td>
       </tr>
       {% endfor %}
