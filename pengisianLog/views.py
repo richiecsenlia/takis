@@ -8,7 +8,7 @@ from .models import LogTA
 
 # Create your views here.
 @ta_required
-def form_log_TA(request):
+def form_log_ta(request):
     try:
         if request.method == 'GET':
             return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
@@ -39,20 +39,20 @@ def form_log_TA(request):
                 satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja'),
                 konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi
             )
-            return redirect(reverse("pengisianLog:daftarLogTA"))
+            return redirect(reverse("pengisianLog:daftar_log_ta"))
     except ValueError:
         return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
                 'periode_choice': LogTA.periode.field.choices, 
                 'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
 
 @ta_required
-def daftarLogTA(request):
+def daftar_log_ta(request):
     logs = LogTA.objects.filter(user=request.user)
     context = {'logs': logs}
     return render(request, 'daftar_log.html', context)
 
 @admin_required
-def daftarLogEvaluator(request):
+def daftar_log_evaluator(request):
     logs = LogTA.objects.all().order_by('user', 'id')
     context = {'logs': logs}
     return render(request, 'daftar_log.html', context)

@@ -139,7 +139,7 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_logTA[0].kategori, "Penyelenggaraan Kuliah")
         self.assertEquals(all_logTA[2].konversi_jam_rencana_kinerja, all_logTA[2].jumlah_rencana_kinerja / 4)
         self.assertEquals(all_logTA[2].konversi_jam_realisasi_kinerja, all_logTA[2].jumlah_realisasi_kinerja / 4)
-        self.assertRedirects(response, reverse("pengisianLog:daftarLogTA"))
+        self.assertRedirects(response, reverse("pengisianLog:daftar_log_ta"))
 
     def test_post_form_logTA_as_TA_wrong_input(self):
         self.client.force_login(user=self.ta_user)
@@ -160,7 +160,7 @@ class PengisianLogTestCase(TestCase):
     
     def test_view_LogTA_response_as_TA(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.get(reverse('pengisianLog:daftarLogTA'))
+        response = self.client.get(reverse('pengisianLog:daftar_log_ta'))
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
@@ -168,7 +168,7 @@ class PengisianLogTestCase(TestCase):
     
     def test_view_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse('pengisianLog:daftarLogEvaluator'))
+        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator'))
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
