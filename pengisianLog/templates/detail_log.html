@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Detail Log
+{% endblock title%}
+
+{% block content %}
+
+<table>
+  <tr>
+    {% if user.role.role == 'admin' %}
+    <th scope="col">Akun TA</th>
+    {% endif %}
+    <th scope="col">Kategori</th>
+    <th scope="col">Jenis Pekerjaan</th>
+    <th scope="col">Detail Kegiatan</th>
+    <th scope="col">Pemberi Tugas</th>
+    <th scope="col">Uraian</th>
+    <th scope="col">Periode Pengerjaan</th>
+    <th scope="col">Bulan Pengerjaan</th>
+    <th scope="col">Jumlah Rencana Kinerja</th>
+    <th scope="col">Satuan Rencana Kinerja</th>
+    <th scope="col">Konversi Jam Rencana Kinerja</th>
+    <th scope="col">Jumlah Realisasi Kinerja</th>
+    <th scope="col">Satuan Realisasi Kinerja</th>
+    <th scope="col">Konversi Jam Realisasi Kinerja</th>
+  </tr>
+  <tr>
+    {% if user.role.role == 'admin' %}
+    <td>{{ log.user }}</td>
+    {% endif %}
+    <td>{{ log.kategori }}</td>
+    <td>{{ log.jenis_pekerjaan }}</td>
+    <td>{{ log.detail_kegiatan }}</td>
+    <td>{{ log.pemberi_tugas }}</td>
+    <td>{{ log.uraian }}</td>
+    <td>{{ log.periode }}</td>
+    <td>{{ log.bulan_pengerjaan }}</td>
+    <td>{{ log.jumlah_rencana_kinerja }}</td>
+    <td>{{ log.satuan_rencana_kinerja }}</td>
+    <td>{{ log.konversi_jam_rencana_kinerja }}</td>
+    <td>{{ log.jumlah_realisasi_kinerja }}</td>
+    <td>{{ log.satuan_realisasi_kinerja }}</td>
+    <td>{{ log.konversi_jam_realisasi_kinerja }}</td>
+  </tr>
+</table>
+
+<br>
+
+<a href="#" class="btn btn-warning">Edit</a>
+
+{% endblock content %}

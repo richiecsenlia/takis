@@ -177,7 +177,7 @@ class PengisianLogTestCase(TestCase):
     
     def test_view_LogTA_details(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.get(reverse('pengisianLog:detail_log'), 1)
+        response = self.client.get(reverse('pengisianLog:detail_log', kwargs={'id':1}))
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)

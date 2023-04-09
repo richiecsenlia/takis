@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .models import LogTA
-from authentication.views import admin_required, ta_required, ta_role_check, admin_role_check
+from authentication.views import admin_required, ta_required
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from authentication.views import ta_required, admin_required
 from django.views.decorators.http import require_GET
@@ -59,3 +59,10 @@ def daftar_log_evaluator(request):
     logs = LogTA.objects.all().order_by('user', 'id')
     context = {'logs': logs}
     return render(request, 'daftar_log.html', context)
+
+@require_GET
+@login_required
+def detail_log(request, id):
+    log = LogTA.objects.get(pk=id)
+    context = {'log': log}
+    return render(request, 'detail_log.html', context)
