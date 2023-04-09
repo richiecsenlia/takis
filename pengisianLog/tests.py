@@ -41,6 +41,7 @@ context_wrong = {
             'satuan_realisasi_kinerja' : "Tugas",
             'konversi_jam_realisasi_kinerja' : "Empat"
         }
+        
 class PengisianLogTestCase(TestCase):
 
     def setUp(self):
@@ -173,3 +174,11 @@ class PengisianLogTestCase(TestCase):
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftar_log.html')
+    
+    def test_view_LogTA_details(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse('pengisianLog:detail_log'), 1)
+        user = auth.get_user(self.client)
+        self.assertTrue(user.is_authenticated)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'detail_log.html')
