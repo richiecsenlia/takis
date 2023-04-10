@@ -65,9 +65,9 @@ class RekapanLogTestCase(TestCase):
         )
 
     def test_get_average_all_rencana(self):
-        persiapan, penyelenggaraan, dukungan, pengembangan, riset = get_all_rencana(self.ta_user)
+        rencanaAvg = get_all_rencana(self.ta_user)
         # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
 
-        self.assertEquals(penyelenggaraan, 0.25)
-        self.assertEquals(persiapan, (1/3))
+        self.assertEquals(rencanaAvg['penyelenggaraan'], 0.25)
+        self.assertEquals(rencanaAvg['persiapan'], (1/3))
 
