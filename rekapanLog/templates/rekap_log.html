@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Rekap Log
+{% endblock title%}
+
+{% block content %}
+
+<h1>Rekap Loh Log</h1>
+
+<table class="table">
+  <caption>Rekap Log</caption>
+    <thead>
+      <tr>
+        {% if user.role.role == 'admin' %}
+        <th scope="col">Akun TA</th>
+        {% endif %}
+        <th scope="col">Jenis Pekerjaan</th>
+        <th scope="col">Jenis Pekerjaan</th>
+        <th scope="col">Detail Kegiatan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ log.kategori }}</td>
+        <td>{{ log.jenis_pekerjaan }}</td>
+        <td>{{ log.detail_kegiatan }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endblock content %}
