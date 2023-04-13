@@ -12,19 +12,16 @@ Rekap Log
   <caption>Rekap Log</caption>
     <thead>
       <tr>
-        {% if user.role.role == 'admin' %}
-        <th scope="col">Akun TA</th>
-        {% endif %}
         <th scope="col">Jenis Pekerjaan</th>
-        <th scope="col">Jenis Pekerjaan</th>
-        <th scope="col">Detail Kegiatan</th>
+        <th scope="col">Rencana</th>
+        <th scope="col">Realiasi</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>{{ log.kategori }}</td>
-        <td>{{ log.jenis_pekerjaan }}</td>
-        <td>{{ log.detail_kegiatan }}</td>
+        <td>Pekerjaan</td>
+        <td>Plan</td>
+        <td>Real</td>
       </tr>
     </tbody>
   </table>
