@@ -97,3 +97,9 @@ class RekapanLogTestCase(TestCase):
         self.assertEquals(rencanaApr['penyelenggaraan'], 0.5)
         self.assertEquals(rencanaSep['persiapan'], 2)
         self.assertEquals(rencanaSep['pengembangan'], 1)
+
+    def test_display_form_LogTA_as_TA(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse("rekapanLog:rekapLog"))
+
+        self.assertTemplateUsed(response, 'rekap_log.html')
