@@ -12,3 +12,12 @@ def get_all_rencana(user_):
         riset=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Riset dan Pusilkom'))/6) 
     
     return aggr
+
+def get_month_rencana(user_, month):
+    rekapBulan = LogTA.objects.aggregate(persiapan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Persiapan Kuliah', bulan_pengerjaan=month)), 
+        penyelenggaraan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Penyelenggaraan Kuliah', bulan_pengerjaan=month)),
+        dukungan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Dukungan Kuliah Kakak Asuh', bulan_pengerjaan=month)),
+        pengembangan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Pengembangan Institusi', bulan_pengerjaan=month)),
+        riset=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Riset dan Pusilkom', bulan_pengerjaan=month))) 
+    
+    return rekapBulan
