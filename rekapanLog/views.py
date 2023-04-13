@@ -2,6 +2,7 @@ from django.shortcuts import render
 from pengisianLog.models import LogTA
 from django.db.models import Sum, Avg
 from django.db.models import Q
+from authentication.views import ta_required, admin_required
 
 # Create your views here.
 def get_all_rencana(user_):
@@ -21,3 +22,7 @@ def get_month_rencana(user_, month):
         riset=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Riset dan Pusilkom', bulan_pengerjaan=month))) 
     
     return rekapBulan
+
+@ta_required
+def rekap_page(request):
+    return render(request, "rekap_log.html", {})
