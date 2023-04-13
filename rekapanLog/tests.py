@@ -64,10 +64,36 @@ class RekapanLogTestCase(TestCase):
             konversi_jam_realisasi_kinerja = 0
         )
 
+        LogTA.objects.create(
+            user = self.ta_user,
+            kategori = "Pengembangan Institusi",
+            jenis_pekerjaan = "Manajemen Lembaga Asisten",
+            detail_kegiatan = "",
+            pemberi_tugas = "",
+            uraian = "Meeting Lembaga asisten",
+            periode = "Adhoc",
+            bulan_pengerjaan = "SEP",
+            jumlah_rencana_kinerja = 1,
+            satuan_rencana_kinerja = "semester",
+            konversi_jam_rencana_kinerja = 1,
+            jumlah_realisasi_kinerja = 0,
+            satuan_realisasi_kinerja = "",
+            konversi_jam_realisasi_kinerja = 0
+        )
+
     def test_get_average_all_rencana(self):
         rencanaAvg = get_all_rencana(self.ta_user)
         # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
 
         self.assertEquals(rencanaAvg['penyelenggaraan'], 0.25)
         self.assertEquals(rencanaAvg['persiapan'], (1/3))
+        self.assertEquals(rencanaAvg['pengembangan'], (1/6))
 
+    def test_get_average_month_rencana(self):
+        rencanaApr = get_month_rencana(self.ta_user, 'APR')
+        rencanaSep = get_month_rencana(self.ta_user, 'SEP')
+        # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
+
+        self.assertEquals(rencanaApr['penyelenggaraan'], 0.5)
+        self.assertEquals(rencanaSep['persiapan'], 2)
+        self.assertEquals(rencanaSep['pengembangan'], 1)
