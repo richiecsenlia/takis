@@ -3,6 +3,7 @@ from django.test import RequestFactory
 from django.contrib.auth.models import User
 from .views import *
 from pengisianLog.models import LogTA
+from django.urls import reverse
 
 # Create your tests here.
 class RekapanLogTestCase(TestCase):
@@ -100,6 +101,6 @@ class RekapanLogTestCase(TestCase):
 
     def test_display_form_LogTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.get(reverse("rekapanLog:rekapLog"))
+        response = self.client.get(reverse("rekapanLog:rekapanLog"))
 
         self.assertTemplateUsed(response, 'rekap_log.html')
