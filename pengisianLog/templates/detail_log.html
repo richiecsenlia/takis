@@ -6,47 +6,128 @@ Detail Log
 
 {% block content %}
 
-<table>
-  <tr>
-    {% if user.role.role == 'admin' %}
-    <th scope="col">Akun TA</th>
-    {% endif %}
-    <th scope="col">Kategori</th>
-    <th scope="col">Jenis Pekerjaan</th>
-    <th scope="col">Detail Kegiatan</th>
-    <th scope="col">Pemberi Tugas</th>
-    <th scope="col">Uraian</th>
-    <th scope="col">Periode Pengerjaan</th>
-    <th scope="col">Bulan Pengerjaan</th>
-    <th scope="col">Jumlah Rencana Kinerja</th>
-    <th scope="col">Satuan Rencana Kinerja</th>
-    <th scope="col">Konversi Jam Rencana Kinerja</th>
-    <th scope="col">Jumlah Realisasi Kinerja</th>
-    <th scope="col">Satuan Realisasi Kinerja</th>
-    <th scope="col">Konversi Jam Realisasi Kinerja</th>
-  </tr>
-  <tr>
-    {% if user.role.role == 'admin' %}
-    <td>{{ log.user }}</td>
-    {% endif %}
-    <td>{{ log.kategori }}</td>
-    <td>{{ log.jenis_pekerjaan }}</td>
-    <td>{{ log.detail_kegiatan }}</td>
-    <td>{{ log.pemberi_tugas }}</td>
-    <td>{{ log.uraian }}</td>
-    <td>{{ log.periode }}</td>
-    <td>{{ log.bulan_pengerjaan }}</td>
-    <td>{{ log.jumlah_rencana_kinerja }}</td>
-    <td>{{ log.satuan_rencana_kinerja }}</td>
-    <td>{{ log.konversi_jam_rencana_kinerja }}</td>
-    <td>{{ log.jumlah_realisasi_kinerja }}</td>
-    <td>{{ log.satuan_realisasi_kinerja }}</td>
-    <td>{{ log.konversi_jam_realisasi_kinerja }}</td>
-  </tr>
-</table>
-
-<br>
-
-<a href="#" class="btn btn-warning">Edit</a>
+<div class="p-3">
+  {% if user.role.role == 'admin' %}
+  <div class="card">
+    <div class="card-header">
+      <b>Informasi Akun</b>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <tr>
+          <th>Akun TA</th>
+          <td>{{ log.user }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <br>
+  {% endif %}
+  <div class="card">
+    <div class="card-header">
+      <b>Kegiatan</b>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <tr>
+          <th>Kategori</th>
+          <td>{{ log.kategori }}</td>
+        </tr>
+        <tr>
+          <th>Jenis Pekerjaan</th>
+          <td>{{ log.jenis_pekerjaan }}</td>
+        </tr>
+        <tr>
+          <th>Detail Kegiatan</th>
+          <td>{{ log.detail_kegiatan }}</td>
+        </tr>
+        <tr>
+          <th>Pemberi Tugas</th>
+          <td>{{ log.pemberi_tugas }}</td>
+        </tr>
+        <tr>
+          <th>Uraian</th>
+          <td>{{ log.uraian }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <br>
+  <div class="card">
+    <div class="card-header">
+      <b>Pengerjaan</b>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <tr>
+          <th>Periode</th>
+          <td>{{ log.periode }}</td>
+        </tr>
+        <tr>
+          <th>Bulan</th>
+          <td>{{ log.bulan_pengerjaan }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <br>
+  <div class="card">
+    <div class="card-header">
+      <b>Perkiraan Beban Kerja Per Pekan</b>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <tr>
+          <th>Jumlah Kinerja</th>
+          <td>{{ log.jumlah_rencana_kinerja }}</td>
+        </tr>
+        <tr>
+          <th>Satuan Kinerja</th>
+          <td>{{ log.satuan_rencana_kinerja }}</td>
+        </tr>
+        <tr>
+          <th>Konversi Jam</th>
+          <td>{{ log.konversi_jam_rencana_kinerja }}</td>
+        </tr>
+        <!--
+        <tr>
+          <th>Jam Kerja</th>
+          <td></td>
+        </tr>
+        -->
+      </table>
+    </div>
+  </div>
+  <br>
+  <div class="card">
+    <div class="card-header">
+      <b>Realisasi Beban Kerja Per Pekan</b>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <tr>
+          <th>Jumlah Kinerja</th>
+          <td>{{ log.jumlah_realisasi_kinerja }}</td>
+        </tr>
+        <tr>
+          <th>Satuan Kinerja</th>
+          <td>{{ log.satuan_realisasi_kinerja }}</td>
+        </tr>
+        <tr>
+          <th>Konversi Jam</th>
+          <td>{{ log.konversi_jam_realisasi_kinerja }}</td>
+        </tr>
+        <!--
+        <tr>
+          <th>Jam Kerja</th>
+          <td></td>
+        </tr>
+        -->
+      </table>
+    </div>
+  </div>
+  <br>
+  <a href="#" class="btn btn-warning">Edit</a>
+</div>
 
 {% endblock content %}
