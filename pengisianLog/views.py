@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import LogTA
 from authentication.views import admin_required, ta_required
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse
 from authentication.views import ta_required, admin_required
 from django.views.decorators.http import require_GET
@@ -64,5 +65,9 @@ def daftar_log_evaluator(request):
 @login_required
 def detail_log(request, id):
     log = LogTA.objects.get(pk=id)
+    
+    if str(log.user.role) != 'admin' and log.user != request.user:
+        raise PermissionDenied
+
     context = {'log': log}
     return render(request, 'detail_log.html', context)
