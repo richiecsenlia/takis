@@ -81,5 +81,8 @@ def daftarLogEvaluator(request):
     context = {'logs': logs,
                 'kategori_choice': kategori_choice, 
                 'periode_choice': periode_choice, 
-                'bulan_choice': bulan_choice}
+                'bulan_choice': bulan_choice,
+                'filter_bulan':filter_bulan,
+                'filter_kategori':filter_kategori,
+                'filter_periode':filter_periode}
     return render(request, 'daftarLog.html', context)
