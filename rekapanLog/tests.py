@@ -103,4 +103,11 @@ class RekapanLogTestCase(TestCase):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse("rekapanLog:rekapanLog"))
 
+        rencanaAvg = get_all_rencana(self.ta_user)
+
         self.assertTemplateUsed(response, 'rekap_log.html')
+        self.assertEquals(response.context['persiapan'], rencanaAvg['persiapan'])
+        self.assertEquals(response.context['penyelenggaraan'], rencanaAvg['penyelenggaraan'])
+        self.assertEquals(response.context['dukungan'], rencanaAvg['dukungan'])
+        self.assertEquals(response.context['pengembangan'], rencanaAvg['pengembangan'])
+        self.assertEquals(response.context['riset'], rencanaAvg['riset'])
