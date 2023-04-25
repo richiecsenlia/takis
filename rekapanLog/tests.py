@@ -86,18 +86,18 @@ class RekapanLogTestCase(TestCase):
         rencanaAvg = get_all_rencana(self.ta_user)
         # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
 
-        self.assertEquals(rencanaAvg['penyelenggaraan'], 0.25)
-        self.assertEquals(rencanaAvg['persiapan'], (1/3))
-        self.assertEquals(rencanaAvg['pengembangan'], (1/6))
+        self.assertEquals(rencanaAvg['penyelenggaraan_plan'], 0.25)
+        self.assertEquals(rencanaAvg['persiapan_plan'], (1/3))
+        self.assertEquals(rencanaAvg['pengembangan_plan'], (1/6))
 
     def test_get_average_month_rencana(self):
         rencanaApr = get_month_rencana(self.ta_user, 'APR')
         rencanaSep = get_month_rencana(self.ta_user, 'SEP')
         # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
 
-        self.assertEquals(rencanaApr['penyelenggaraan'], 0.5)
-        self.assertEquals(rencanaSep['persiapan'], 2)
-        self.assertEquals(rencanaSep['pengembangan'], 1)
+        self.assertEquals(rencanaApr['penyelenggaraan_plan'], 0.5)
+        self.assertEquals(rencanaSep['persiapan_plan'], 2)
+        self.assertEquals(rencanaSep['pengembangan_plan'], 1)
 
     def test_display_form_LogTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
@@ -106,8 +106,8 @@ class RekapanLogTestCase(TestCase):
         rencanaAvg = get_all_rencana(self.ta_user)
 
         self.assertTemplateUsed(response, 'rekap_log.html')
-        self.assertEquals(response.context['persiapan'], rencanaAvg['persiapan'])
-        self.assertEquals(response.context['penyelenggaraan'], rencanaAvg['penyelenggaraan'])
-        self.assertEquals(response.context['dukungan'], rencanaAvg['dukungan'])
-        self.assertEquals(response.context['pengembangan'], rencanaAvg['pengembangan'])
-        self.assertEquals(response.context['riset'], rencanaAvg['riset'])
+        self.assertEquals(response.context['persiapan_plan'], rencanaAvg['persiapan_plan'])
+        self.assertEquals(response.context['penyelenggaraan_plan'], rencanaAvg['penyelenggaraan_plan'])
+        self.assertEquals(response.context['dukungan_plan'], rencanaAvg['dukungan_plan'])
+        self.assertEquals(response.context['pengembangan_plan'], rencanaAvg['pengembangan_plan'])
+        self.assertEquals(response.context['riset_plan'], rencanaAvg['riset_plan'])
