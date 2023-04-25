@@ -34,7 +34,7 @@ def get_month_rencana(user_, month):
     return rekapBulan
 
 @ta_required
-def rekap_page(request):
-    rekapAvg = get_all_rencana(request.user)
+def rekap_page(request, name):
+    rekapAvg = get_all_rencana(name)
 
     return render(request, "rekap_log.html", rekapAvg)
