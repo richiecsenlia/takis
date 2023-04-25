@@ -26,9 +26,9 @@ class RekapanLogTestCase(TestCase):
             jumlah_rencana_kinerja = 4,
             satuan_rencana_kinerja = "Tugas",
             konversi_jam_rencana_kinerja = 1,
-            jumlah_realisasi_kinerja = 0,
-            satuan_realisasi_kinerja = "",
-            konversi_jam_realisasi_kinerja = 0
+            jumlah_realisasi_kinerja = 4,
+            satuan_realisasi_kinerja = "Tugas",
+            konversi_jam_realisasi_kinerja = 1
         )
 
         LogTA.objects.create(
@@ -43,9 +43,9 @@ class RekapanLogTestCase(TestCase):
             jumlah_rencana_kinerja = 2,
             satuan_rencana_kinerja = "Tugas",
             konversi_jam_rencana_kinerja = 0.5,
-            jumlah_realisasi_kinerja = 0,
-            satuan_realisasi_kinerja = "",
-            konversi_jam_realisasi_kinerja = 0
+            jumlah_realisasi_kinerja = 1,
+            satuan_realisasi_kinerja = "Tugas",
+            konversi_jam_realisasi_kinerja = 0.25
         )
 
         LogTA.objects.create(
@@ -77,9 +77,9 @@ class RekapanLogTestCase(TestCase):
             jumlah_rencana_kinerja = 1,
             satuan_rencana_kinerja = "semester",
             konversi_jam_rencana_kinerja = 1,
-            jumlah_realisasi_kinerja = 0,
-            satuan_realisasi_kinerja = "",
-            konversi_jam_realisasi_kinerja = 0
+            jumlah_realisasi_kinerja = 1,
+            satuan_realisasi_kinerja = "semester",
+            konversi_jam_realisasi_kinerja = 1
         )
 
     def test_get_average_all_rencana(self):
@@ -87,8 +87,11 @@ class RekapanLogTestCase(TestCase):
         # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
 
         self.assertEquals(rencanaAvg['penyelenggaraan_plan'], 0.25)
+        self.assertEquals(rencanaAvg['penyelenggaraan_real'], (1.25/6))
         self.assertEquals(rencanaAvg['persiapan_plan'], (1/3))
+        self.assertEquals(rencanaAvg['persiapan_real'], 0)
         self.assertEquals(rencanaAvg['pengembangan_plan'], (1/6))
+        self.assertEquals(rencanaAvg['pengembangan_real'], (1/6))
 
     def test_get_average_month_rencana(self):
         rencanaApr = get_month_rencana(self.ta_user, 'APR')
@@ -96,8 +99,11 @@ class RekapanLogTestCase(TestCase):
         # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
 
         self.assertEquals(rencanaApr['penyelenggaraan_plan'], 0.5)
+        self.assertEquals(rencanaApr['penyelenggaraan_real'], 0.25)
         self.assertEquals(rencanaSep['persiapan_plan'], 2)
+        self.assertEquals(rencanaSep['persiapan_real'], 0)
         self.assertEquals(rencanaSep['pengembangan_plan'], 1)
+        self.assertEquals(rencanaSep['pengembangan_real'], 1)
 
     def test_display_form_LogTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
@@ -107,7 +113,12 @@ class RekapanLogTestCase(TestCase):
 
         self.assertTemplateUsed(response, 'rekap_log.html')
         self.assertEquals(response.context['persiapan_plan'], rencanaAvg['persiapan_plan'])
+        self.assertEquals(response.context['persiapan_real'], rencanaAvg['persiapan_real'])
+        self.assertEquals(response.context['penyelenggaraan_plan'], rencanaAvg['penyelenggaraan_plan'])
         self.assertEquals(response.context['penyelenggaraan_plan'], rencanaAvg['penyelenggaraan_plan'])
         self.assertEquals(response.context['dukungan_plan'], rencanaAvg['dukungan_plan'])
+        self.assertEquals(response.context['dukungan_real'], rencanaAvg['dukungan_real'])
         self.assertEquals(response.context['pengembangan_plan'], rencanaAvg['pengembangan_plan'])
+        self.assertEquals(response.context['pengembangan_real'], rencanaAvg['pengembangan_real'])
         self.assertEquals(response.context['riset_plan'], rencanaAvg['riset_plan'])
+        self.assertEquals(response.context['riset_real'], rencanaAvg['riset_real'])
