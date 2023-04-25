@@ -6,20 +6,20 @@ from authentication.views import ta_required, admin_required
 
 # Create your views here.
 def get_all_rencana(user_):
-    aggr = LogTA.objects.aggregate(persiapan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Persiapan Kuliah'))/6, 
-        penyelenggaraan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Penyelenggaraan Kuliah'))/6,
-        dukungan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Dukungan Kuliah Kakak Asuh'))/6,
-        pengembangan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Pengembangan Institusi'))/6,
-        riset=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Riset dan Pusilkom'))/6) 
+    aggr = LogTA.objects.aggregate(persiapan_plan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Persiapan Kuliah'))/6, 
+        penyelenggaraan_plan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Penyelenggaraan Kuliah'))/6,
+        dukungan_plan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Dukungan Kuliah Kakak Asuh'))/6,
+        pengembangan_plan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Pengembangan Institusi'))/6,
+        riset_plan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Riset dan Pusilkom'))/6) 
     
     return aggr
 
 def get_month_rencana(user_, month):
-    rekapBulan = LogTA.objects.aggregate(persiapan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Persiapan Kuliah', bulan_pengerjaan=month)), 
-        penyelenggaraan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Penyelenggaraan Kuliah', bulan_pengerjaan=month)),
-        dukungan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Dukungan Kuliah Kakak Asuh', bulan_pengerjaan=month)),
-        pengembangan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Pengembangan Institusi', bulan_pengerjaan=month)),
-        riset=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Riset dan Pusilkom', bulan_pengerjaan=month))) 
+    rekapBulan = LogTA.objects.aggregate(persiapan_plan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Persiapan Kuliah', bulan_pengerjaan=month)), 
+        penyelenggaraan_plan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Penyelenggaraan Kuliah', bulan_pengerjaan=month)),
+        dukungan_plan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Dukungan Kuliah Kakak Asuh', bulan_pengerjaan=month)),
+        pengembangan_plan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Pengembangan Institusi', bulan_pengerjaan=month)),
+        riset_plan=Sum("konversi_jam_rencana_kinerja", filter=Q(kategori='Riset dan Pusilkom', bulan_pengerjaan=month))) 
     
     return rekapBulan
 
