@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0001_initial'),
+        ("accounts", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='teachingassistantprofile',
-            name='prodi',
-            field=models.CharField(choices=[('Ilmu Komputer', 'Ilmu Komputer'), ('Ilmu Komputer KKI', 'Ilmu Komputer KKI'), ('Sistem Informasi', 'Sistem Informasi'), ('Teknologi Informasi', 'Teknologi Informasi')], max_length=30, verbose_name='Program Studi'),
+            model_name="teachingassistantprofile",
+            name="prodi",
+            field=models.CharField(
+                choices=[
+                    ("Ilmu Komputer", "Ilmu Komputer"),
+                    ("Ilmu Komputer KKI", "Ilmu Komputer KKI"),
+                    ("Sistem Informasi", "Sistem Informasi"),
+                    ("Teknologi Informasi", "Teknologi Informasi"),
+                ],
+                max_length=30,
+                verbose_name="Program Studi",
+            ),
         ),
     ]
