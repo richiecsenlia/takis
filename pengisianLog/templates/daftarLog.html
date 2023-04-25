@@ -7,7 +7,18 @@ Daftar Log
 {% block content %}
 
 <h1>Daftar Log</h1>
-
+{% for bulan in filter_bulan %}
+<span class="badge rounded-pill bg-info text-dark">{{bulan}}</span>
+{% endfor %}
+{% for kategori in filter_kategori %}
+<span class="badge rounded-pill bg-info text-dark">{{kategori}}</span>
+{% endfor %}
+{% for periode in filter_periode %}
+<span class="badge rounded-pill bg-info text-dark">{{periode}}</span>
+{% endfor %}
+<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filter">
+  + Filter
+</button>
 <table class="table">
   <caption>Tabel Daftar Log TA</caption>
     <thead>
@@ -61,5 +72,73 @@ Daftar Log
       {% endfor %}
     </tbody>
   </table>
-
+ 
+  <div class="modal" tabindex="-1" id = "filter">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Filter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body">
+          <form method ='GET'>
+            
+            <div id="bulan" class="form-text">
+              bulan
+            </div>
+            {% for bulan in bulan_choice %}
+            <div class="form-check form-check-inline" id = "bulan">
+              <input class="form-check-input" type="checkbox" value="{{bulan.1}}" name ="bulan" id="{{bulan.1}}" 
+              {% if bulan.1 in filter_bulan %}
+                checked
+              {% endif %}
+              >
+              <label class="form-check-label" for="{{bulan.1}}">
+                {{ bulan.1 }}
+              </label>
+            </div>
+            {% endfor %}
+            <div id="periode" class="form-text">
+              periode
+            </div>
+            {% for periode in periode_choice %}
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" value="{{periode.1}}"name = "periode" id="{{periode.1}}"
+              {% if periode.1 in filter_periode %}
+                checked
+              {% endif %}
+              >
+              <label class="form-check-label" for="{{periode.1}}">
+                {{ periode.1 }}
+              </label>
+            </div>
+            {% endfor %}
+            <div id="kategori" class="form-text">
+              kategori
+            </div>
+            {% for kategori in kategori_choice %}
+            <div class="form-check ">
+              <input class="form-check-input" type="checkbox" value="{{kategori.1}}"name="kategori" id="{{kategori.1}}"
+              {% if kategori.1 in filter_kategori %}
+                checked
+              {% endif %}
+              >
+              <label class="form-check-label" for="{{kategori.1}}">
+                {{ kategori.1 }}
+              </label>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          
+        </div>
+      
+      </div>
+    </div>
+  </div>
+  
 {% endblock content %}

@@ -173,3 +173,17 @@ class PengisianLogTestCase(TestCase):
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftarLog.html')
+
+    def test_filter_LogTA_response(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse('pengisianLog:daftarLogTA'))
+        self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
+        self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
+        self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
+
+    def test_filter_LogTA_response_context(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse('pengisianLog:daftarLogTA'),{"bulan":"JAN","kategori":"Harian","periode":"Persiapan Kuliah"})
+        self.assertEquals(response.context['filter_kategori'][0], "Harian")
+        self.assertEquals(response.context['filter_periode'][0], "Persiapan Kuliah")
+        self.assertEquals(response.context['filter_bulan'][0], "JAN")
