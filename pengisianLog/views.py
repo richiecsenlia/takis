@@ -47,11 +47,35 @@ def form_log_TA(request):
 
 @ta_required
 def daftarLogTA(request):
+    
+    filter_bulan = request.GET.getlist("bulan")
+    filter_kategori = request.GET.getlist("kategori")
+    filter_periode = request.GET.getlist("periode")
     logs = LogTA.objects.filter(user=request.user)
+    
+    kategori_choice = LogTA.kategori.field.choices 
+    periode_choice = LogTA.periode.field.choices
+    bulan_choice = LogTA.bulan_pengerjaan.field.choices
+    if(len(filter_bulan) != 0) :
+        for bulan in bulan_choice :
+            if not (bulan[1] in filter_bulan):
+                logs = logs.exclude(bulan_pengerjaan = bulan[1])
+    if len(filter_kategori) !=0 :
+        for kategori in kategori_choice :
+            if not (kategori[1] in filter_kategori):
+                logs = logs.exclude(kategori= kategori[1])
+    if len(filter_periode) != 0 :
+        for periode in periode_choice :
+            if not (periode[1] in filter_periode):
+                logs = logs.exclude(periode = periode[1])
+        
     context = {'logs': logs,
-                'kategori_choice': LogTA.kategori.field.choices, 
-                'periode_choice': LogTA.periode.field.choices, 
-                'bulan_choice': LogTA.bulan_pengerjaan.field.choices}
+                'kategori_choice': kategori_choice, 
+                'periode_choice': periode_choice, 
+                'bulan_choice': bulan_choice,
+                'filter_bulan':filter_bulan,
+                'filter_kategori':filter_kategori,
+                'filter_periode':filter_periode}
     return render(request, 'daftarLog.html', context)
 
 @admin_required
