@@ -11,6 +11,8 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import auth
 from django.test import RequestFactory
 from django.contrib.auth.hashers import check_password
+from accounts.models import TeachingAssistantProfile, MataKuliah
+
 # Create your tests here.
 class AuthTest(TestCase):
     
@@ -237,3 +239,10 @@ class AuthTest(TestCase):
         request.user = self.admin_user
         res = dummy_view(request)
         self.assertEqual(res.status_code, 200)
+
+    def test_filter_user_change_role(self):
+        self.client.force_login(user=self.admin_user)
+        response = self.client.get(reverse('authentication:change_role'))
+        self.assertEquals(response.context['kontrak_choices'], TeachingAssistantProfile.kontrak.field.choices)
+        self.assertEquals(response.context['status_choices'], TeachingAssistantProfile.status.field.choices)
+        self.assertEquals(response.context['prodi_choices'], TeachingAssistantProfile.prodi.field.choices)
