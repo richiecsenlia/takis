@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}
+404
+{% endblock title%}
+
+{% block content%}
+    <h2>Oops, Halaman yang Anda ingin akses tidak ditemukan.</h2>
+    <a class="btn btn-success" href="{% url 'main:homepage' %}" role="button">Kembali ke Homepage</a>
+
+{% endblock %}

@@ -1,11 +1,13 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
 from .models import LogTA
 from authentication.views import admin_required, ta_required, ta_role_check, admin_role_check
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from authentication.views import ta_required, admin_required
 from .models import LogTA
+from django.contrib.auth.decorators import login_required
 
 VALUE_ERROR = "Input tidak valid"
 
@@ -162,3 +164,15 @@ def daftarLogEvaluator(request):
                 'filter_kategori':filter_kategori,
                 'filter_periode':filter_periode}
     return render(request, 'daftarLog.html', context)
+
+@login_required(login_url=reverse_lazy("authentication:login"))
+def history_log_ta(request, id):
+    log = get_object_or_404(LogTA, id=id)
+    if log.user != request.user and str(request.user.role) != 'admin':
+        raise PermissionDenied
+
+    context = {
+        'history': log.history.all()
+    }
+
+    return render(request, 'historyLog.html', context)

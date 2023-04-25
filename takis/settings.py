@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'authentication',
     'accounts',
+    'simple_history',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'authentication.middleware.simple_middleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
     #'django_cas_ng.middleware.CASMiddleware',
 ]
 
