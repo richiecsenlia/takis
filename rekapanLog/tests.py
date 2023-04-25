@@ -101,7 +101,7 @@ class RekapanLogTestCase(TestCase):
 
     def test_display_form_LogTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.get(reverse("rekapanLog:rekapanLog"))
+        response = self.client.get(reverse("rekapanLog:rekapan_log"))
 
         rencanaAvg = get_all_rencana(self.ta_user)
 
