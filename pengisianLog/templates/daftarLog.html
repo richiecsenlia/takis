@@ -62,11 +62,40 @@ Daftar Log
         <td>{{ log.satuan_realisasi_kinerja }}</td>
         <td>{{ log.konversi_jam_realisasi_kinerja }}</td>
         <td>
-            <a href="#">
-                <button type="button" class="btn btn-success">
-                    Edit
+            <div class="row mb-1">
+                <a href="{% url 'pengisianLog:edit_log' log.pk %}">
+                    <button type="button" data-feather="edit" class="btn btn-primary">
+                      Edit
+                    </button>
+                </a>
+              </div>
+              <div class="row">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                  Delete
                 </button>
-            </a>
+              </div>
+              <div class="modal fade" tabindex="-1" id="deleteModal" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5">Konfirmasi Penghapusan</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Apakah Anda yakin ingin menghapus log ini?
+                    </div>
+                    <div class="modal-footer">
+                      <a href="{% url 'pengisianLog:delete_log' log.pk %}">
+                        <button type="button" class="btn btn-danger">
+                            Ya
+                        </button>
+                      </a>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
         </td>
       </tr>
       {% endfor %}

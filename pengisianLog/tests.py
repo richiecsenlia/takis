@@ -26,6 +26,22 @@ context_dict = {
             'konversi_jam_realisasi_kinerja' : "4"
         }
 
+context_dict_updated = {
+            'kategori' : "Riset dan Pusilkom",
+            'pekerjaan' : "Membuat Soal",
+            'detail_kegiatan' : "Essay dan Pilgan",
+            'pemberi_tugas' : "Ibu Ika Alfina",
+            'uraian' : "Membuat soal PR",
+            'periode' : "Semester Kuliah",
+            'bulan_pengerjaan' : "MAR",
+            'jumlah_kinerja' : "4",
+            'satuan_kinerja' : "Tugas",
+            'jam_rencana_kinerja' : "4",
+            'jumlah_realisasi_kinerja' : "4",
+            'satuan_realisasi_kinerja' : "Tugas",
+            'konversi_jam_realisasi_kinerja' : "4"
+        }
+
 context_wrong = {
             'kategori' : "Penyelenggaraan Kuliah",
             'pekerjaan' : "Membuat Soal",
@@ -41,6 +57,23 @@ context_wrong = {
             'satuan_realisasi_kinerja' : "Tugas",
             'konversi_jam_realisasi_kinerja' : "Empat"
         }
+
+context_wrong_updated = {
+            'kategori' : "Riset dan Pusilkom",
+            'pekerjaan' : "Membuat Soal",
+            'detail_kegiatan' : "Essay dan Pilgan",
+            'pemberi_tugas' : "Ibu Ika Alfina",
+            'uraian' : "Membuat soal PR",
+            'periode' : "Semester Kuliah",
+            'bulan_pengerjaan' : "MAR",
+            'jumlah_kinerja' : "Empat",
+            'satuan_kinerja' : "Tugas",
+            'jam_rencana_kinerja' : "Empat",
+            'jumlah_realisasi_kinerja' : "Empat",
+            'satuan_realisasi_kinerja' : "Tugas",
+            'konversi_jam_realisasi_kinerja' : "Empat"
+        }
+
 class PengisianLogTestCase(TestCase):
 
     def setUp(self):
@@ -68,10 +101,7 @@ class PengisianLogTestCase(TestCase):
             bulan_pengerjaan = "MAR",
             jumlah_rencana_kinerja = 4,
             satuan_rencana_kinerja = "Tugas",
-            konversi_jam_rencana_kinerja = 1,
-            jumlah_realisasi_kinerja = 0,
-            satuan_realisasi_kinerja = "",
-            konversi_jam_realisasi_kinerja = 0
+            konversi_jam_rencana_kinerja = 1
         )
 
         self.logTA_2 = LogTA.objects.create(
@@ -85,12 +115,10 @@ class PengisianLogTestCase(TestCase):
             bulan_pengerjaan = "SEP",
             jumlah_rencana_kinerja = 2,
             satuan_rencana_kinerja = "Tugas",
-            konversi_jam_rencana_kinerja = 2,
-            jumlah_realisasi_kinerja = 0,
-            satuan_realisasi_kinerja = "",
-            konversi_jam_realisasi_kinerja = 0
+            konversi_jam_rencana_kinerja = 2
         )
 
+    # Test membuat log TA
     def test_create_LogTA(self):
         all_logTA = LogTA.objects.all()
         
@@ -158,6 +186,7 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_logTA.count(), 2)
         self.assertEqual(response.status_code, 302)
     
+    # Test melihat log TA
     def test_view_LogTA_response_as_TA(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse('pengisianLog:daftarLogTA'))
@@ -173,6 +202,7 @@ class PengisianLogTestCase(TestCase):
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftarLog.html')
+    
 
     def test_filter_LogTA_response(self):
         self.client.force_login(user=self.ta_user)
@@ -187,3 +217,63 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(response.context['filter_kategori'][0], "Harian")
         self.assertEquals(response.context['filter_periode'][0], "Persiapan Kuliah")
         self.assertEquals(response.context['filter_bulan'][0], "JAN")
+        
+    # Test edit log TA
+    def test_display_form_edit_log_ta_as_ta(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse("pengisianLog:edit_log", kwargs={'id':1}))
+        log = response.context["log"]
+
+        self.assertTemplateUsed(response, 'edit_log.html')
+        self.assertEquals(response.context['kategori_choice'], [kategori for kategori in LogTA.kategori.field.choices if log.kategori not in kategori])
+        self.assertEquals(response.context['periode_choice'], [periode for periode in LogTA.periode.field.choices if log.periode not in periode])
+        self.assertEquals(response.context['bulan_choice'], [bulan_pengerjaan for bulan_pengerjaan in LogTA.bulan_pengerjaan.field.choices if log.bulan_pengerjaan not in bulan_pengerjaan])
+
+    def test_display_form_edit_log_ta_unregistered(self):
+        response = self.client.get(reverse("pengisianLog:edit_log", kwargs={'id':1}))
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_post_form_edit_log_ta_as_TA(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse("pengisianLog:edit_log", kwargs={'id':1}))
+
+        response = self.client.post(reverse("pengisianLog:edit_log", kwargs={'id':1}), context_dict_updated)
+        response_updated = self.client.get(reverse("pengisianLog:edit_log", kwargs={'id':1}))
+
+        updated_log = response_updated.context["log"]
+        all_logTA = LogTA.objects.all()
+
+        self.assertEquals(all_logTA.count(), 2)
+        self.assertEquals(updated_log.kategori, "Riset dan Pusilkom")
+        self.assertEquals(all_logTA[0].konversi_jam_rencana_kinerja, all_logTA[0].jumlah_rencana_kinerja / 4)
+        self.assertEquals(all_logTA[0].konversi_jam_realisasi_kinerja, all_logTA[0].jumlah_realisasi_kinerja / 4)
+        self.assertRedirects(response, reverse("pengisianLog:daftarLogTA"))
+
+    def test_post_form_edit_log_ta_as_ta_wrong_input(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse("pengisianLog:edit_log", kwargs={'id':1}))
+
+        self.client.post(reverse("pengisianLog:edit_log", kwargs={'id':1}), context_dict_updated)
+        response = self.client.get(reverse("pengisianLog:edit_log", kwargs={'id':1}))
+
+        all_logTA = LogTA.objects.all()
+
+        self.assertEquals(all_logTA.count(), 2)
+        self.assertTemplateUsed(response, 'edit_log.html')
+
+    def test_post_form_edit_log_ta_as_unregistered(self):
+        response = self.client.post(reverse("pengisianLog:edit_log", kwargs={'id':1}))
+
+        all_logTA = LogTA.objects.all()
+
+        self.assertEquals(all_logTA.count(), 2)
+        self.assertEqual(response.status_code, 302)
+    
+    def test_delete_log_ta(self):
+        self.client.post(reverse("pengisianLog:delete_log", kwargs={'id':1}))
+        log = LogTA.objects.get(id=1)
+        log.delete()
+
+        all_logTA = LogTA.objects.all()
+        self.assertEquals(all_logTA.count(), 1)
