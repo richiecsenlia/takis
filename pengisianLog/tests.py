@@ -74,6 +74,8 @@ context_wrong_updated = {
             'konversi_jam_realisasi_kinerja' : "Empat"
         }
 
+HISTORY_LOG_URL = "pengisianLog:historyLog"
+
 class PengisianLogTestCase(TestCase):
 
     def setUp(self):
@@ -81,6 +83,10 @@ class PengisianLogTestCase(TestCase):
         self.ta_user = User.objects.create(username='ta', password='ta', email='ta@ta.com')
         self.ta_user.role.role = 'TA'
         self.ta_user.role.save()
+
+        self.ta_user_2 = User.objects.create(username='ta2', password='ta2', email='ta2@ta2.com')
+        self.ta_user_2.role.role = 'TA'
+        self.ta_user_2.role.save()
 
         self.admin_user = User.objects.create(username='admin', password='admin', email='admin@admin.com')
         self.admin_user.role.role = 'admin'
@@ -203,6 +209,68 @@ class PengisianLogTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftarLog.html')
     
+
+    def test_view_history_log_as_registered(self):
+        self.client.force_login(user=self.admin_user)
+
+        old_category = self.logTA_1.kategori
+        new_category = "Dukungan Kuliah Kakak Asuh"
+        self.logTA_1.kategori = new_category
+        self.logTA_1.save()
+
+        response = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':self.logTA_1.id}))
+        histories_response = response.context['history']
+
+        self.assertEqual(histories_response.count(), 2)
+        self.assertEqual(histories_response[0].kategori, new_category)
+        self.assertEqual(histories_response[1].kategori, old_category)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'historyLog.html')
+
+    def test_view_history_log_history_user(self):
+        self.client.force_login(user=self.ta_user)
+        self.logTA_1.kategori = "Dukungan Kuliah Kakak Asuh"
+        self.logTA_1._history_user = self.ta_user
+        self.logTA_1.save()
+
+        self.client.login(user=self.admin_user)
+        self.logTA_1.kategori = "Riset dan Pusilkom"
+        self.logTA_1._history_user = self.admin_user
+        self.logTA_1.save()
+
+        response = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':self.logTA_1.id}))
+        histories_response = response.context['history']
+
+        self.assertEqual(histories_response[1].history_user, self.ta_user)
+        self.assertEqual(histories_response[0].history_user, self.admin_user)
+
+    def test_view_history_log_as_unregistered(self):
+        
+        response = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':self.logTA_1.id}))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, 
+                         reverse('authentication:login')+'?next='+reverse('pengisianLog:historyLog', 
+                                                                          kwargs={'id':self.logTA_1.id}))
+        
+    def test_view_history_missing_log(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':8000}))
+        self.assertEqual(response.status_code, 404)
+        
+    def test_view_history_log_only_correspoinding_ta_or_admin(self):
+        self.client.force_login(user=self.ta_user)
+        self.logTA_1.save()
+
+        response_ta_user = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':self.logTA_1.id}))
+        self.assertEqual(response_ta_user.status_code, 200)
+
+        self.client.force_login(user=self.ta_user_2)
+        response_ta_user_2 = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':self.logTA_1.id}))
+        self.assertEqual(response_ta_user_2.status_code, 403)
+
+        self.client.force_login(user=self.admin_user)
+        response_admin = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':self.logTA_1.id}))
+        self.assertEqual(response_admin.status_code, 200)
 
     def test_filter_LogTA_response(self):
         self.client.force_login(user=self.ta_user)
