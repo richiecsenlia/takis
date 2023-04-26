@@ -12,6 +12,7 @@ django-cas-ng==4.3.0
 django-crispy-forms==2.0
 django-extra-keywords==1.1.2
 django-nose==1.4.7
+django-simple-history==3.3.0
 django-sso-ui==1.0.0
 django-utils-six==2.0
 gunicorn==19.9.0
