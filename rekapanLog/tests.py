@@ -124,3 +124,23 @@ class RekapanLogTestCase(TestCase):
         self.assertEquals(response.context['riset_real'], rencanaAvg['riset_real'])
 
         self.assertEquals(response.context['choice'], "Rata-rata")
+        
+    def test_display_form_LogTA_with_choice(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.post(reverse("rekapanLog:rekapan_log", args=[self.ta_user.username]), {"bulan" : "APR"})
+
+        rencanaApr = get_month_rencana(self.ta_user, 'APR')
+
+        self.assertTemplateUsed(response, 'rekap_log.html')
+        self.assertEquals(response.context['persiapan_plan'], rencanaApr['persiapan_plan'])
+        self.assertEquals(response.context['persiapan_real'], rencanaApr['persiapan_real'])
+        self.assertEquals(response.context['penyelenggaraan_plan'], rencanaApr['penyelenggaraan_plan'])
+        self.assertEquals(response.context['penyelenggaraan_plan'], rencanaApr['penyelenggaraan_plan'])
+        self.assertEquals(response.context['dukungan_plan'], rencanaApr['dukungan_plan'])
+        self.assertEquals(response.context['dukungan_real'], rencanaApr['dukungan_real'])
+        self.assertEquals(response.context['pengembangan_plan'], rencanaApr['pengembangan_plan'])
+        self.assertEquals(response.context['pengembangan_real'], rencanaApr['pengembangan_real'])
+        self.assertEquals(response.context['riset_plan'], rencanaApr['riset_plan'])
+        self.assertEquals(response.context['riset_real'], rencanaApr['riset_real'])
+
+        self.assertEquals(response.context['choice'], "APR")
