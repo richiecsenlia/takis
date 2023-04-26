@@ -7,7 +7,25 @@ Rekap Log
 {% block content %}
 
 <h1>Rekap Log</h1>
-
+<form method="post" style="margin-left: 10px; margin-right: 10px">
+  {% csrf_token %}
+  <select name="bulan" class="form-select" onchange="this.form.submit()">
+    <option value="Rata-rata" selected disabled><b>Selected : </b>{{ choice }}</option>
+    <option value="Rata-rata">Rata-rata</option>
+    <option value="JAN">JAN</option>
+    <option value="FEB">FEB</option>
+    <option value="MAR">MAR</option>
+    <option value="APR">APR</option>
+    <option value="MEI">MEI</option>
+    <option value="JUN">JUN</option>
+    <option value="JUL">JUL</option>
+    <option value="AGT">AGT</option>
+    <option value="SEP">SEP</option>
+    <option value="OKT">OKT</option>
+    <option value="NOV">NOV</option>
+    <option value="DES">DES</option>
+</select>
+</form>
 <div style="width: 500px;">
 <table class="table">
     <thead>
