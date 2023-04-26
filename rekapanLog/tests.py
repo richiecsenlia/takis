@@ -122,3 +122,5 @@ class RekapanLogTestCase(TestCase):
         self.assertEquals(response.context['pengembangan_real'], rencanaAvg['pengembangan_real'])
         self.assertEquals(response.context['riset_plan'], rencanaAvg['riset_plan'])
         self.assertEquals(response.context['riset_real'], rencanaAvg['riset_real'])
+
+        self.assertEquals(response.context['choice'], "Rata-rata")
