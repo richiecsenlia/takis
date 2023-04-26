@@ -91,7 +91,7 @@ def edit_log_ta(request, id):
             log.satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja')
             log.konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi
             log.save()
-            return redirect(reverse("pengisianLog:daftarLogTA"))
+            return redirect(reverse("pengisianLog:daftar_log_ta"))
     except ValueError:
         messages.error(request, VALUE_ERROR)
         return render(request, 'edit_log.html', context)
@@ -100,7 +100,7 @@ def edit_log_ta(request, id):
 def delete_log_ta(request, id):
     log = LogTA.objects.get(pk=id)
     log.delete()
-    return redirect(reverse("pengisianLog:daftarLogTA"))
+    return redirect(reverse("pengisianLog:daftar_log_ta"))
 
 @ta_required
 def daftar_log_ta(request):
@@ -190,4 +190,4 @@ def history_log_ta(request, id):
         'history': log.history.all()
     }
 
-    return render(request, 'historyLog.html', context)
+    return render(request, 'history_log.html', context)
