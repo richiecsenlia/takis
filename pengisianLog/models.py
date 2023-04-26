@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from simple_history.models import HistoricalRecords
 
 KATEGORI_CHOICES = [('Persiapan Kuliah','Persiapan Kuliah'),
                     ('Penyelenggaraan Kuliah','Penyelenggaraan Kuliah'),
@@ -41,3 +42,4 @@ class LogTA(models.Model):
     jumlah_realisasi_kinerja = models.IntegerField(default=0, blank=True, null=True)
     satuan_realisasi_kinerja = models.CharField(default="", max_length=20,blank=True, null=True)
     konversi_jam_realisasi_kinerja = models.FloatField(default=0, blank=True, null=True)
+    history = HistoricalRecords()

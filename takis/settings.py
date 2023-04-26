@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'authentication',
     'accounts',
     'rekapanLog'
+    'simple_history',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'authentication.middleware.simple_middleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
     #'django_cas_ng.middleware.CASMiddleware',
 ]
 
