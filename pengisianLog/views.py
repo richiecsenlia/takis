@@ -1,19 +1,21 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 from .models import LogTA
-from authentication.views import admin_required, ta_required, ta_role_check, admin_role_check
+from authentication.views import admin_required, ta_required
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse, reverse_lazy
 from authentication.views import ta_required, admin_required
-from .models import LogTA
+from django.views.decorators.http import require_GET
+from pengisianLog.models import LogTA
 from django.contrib.auth.decorators import login_required
 
 VALUE_ERROR = "Input tidak valid"
 
 # Create your views here.
 @ta_required
-def form_log_TA(request):
+def form_log_ta(request):
     try:
         if request.method == 'GET':
             return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
@@ -44,13 +46,14 @@ def form_log_TA(request):
                 satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja'),
                 konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi
             )
-            return redirect(reverse("pengisianLog:daftarLogTA"))
+            return redirect(reverse("pengisianLog:daftar_log_ta"))
     except ValueError:
         messages.error(request, VALUE_ERROR)
         return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
                 'periode_choice': LogTA.periode.field.choices, 
                 'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
     
+@require_GET
 @ta_required
 def edit_log_ta(request, id):
     try:
@@ -88,7 +91,7 @@ def edit_log_ta(request, id):
             log.satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja')
             log.konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi
             log.save()
-            return redirect(reverse("pengisianLog:daftarLogTA"))
+            return redirect(reverse("pengisianLog:daftar_log_ta"))
     except ValueError:
         messages.error(request, VALUE_ERROR)
         return render(request, 'edit_log.html', context)
@@ -97,10 +100,10 @@ def edit_log_ta(request, id):
 def delete_log_ta(request, id):
     log = LogTA.objects.get(pk=id)
     log.delete()
-    return redirect(reverse("pengisianLog:daftarLogTA"))
+    return redirect(reverse("pengisianLog:daftar_log_ta"))
 
 @ta_required
-def daftarLogTA(request):
+def daftar_log_ta(request):
     
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
@@ -130,15 +133,16 @@ def daftarLogTA(request):
                 'filter_bulan':filter_bulan,
                 'filter_kategori':filter_kategori,
                 'filter_periode':filter_periode}
-    return render(request, 'daftarLog.html', context)
+    return render(request, 'daftar_log.html', context)
 
+@require_GET
 @admin_required
-def daftarLogEvaluator(request):
+def daftar_log_evaluator(request):
     print(request.GET)
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
-    logs = LogTA.objects.all()
+    logs = LogTA.objects.all().order_by('user', 'id')
     
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
@@ -163,7 +167,18 @@ def daftarLogEvaluator(request):
                 'filter_bulan':filter_bulan,
                 'filter_kategori':filter_kategori,
                 'filter_periode':filter_periode}
-    return render(request, 'daftarLog.html', context)
+    return render(request, 'daftar_log.html', context)
+
+@require_GET
+@login_required
+def detail_log(request, id):
+    log = LogTA.objects.get(pk=id)
+    
+    if str(log.user.role) != 'admin' and log.user != request.user:
+        raise PermissionDenied
+
+    context = {'log': log}
+    return render(request, 'detail_log.html', context)
 
 @login_required(login_url=reverse_lazy("authentication:login"))
 def history_log_ta(request, id):
@@ -175,4 +190,4 @@ def history_log_ta(request, id):
         'history': log.history.all()
     }
 
-    return render(request, 'historyLog.html', context)
+    return render(request, 'history_log.html', context)
