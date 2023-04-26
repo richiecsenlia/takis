@@ -36,5 +36,6 @@ def get_month_rencana(user_, month):
 @ta_required
 def rekap_page(request, name):
     rekapAvg = get_all_rencana(name)
+    rekapAvg["choice"] = "Rata-rata"
 
     return render(request, "rekap_log.html", rekapAvg)
