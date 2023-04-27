@@ -8,8 +8,8 @@ urlpatterns = [
     path('sso/logout/', cas_views.LogoutView.as_view(), name='ssologout'),
     path('login/',login_handler,name='login'),
     path('register/',register,name='register'),
-    path('change_password/',change_password,name='change_password'),
+    path('change-password/',change_password,name='change_password'),
     path('not-assign/',not_assign,name="not_assign"),
-    path('change_role/',admin_required(change_role),name="change_role"),
-    path('change_role/<int:id>/<str:role>',admin_required(update_role),name="update_role"),
+    path('change-role/',admin_required(change_role),name="change_role"),
+    path('change-role/<int:id>/<str:role>',admin_required(update_role),name="update_role"),
 ]
