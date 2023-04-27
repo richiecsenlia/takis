@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'authentication',
     'accounts',
-    'rekapanLog'
+    'rekapanLog',
     'simple_history',
 ]
 
