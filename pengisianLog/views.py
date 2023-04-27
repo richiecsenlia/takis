@@ -1,15 +1,11 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.exceptions import PermissionDenied
-from .models import LogTA
 from authentication.views import admin_required, ta_required
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 from django.urls import reverse, reverse_lazy
-from authentication.views import ta_required, admin_required
 from django.views.decorators.http import require_GET
 from pengisianLog.models import LogTA
-from django.contrib.auth.decorators import login_required
 
 VALUE_ERROR = "Input tidak valid"
 
@@ -174,7 +170,7 @@ def daftar_log_evaluator(request):
 def detail_log(request, id):
     log = LogTA.objects.get(pk=id)
     
-    if str(log.user.role) != 'admin' and log.user != request.user:
+    if str(request.user.role) != 'admin' and log.user == request.user:
         raise PermissionDenied
 
     context = {'log': log}
