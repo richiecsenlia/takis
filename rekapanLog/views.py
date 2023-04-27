@@ -2,7 +2,9 @@ from django.shortcuts import render
 from pengisianLog.models import LogTA
 from django.db.models import Sum, Avg
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from authentication.views import ta_required, admin_required
+from django.urls import reverse_lazy
 
 # Create your views here.
 def get_all_rencana(user_):
@@ -33,7 +35,7 @@ def get_month_rencana(user_, month):
     
     return rekapBulan
 
-@ta_required
+@login_required(login_url=reverse_lazy("authentication:login"))
 def rekap_page(request, name):
     if request.method == 'GET':
         rekapAvg = get_all_rencana(name)
