@@ -43,7 +43,7 @@ Daftar Log
         {% for log in logs %}
         <tr>
           {% if user.role.role == 'admin' %}
-          <td>{{ log.user }}</td>
+          <td> <a href="{% url 'rekapanLog:rekapan_log' log.user %}"> {{ log.user }} </a></td>
           {% endif %}
           <td>{{ log.kategori }}</td>
           <td>{{ log.jenis_pekerjaan }}</td>
