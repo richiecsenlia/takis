@@ -250,7 +250,7 @@ class PengisianLogTestCase(TestCase):
         response = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':self.logTA_1.id}))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, 
-                         reverse('authentication:login')+'?next='+reverse('pengisianLog:history_log', 
+                         reverse('authentication:login')+'?next='+reverse(HISTORY_LOG_URL, 
                                                                           kwargs={'id':self.logTA_1.id}))
         
     def test_view_history_missing_log(self):
