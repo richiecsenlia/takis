@@ -7,127 +7,115 @@ Detail Log
 {% block content %}
 
 <div class="p-3">
+  <div class="clearfix">
+    <h3 class="d-inline-block">Detail Log</h3>
+    <a href="{% url 'pengisianLog:edit_log' log.pk %}" class="btn btn-warning float-end">Edit</a>
+    <a href="{% url 'pengisianLog:history_log' log.pk %}" class="btn btn-primary float-end">Histori</a>
+  </div>
   {% if user.role.role == 'admin' %}
-  <div class="card">
-    <div class="card-header">
-      <b>Informasi Akun</b>
-    </div>
+  <div class="card mt-2 mb-2 shadow-sm">
+    <h5 class="card-header">
+      Informasi Akun
+    </h5>
     <div class="card-body">
-      <table class="table">
-        <tr>
-          <th>Akun TA</th>
-          <td>{{ log.user }}</td>
-        </tr>
-      </table>
+      <div class="col-md-12">
+        <p>Akun TA</p>
+        <p>{{ log.user }}</p>
+      </div>
     </div>
   </div>
-  <br>
   {% endif %}
-  <div class="card">
-    <div class="card-header">
-      <b>Kegiatan</b>
-    </div>
+  <div class="card mt-2 mb-2 shadow-sm">
+    <h5 class="card-header">
+      Kegiatan
+    </h5>
     <div class="card-body">
-      <table class="table">
-        <tr>
-          <th>Kategori</th>
-          <td>{{ log.kategori }}</td>
-        </tr>
-        <tr>
-          <th>Jenis Pekerjaan</th>
-          <td>{{ log.jenis_pekerjaan }}</td>
-        </tr>
-        <tr>
-          <th>Detail Kegiatan</th>
-          <td>{{ log.detail_kegiatan }}</td>
-        </tr>
-        <tr>
-          <th>Pemberi Tugas</th>
-          <td>{{ log.pemberi_tugas }}</td>
-        </tr>
-        <tr>
-          <th>Uraian</th>
-          <td>{{ log.uraian }}</td>
-        </tr>
-      </table>
+      <div class="col-md-12">
+        <p>Kategori</p>
+        <p>{{ log.kategori }}</p>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-4">
+          <p>Jenis Pekerjaan</p>
+          <p>{{ log.jenis_pekerjaan }}</p>
+        </div>
+        <div class="col-md-4">
+          <p>Detail Kegiatan</p>
+          <p>{{ log.detail_kegiatan }}</p>
+        </div>
+        <div class="col-md-4">
+          <p>Pemberi Tugas</p>
+          <p>{{ log.pemberi_tugas }}</p>
+        </div>
+      </div>
+      <div class="col-12 mt-2">
+        <p>Uraian</p>
+        <p>{{ log.uraian }}</p>
+      </div>
     </div>
   </div>
-  <br>
-  <div class="card">
-    <div class="card-header">
-      <b>Pengerjaan</b>
-    </div>
+
+  <div class="card mt-2 mb-2 shadow-sm">
+    <h5 class="card-header">
+      Periode Pengerjaan
+    </h5>
     <div class="card-body">
-      <table class="table">
-        <tr>
-          <th>Periode</th>
-          <td>{{ log.periode }}</td>
-        </tr>
-        <tr>
-          <th>Bulan</th>
-          <td>{{ log.bulan_pengerjaan }}</td>
-        </tr>
-      </table>
+      <div class="row">
+        <div class="col-md-6">
+          <p>Periode</p>
+          <p>{{ log.periode }}</p>
+        </div>
+        <div class="col-md-6">
+          <p>Bulan</p>
+          <p>{{ log.bulan_pengerjaan }}</p>
+        </div>
+      </div>
     </div>
   </div>
-  <br>
-  <div class="card">
-    <div class="card-header">
-      <b>Perkiraan Beban Kerja Per Pekan</b>
-    </div>
+
+  <div class="card mt-2 mb-2 shadow-sm">
+    <h5 class="card-header">
+      Perkiraan Beban Kerja Per Pekan
+    </h5>
     <div class="card-body">
-      <table class="table">
-        <tr>
-          <th>Jumlah Kinerja</th>
-          <td>{{ log.jumlah_rencana_kinerja }}</td>
-        </tr>
-        <tr>
-          <th>Satuan Kinerja</th>
-          <td>{{ log.satuan_rencana_kinerja }}</td>
-        </tr>
-        <tr>
-          <th>Konversi Jam</th>
-          <td>{{ log.konversi_jam_rencana_kinerja }}</td>
-        </tr>
-        <!--
-        <tr>
-          <th>Jam Kerja</th>
-          <td></td>
-        </tr>
-        -->
-      </table>
+      <div class="row">
+        <div class="col-md-6">
+          <p>Jumlah Kinerja</p>
+          <p>{{ log.jumlah_rencana_kinerja }}</p>
+        </div>
+        <div class="col-md-6">
+          <p>Satuan Kinerja</p>
+          <p>{{ log.satuan_rencana_kinerja }}</p>
+        </div>
+        <div class="col-md-6">
+          <p>Konversi Jam</p>
+          <p>{{ log.konversi_jam_rencana_kinerja }}</p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="card mt-2 mb-2 shadow-sm">
+      <h5 class="card-header">
+        Realisasi Beban Kerja per Pekan
+      </h5>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p>Jumlah Kinerja</p>
+            <p>{{ log.jumlah_realisasi_kinerja }}</p>
+          </div>
+          <div class="col-md-6">
+            <p>Satuan Kinerja</p>
+            <p>{{ log.satuan_realisasi_kinerja }}</p>
+          </div>
+          <div class="col-md-6">
+            <p>Konversi Jam</p>
+            <p>{{ log.konversi_jam_realisasi_kinerja }}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <br>
-  <div class="card">
-    <div class="card-header">
-      <b>Realisasi Beban Kerja Per Pekan</b>
-    </div>
-    <div class="card-body">
-      <table class="table">
-        <tr>
-          <th>Jumlah Kinerja</th>
-          <td>{{ log.jumlah_realisasi_kinerja }}</td>
-        </tr>
-        <tr>
-          <th>Satuan Kinerja</th>
-          <td>{{ log.satuan_realisasi_kinerja }}</td>
-        </tr>
-        <tr>
-          <th>Konversi Jam</th>
-          <td>{{ log.konversi_jam_realisasi_kinerja }}</td>
-        </tr>
-        <!--
-        <tr>
-          <th>Jam Kerja</th>
-          <td></td>
-        </tr>
-        -->
-      </table>
-    </div>
-  </div>
-  <br>
-  <a href="#" class="btn btn-warning">Edit</a>
 </div>
 
 {% endblock content %}
