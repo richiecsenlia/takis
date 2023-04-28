@@ -170,7 +170,7 @@ def daftar_log_evaluator(request):
 def detail_log(request, id):
     log = LogTA.objects.get(pk=id)
     
-    if str(request.user.role) != 'admin' and log.user == request.user:
+    if str(request.user.role) != 'admin' and log.user != request.user:
         raise PermissionDenied
 
     context = {'log': log}
