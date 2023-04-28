@@ -14,6 +14,10 @@ class RekapanLogTestCase(TestCase):
         self.ta_user.role.role = 'TA'
         self.ta_user.role.save()
 
+        self.ta_user_other = User.objects.create(username='ta2', password='ta', email='ta2@ta.com')
+        self.ta_user_other.role.role = 'TA'
+        self.ta_user_other.role.save()
+
         self.admin_user = User.objects.create(username='admin', password='admin', email='admin@admin.com')
         self.admin_user.role.role = 'admin'
         self.admin_user.role.save()
@@ -84,6 +88,23 @@ class RekapanLogTestCase(TestCase):
             jumlah_realisasi_kinerja = 1,
             satuan_realisasi_kinerja = "semester",
             konversi_jam_realisasi_kinerja = 1
+        )
+
+        LogTA.objects.create(
+            user = self.ta_user_other,
+            kategori = "Persiapan Kuliah",
+            jenis_pekerjaan = "Mempersiapkan Environment",
+            detail_kegiatan = "",
+            pemberi_tugas = "",
+            uraian = "Rapat persiapan",
+            periode = "Adhoc",
+            bulan_pengerjaan = "SEP",
+            jumlah_rencana_kinerja = 2,
+            satuan_rencana_kinerja = "Tugas",
+            konversi_jam_rencana_kinerja = 2,
+            jumlah_realisasi_kinerja = 2,
+            satuan_realisasi_kinerja = "",
+            konversi_jam_realisasi_kinerja = 2
         )
 
     def test_get_average_all_rencana(self):
