@@ -1,0 +1,19 @@
+# Environment variables
+.env
+env/
+
+# Database file
+db.sqlite3
+
+# Python cache
+__pycache__
+
+# Served static
+myproject/static
+staticfiles
+
+# Coverage
+.coverage
+
+# vscode
+.vscode

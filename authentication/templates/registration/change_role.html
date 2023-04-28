@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+
+{% block content%}
+
+
+    <div class="container text-center">
+        <h2> Assign role kepada user </h2>
+    </div>
+    {% for kontrak in filter_kontrak %}
+<span class="badge rounded-pill bg-info text-dark">{{kontrak}}</span>
+{% endfor %}
+{% for status in filter_status %}
+<span class="badge rounded-pill bg-info text-dark">{{status}}</span>
+{% endfor %}
+{% for prodi in filter_prodi %}
+<span class="badge rounded-pill bg-info text-dark">{{prodi}}</span>
+{% endfor %}
+{% for matkul in filter_matkul %}
+<span class="badge rounded-pill bg-info text-dark">{{matkul}}</span>
+{% endfor %}
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filter">
+        + Filter
+      </button>
+
+    <table class ='table table-striped table-bordered'>
+        <caption>Daftar user</caption>
+        <thead>
+            <tr>
+                <th scope="col">username</th>
+                <th scope="col">role</th>
+                <th scope="col">action</th>
+            </tr>
+        </thead>
+        {% for user in users %}
+        <tr>
+            <td scope="col">{{user.username}}</td>
+            <td scope="col">{{user.role.role}}</td>
+            <td scope="col">{% if user.role.role != "TA" %}
+                <a href="/auth/change_role/{{user.id}}/TA" class="btn btn-primary">TA</a>
+                {% endif %}
+                {% if user.role.role != "admin" %}
+                <a href="/auth/change_role/{{user.id}}/admin" class="btn btn-primary">admin</a>
+                {% endif %}
+                {% if user.role.role != "not-assign" %}
+                <a href="/auth/change_role/{{user.id}}/not-assign" class="btn btn-primary">not-assign</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="modal" tabindex="-1" id = "filter">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Filter</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+              <form method ='GET'>
+                
+                <div id="kontrak" class="form-text">
+                  kontrak
+                </div>
+                {% for kontrak in kontrak_choices %}
+                <div class="form-check form-check-inline" id = "kontrak">
+                  <input class="form-check-input" type="checkbox" value="{{kontrak.1}}" name ="kontrak" id="{{kontrak.1}}"
+                  {% if kontrak.1 in filter_kontrak %}
+                    checked
+                  {% endif %}
+              >
+                  <label class="form-check-label" for="{{kontrak.1}}">
+                    {{ kontrak.1 }}
+                  </label>
+                </div>
+                {% endfor %}
+                <div id="status" class="form-text">
+                  status
+                </div>
+                {% for status in status_choices %}
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" value="{{status.1}}"name = "status" id="{{status.1}}"
+                  {% if status.1 in filter_status %}
+                    checked
+                  {% endif %}>
+                  <label class="form-check-label" for="{{status.1}}">
+                    {{ status.1 }}
+                  </label>
+                </div>
+                {% endfor %}
+                <div id="prodi" class="form-text">
+                  prodi
+                </div>
+                {% for prodi in prodi_choices %}
+                <div class="form-check ">
+                  <input class="form-check-input" type="checkbox" value="{{prodi.1}}"name="prodi" id="{{prodi.1}}"
+                  {% if prodi.1 in filter_prodi %}
+                    checked
+                  {% endif %}>
+                  <label class="form-check-label" for="{{prodi.1}}">
+                    {{ prodi.1 }}
+                  </label>
+                </div>
+                {% endfor %}
+                <div id="matkul" class="form-text">
+                    matkul
+                  </div>
+                {% for matkul in matkul_choices %}
+                <div class="form-check ">
+                  <input class="form-check-input" type="checkbox" value="{{matkul.nama}}"name="matkul" id="{{matkul.nama}}"
+                  {% if matkul.1 in filter_matkul %}
+                    checked
+                  {% endif %}>
+                  <label class="form-check-label" for="{{matkul.nama}}">
+                    {{ matkul.nama }}
+                  </label>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              
+            </div>
+          
+          </div>
+        </div>
+      </div>
+{% endblock %}

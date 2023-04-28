@@ -1,0 +1,99 @@
+{% load static %}
+
+<nav class="navbar navbar-dark navbar-expand-lg bg-dark">
+  <div class="container-fluid mx-4">
+    <a class="navbar-brand fw-bold" href="{% url 'main:homepage' %}">TAKIS</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Log TA
+          </a>
+          <ul class="dropdown-menu">
+            {% if user.role.role == 'admin' %}
+              <li><a class="dropdown-item" href="{% url 'pengisianLog:daftar_log_evaluator' %}">Lihat Seluruh Daftar Log</a></li>
+            {% else %}
+              <li><a class="dropdown-item" href="{% url 'pengisianLog:daftar_log_ta' %}">Lihat Daftar Log</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="{% url 'pengisianLog:mengisi_log' %}">Tambah Log Baru</a></li>              
+            {% endif %}
+          </ul>
+        </li>
+        {% if user.role.role == 'admin' %}
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Admin
+          </a>
+          <ul class="dropdown-menu">
+            
+              <li><a class="dropdown-item" href="{% url 'authentication:change_role' %}">Assign Role</a></li>       
+          </ul>
+        </li>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+          {{request.user}}
+          </a>
+          <ul class="dropdown-menu">
+              {% if user.teachingassistantprofile %}
+              <li><a class="dropdown-item" href="{% url 'accounts:profile' user.teachingassistantprofile.slug %}">Lihat Profil</a></li> 
+              {% else %}
+              <li><a class="dropdown-item" href="{% url 'accounts:fill_profile' %}">Atur Profil</a></li> 
+              {% endif %}
+              <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
+              <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="{% url 'authentication:login' %}"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+          Guest
+          </a>
+          <ul class="dropdown-menu">
+            
+              <li><a class="dropdown-item" href="{% url 'authentication:login' %}">Login</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="{% url 'authentication:register' %}">Register</a></li>       
+          </ul>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
