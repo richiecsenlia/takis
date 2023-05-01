@@ -6,7 +6,8 @@ from .models import LogTA
 from .views import *
 from django.urls import reverse
 from django.test import RequestFactory
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 
 # Create your tests here.
 
@@ -273,14 +274,21 @@ class PengisianLogTestCase(TestCase):
         response_admin = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':self.logTA_1.id}))
         self.assertEqual(response_admin.status_code, 200)
 
-    def test_filter_LogTA_response(self):
+    def test_filter_LogTA_response_as_TA(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse('pengisianLog:daftar_log_ta'))
         self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
         self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
         self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
 
-    def test_filter_LogTA_response_context(self):
+    def test_filter_LogTA_response_as_evaluator(self):
+        self.client.force_login(user=self.admin_user)
+        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator'))
+        self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
+        self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
+        self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
+
+    def test_filter_LogTA_response_TA_context(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse('pengisianLog:daftar_log_ta'),{"bulan":"JAN","kategori":"Harian","periode":"Persiapan Kuliah"})
         self.assertEquals(response.context['filter_kategori'][0], "Harian")
@@ -346,3 +354,16 @@ class PengisianLogTestCase(TestCase):
 
         all_logTA = LogTA.objects.all()
         self.assertEquals(all_logTA.count(), 1)
+    
+    def test_detail_log_ta_authorized(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse("pengisianLog:detail_log", kwargs={'id':1}))
+
+        self.assertTemplateUsed(response, 'detail_log.html')
+
+    def test_detail_log_ta_unauthorized(self):
+        self.client.force_login(user=self.ta_user_2)
+
+        with self.assertRaises(PermissionDenied):
+            self.client.get(reverse("pengisianLog:detail_log", kwargs={'id':1}))
+
