@@ -348,9 +348,8 @@ class PengisianLogTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
     
     def test_delete_log_ta(self):
+        self.client.force_login(user=self.ta_user)
         self.client.post(reverse("pengisianLog:delete_log", kwargs={'id':1}))
-        log = LogTA.objects.get(id=1)
-        log.delete()
 
         all_logTA = LogTA.objects.all()
         self.assertEquals(all_logTA.count(), 1)
@@ -363,7 +362,7 @@ class PengisianLogTestCase(TestCase):
 
     def test_detail_log_ta_unauthorized(self):
         self.client.force_login(user=self.ta_user_2)
-
-        with self.assertRaises(PermissionDenied):
-            self.client.get(reverse("pengisianLog:detail_log", kwargs={'id':1}))
+        response = self.client.get(reverse("pengisianLog:detail_log", kwargs={'id':1}))
+        
+        self.assertEqual(response.status_code, 403)
 
