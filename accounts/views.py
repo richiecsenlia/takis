@@ -2,10 +2,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from accounts.models import TeachingAssistantProfile, MataKuliah
-from authentication.views import ta_required
+from authentication.views import ta_required, admin_required
 
 # Create your views here.
-@ta_required
 def fill_profile(request):
     if request.method == 'POST':
         ta_profile = TeachingAssistantProfile(
@@ -35,3 +34,12 @@ def profile(request, slug):
     }
     
     return render(request, 'accounts/profile.html', context)
+
+@admin_required
+def dashboard_eval(request):
+    ta_list = TeachingAssistantProfile.objects.all()
+    context = {
+        'ta_list': ta_list
+    }
+
+    return render(request, 'accounts/dashboard_eval.html', context)
