@@ -6,7 +6,8 @@ from .models import LogTA
 from .views import *
 from django.urls import reverse
 from django.test import RequestFactory
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 
 # Create your tests here.
 
@@ -250,7 +251,7 @@ class PengisianLogTestCase(TestCase):
         response = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':self.logTA_1.id}))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, 
-                         reverse('authentication:login')+'?next='+reverse('pengisianLog:history_log', 
+                         reverse('authentication:login')+'?next='+reverse(HISTORY_LOG_URL, 
                                                                           kwargs={'id':self.logTA_1.id}))
         
     def test_view_history_missing_log(self):
@@ -273,14 +274,21 @@ class PengisianLogTestCase(TestCase):
         response_admin = self.client.get(reverse(HISTORY_LOG_URL, kwargs={'id':self.logTA_1.id}))
         self.assertEqual(response_admin.status_code, 200)
 
-    def test_filter_LogTA_response(self):
+    def test_filter_LogTA_response_as_TA(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse('pengisianLog:daftar_log_ta'))
         self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
         self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
         self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
 
-    def test_filter_LogTA_response_context(self):
+    def test_filter_LogTA_response_as_evaluator(self):
+        self.client.force_login(user=self.admin_user)
+        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator'))
+        self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
+        self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
+        self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
+
+    def test_filter_LogTA_response_TA_context(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse('pengisianLog:daftar_log_ta'),{"bulan":"JAN","kategori":"Harian","periode":"Persiapan Kuliah"})
         self.assertEquals(response.context['filter_kategori'][0], "Harian")
@@ -340,9 +348,21 @@ class PengisianLogTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
     
     def test_delete_log_ta(self):
+        self.client.force_login(user=self.ta_user)
         self.client.post(reverse("pengisianLog:delete_log", kwargs={'id':1}))
-        log = LogTA.objects.get(id=1)
-        log.delete()
 
         all_logTA = LogTA.objects.all()
         self.assertEquals(all_logTA.count(), 1)
+    
+    def test_detail_log_ta_authorized(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse("pengisianLog:detail_log", kwargs={'id':1}))
+
+        self.assertTemplateUsed(response, 'detail_log.html')
+
+    def test_detail_log_ta_unauthorized(self):
+        self.client.force_login(user=self.ta_user_2)
+        response = self.client.get(reverse("pengisianLog:detail_log", kwargs={'id':1}))
+        
+        self.assertEqual(response.status_code, 403)
+
