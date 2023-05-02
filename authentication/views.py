@@ -1,16 +1,15 @@
 from django.shortcuts import render
-from django.core.exceptions import PermissionDenied,ObjectDoesNotExist
-from .forms import UserForm,UserCreateForm,PasswordForm
-from django.urls import reverse_lazy,reverse
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test, login_required
+
 from accounts.models import TeachingAssistantProfile, MataKuliah
+from authentication.forms import UserCreateForm, PasswordForm
+
 # Create your views here.
-
-
-
 def ta_role_check(user):
     if str(user.role) == 'TA':
         return True
@@ -24,12 +23,12 @@ def admin_role_check(user):
         raise PermissionDenied
 
 def ta_required(function):
-    login_check = login_required(login_url=reverse_lazy("authentication:login"))
+    login_check = login_required(login_url=reverse_lazy('authentication:login'))
     role_test = user_passes_test(ta_role_check)
     return login_check(role_test(function))
 
 def admin_required(function):
-    login_check = login_required(login_url=reverse_lazy("authentication:login"))
+    login_check = login_required(login_url=reverse_lazy('authentication:login'))
     role_test = user_passes_test(admin_role_check)
     return login_check(role_test(function))
 
@@ -44,8 +43,7 @@ def login_handler(request):
             login(request,user)
             return HttpResponseRedirect(request.GET.get('next','/'))
         error = 'username / password tidak sesuai'
-    form = UserForm()
-    response = {'form':form,'error' : error}
+    response = {'error' : error}
     return render(request,'registration/login.html',response)
 
 def register(request):
@@ -72,7 +70,7 @@ def change_password(request):
             user.save()
             user = authenticate(username=user.username,password=user.password)
             login(request,user,backend='django.contrib.auth.backends.ModelBackend')
-            return HttpResponseRedirect(reverse("main:homepage"))
+            return HttpResponseRedirect(reverse('main:homepage'))
     response={'form':form}
     return render(request,'registration/change_password.html',response)
 
@@ -127,5 +125,5 @@ def update_role(request,id,role):
         return HttpResponse("user tidak ditemukan")
     user.role.role = role
     user.role.save()
-    return HttpResponseRedirect(reverse("authentication:change_role"))
+    return HttpResponseRedirect(reverse('authentication:change_role'))
 
