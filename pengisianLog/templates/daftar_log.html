@@ -11,6 +11,13 @@ Daftar Log
 </div>
 
 <div class="p-3">
+  {% if user.role.role == 'TA' %}
+  <div>
+  <a href="{% url 'rekapanLog:rekapan_log' user.username %}" class="btn btn-warning">
+    Lihat Rekap
+  </a>
+  </div>
+  {% endif %}
   {% for bulan in filter_bulan %}
   <span class="badge rounded-pill bg-info text-dark">{{bulan}}</span>
   {% endfor %}
@@ -43,7 +50,7 @@ Daftar Log
         {% for log in logs %}
         <tr>
           {% if user.role.role == 'admin' %}
-          <td>{{ log.user }}</td>
+          <td> <a href="{% url 'rekapanLog:rekapan_log' log.user %}"> {{ log.user }} </a></td>
           {% endif %}
           <td>{{ log.kategori }}</td>
           <td>{{ log.jenis_pekerjaan }}</td>
