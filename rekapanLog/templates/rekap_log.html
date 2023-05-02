@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Rekap Log
+{% endblock title%}
+
+{% block content %}
+
+<div class="container">
+  <h1 class="text-center mt-5 mb-3">Rekap Log</h1>
+  <div style="width: 500px; margin :0 auto">
+    <form method="post" style="margin-left: 10px; margin-right: 10px">
+      {% csrf_token %}
+      <select name="bulan" class="form-select" onchange="this.form.submit()">
+        <option value="Rata-rata" selected disabled><b>Selected : </b>{{ choice }}</option>
+        <option value="Rata-rata">Rata-rata</option>
+        <option value="JAN">JAN</option>
+        <option value="FEB">FEB</option>
+        <option value="MAR">MAR</option>
+        <option value="APR">APR</option>
+        <option value="MEI">MEI</option>
+        <option value="JUN">JUN</option>
+        <option value="JUL">JUL</option>
+        <option value="AGT">AGT</option>
+        <option value="SEP">SEP</option>
+        <option value="OKT">OKT</option>
+        <option value="NOV">NOV</option>
+        <option value="DES">DES</option>
+    </select>
+    </form>
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Jenis Pekerjaan</th>
+          <th scope="col">Rencana</th>
+          <th scope="col">Realiasi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Persiapan Kuliah</td>
+          <td>{{ persiapan_plan }}</td>
+          <td>{{ persiapan_real }}</td>
+        </tr>
+        <tr>
+          <td>Penyelenggaraan Kuliah</td>
+          <td>{{ penyelenggaraan_plan }}</td>
+          <td>{{ penyelenggaraan_real }}</td>
+        </tr>
+        <tr>
+          <td>Dukungan Kuliah Kakak Asuh</td>
+          <td>{{ dukungan_plan }}</td>
+          <td>{{ dukungan_real }}</td>
+        </tr>
+        <tr>
+          <td>Pengembangan Institusi</td>
+          <td>{{ pengembangan_plan }}</td>
+          <td>{{ pengembangan_real }}</td>
+        </tr>
+        <tr>
+          <td>Riset dan Pusilkom</td>
+          <td>{{ riset_plan }}</td>
+          <td>{{ riset_real }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock content %}
