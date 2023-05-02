@@ -21,7 +21,7 @@ urlpatterns = [
     path('', include('main.urls')),
     path('', include('accounts.urls')),
     path('auth/',include('authentication.urls')),
-    path('pengisianLog/', include("pengisianLog.urls")),
-    path('rekapLog/',include("rekapanLog.urls"))
+    path('log/', include('pengisianLog.urls')),
+    path('rekap/',include('rekapanLog.urls'))
 ]
 
