@@ -1,163 +1,153 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Daftar Log
-{% endblock title%}
+{% block title %} Daftar Log {% endblock title%}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
 
 {% block content %}
 
-<div class="pt-3 text-center">
-  <h2>Daftar Log</h2>
+<div class="page-header pt-8 pb-12 bg-white-blue">
+  <div class="container">
+    <div class="d-sm-flex justify-content-between align-items-center">
+      <div class="ms-2 pt-2">
+        {% if user.role.role == 'TA' %}
+        <h3>Daftar Log Pekerjaan</h3>
+        {% else %}
+        <h3>Riwayat Log Seluruh TA</h3>
+        {% endif %}
+      </div>
+      <div class="dropdown d-inline">  
+        {% for kontrak in filter_kontrak %}
+        <span class="badge rounded-pill bg-info text-dark">{{kontrak}}</span>
+        {% endfor %}
+        {% for status in filter_status %}
+        <span class="badge rounded-pill bg-info text-dark">{{status}}</span>
+        {% endfor %}
+        {% for prodi in filter_prodi %}
+        <span class="badge rounded-pill bg-info text-dark">{{prodi}}</span>
+        {% endfor %}
+        {% for matkul in filter_matkul %}
+        <span class="badge rounded-pill bg-info text-dark">{{matkul}}</span>
+        {% endfor %}
+        {% if user.role.role == 'TA' %}
+        <a href="{% url 'pengisianLog:mengisi_log' %}" class="btn btn-success mb-sm-1 ms-2">+&nbsp; Buat Log Baru</a>
+        {% endif %}
+        <button type="button" class="btn btn-outline-brand mb-sm-1 mx-2" data-bs-toggle="modal" data-bs-target="#filter">
+          +&nbsp; Filter
+        </button>
+      </div>
+    </div>
+    
+    <div class="card mb-5">
+      <div class="card-body px-0 py-2">
+        <div class="table-responsive">
+          <table class ='table align-items-center mb-0'>
+            <thead>
+              <tr>
+                {% if user.role.role == 'admin' %}
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Akun TA</th>
+                {% endif %}
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Kategori Pekerjaan</th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Jenis Pekerjaan</th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Deskripsi</th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Rencana Beban Kerja</th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Realisasi Beban Kerja</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for log in logs %}
+              <tr>
+                {% if user.role.role == 'admin' %}
+                <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.user }}</td>
+                {% endif %}
+                <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.kategori }}</td>
+                <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.jenis_pekerjaan }}</td>
+                <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.detail_kegiatan }}</td>
+                <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.konversi_jam_rencana_kinerja }}</td>
+                <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.konversi_jam_realisasi_kinerja }}</td>
+                <td>
+                  <a href="{% url 'pengisianLog:detail_log' log.pk %}" class="btn btn-primary mb-0">Lihat Detail</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
 </div>
 
-<div class="p-3">
-  {% if user.role.role == 'TA' %}
-  <div>
-  <a href="{% url 'rekapanLog:rekapan_log' user.username %}" class="btn btn-warning">
-    Lihat Rekap
-  </a>
-  </div>
-  {% endif %}
-  {% for bulan in filter_bulan %}
-  <span class="badge rounded-pill bg-info text-dark">{{bulan}}</span>
-  {% endfor %}
-  {% for kategori in filter_kategori %}
-  <span class="badge rounded-pill bg-info text-dark">{{kategori}}</span>
-  {% endfor %}
-  {% for periode in filter_periode %}
-  <span class="badge rounded-pill bg-info text-dark">{{periode}}</span>
-  {% endfor %}
-  <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filter">
-    + Filter
-  </button>
-
-  <table class="table">
-    <caption>Tabel Daftar Log TA</caption>
-      <thead>
-        <tr>
-          {% if user.role.role == 'admin' %}
-          <th scope="col">Akun TA</th>
-          {% endif %}
-          <th scope="col">Kategori</th>
-          <th scope="col">Jenis Pekerjaan</th>
-          <th scope="col">Uraian</th>
-          <th scope="col">Konversi Jam Rencana Kinerja</th>
-          <th scope="col">Konversi Jam Realisasi Kinerja</th>
-          <th scope="col">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for log in logs %}
-        <tr>
-          {% if user.role.role == 'admin' %}
-          <td> <a href="{% url 'rekapanLog:rekapan_log' log.user %}"> {{ log.user }} </a></td>
-          {% endif %}
-          <td>{{ log.kategori }}</td>
-          <td>{{ log.jenis_pekerjaan }}</td>
-          <td>{{ log.uraian }}</td>
-          <td>{{ log.konversi_jam_rencana_kinerja }}</td>
-          <td>{{ log.konversi_jam_realisasi_kinerja }}</td>
-          <td>
-            <a href="{% url 'pengisianLog:detail_log' log.pk %}" class="btn btn-primary">Detail</a>
-            <a href="{% url 'pengisianLog:edit_log' log.pk %}" class="btn btn-warning">
-              Edit
-            </a>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
-              Delete
-            </button>
-            <div class="modal fade" tabindex="-1" id="deleteModal" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5">Konfirmasi Penghapusan</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus log ini?
-                  </div>
-                  <div class="modal-footer">
-                    <a href="{% url 'pengisianLog:delete_log' log.pk %}">
-                      <button type="button" class="btn btn-danger">
-                          Ya
-                      </button>
-                    </a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
-                  </div>
-                </div>
-              </div>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-  </table>
-
-  <div class="modal" tabindex="-1" id = "filter">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Filter</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        
-        <div class="modal-body">
-          <form method ='GET'>
-            
-            <div id="bulan" class="form-text">
-              bulan
-            </div>
-            {% for bulan in bulan_choice %}
-            <div class="form-check form-check-inline" id = "bulan">
-              <input class="form-check-input" type="checkbox" value="{{bulan.1}}" name ="bulan" id="{{bulan.1}}" 
-              {% if bulan.1 in filter_bulan %}
-                checked
-              {% endif %}
-              >
-              <label class="form-check-label" for="{{bulan.1}}">
-                {{ bulan.1 }}
-              </label>
-            </div>
-            {% endfor %}
-            <div id="periode" class="form-text">
-              periode
-            </div>
-            {% for periode in periode_choice %}
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" value="{{periode.1}}"name = "periode" id="{{periode.1}}"
-              {% if periode.1 in filter_periode %}
-                checked
-              {% endif %}
-              >
-              <label class="form-check-label" for="{{periode.1}}">
-                {{ periode.1 }}
-              </label>
-            </div>
-            {% endfor %}
-            <div id="kategori" class="form-text">
-              kategori
-            </div>
-            {% for kategori in kategori_choice %}
-            <div class="form-check ">
-              <input class="form-check-input" type="checkbox" value="{{kategori.1}}"name="kategori" id="{{kategori.1}}"
-              {% if kategori.1 in filter_kategori %}
-                checked
-              {% endif %}
-              >
-              <label class="form-check-label" for="{{kategori.1}}">
-                {{ kategori.1 }}
-              </label>
-            </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          
-        </div>
+<div class="modal" tabindex="-1" id = "filter">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Filter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
       
+      <div class="modal-body">
+        <form method ='GET'>
+         
+          <div id="bulan" class="form-text">
+            bulan
+          </div>
+          {% for bulan in bulan_choice %}
+          <div class="form-check form-check-inline" id = "bulan">
+            <input class="form-check-input" type="checkbox" value="{{bulan.1}}" name ="bulan" id="{{bulan.1}}" 
+            {% if bulan.1 in filter_bulan %}
+              checked
+            {% endif %}
+            >
+            <label class="form-check-label" for="{{bulan.1}}">
+              {{ bulan.1 }}
+            </label>
+          </div>
+          {% endfor %}
+
+          <div id="periode" class="form-text">
+            periode
+          </div>
+          {% for periode in periode_choice %}
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" value="{{periode.1}}"name = "periode" id="{{periode.1}}"
+            {% if periode.1 in filter_periode %}
+              checked
+            {% endif %}
+            >
+            <label class="form-check-label" for="{{periode.1}}">
+              {{ periode.1 }}
+            </label>
+          </div>
+          {% endfor %}
+
+          <div id="kategori" class="form-text">
+            kategori
+          </div>
+          {% for kategori in kategori_choice %}
+          <div class="form-check ">
+            <input class="form-check-input" type="checkbox" value="{{kategori.1}}"name="kategori" id="{{kategori.1}}"
+            {% if kategori.1 in filter_kategori %}
+              checked
+            {% endif %}
+            >
+            <label class="form-check-label" for="{{kategori.1}}">
+              {{ kategori.1 }}
+            </label>
+          </div>
+          {% endfor %}
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
+
 
 {% endblock content %}

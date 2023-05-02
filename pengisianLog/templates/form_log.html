@@ -1,138 +1,143 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Pengisian Log
-{% endblock title%}
+{% block title %} Edit Log {% endblock title%}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <h1 class="text-center mt-5 mb-3">Pengisian Log</h1>
-    </div>
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
-                {{message}}
-            </div>
-        {% endfor %}
-    {% endif %}
-    <form method="post" style="margin-left: 10px; margin-right: 10px">
-    {% csrf_token %}
-    <div class="card mt-2 mb-2 shadow-sm">
-        <h5 class="card-header">
+<div class="page-header pt-8 pb-6 bg-white-blue">
+  <div class="container">
+    <h2 class="text-center mb-3">Edit Log</h2>
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
+        {{message}}
+      </div>
+      {% endfor %}
+      {% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="card my-2">
+          <h5 class="card-header pb-0">
             Pengisian Kegiatan
-        </h5>
-        <div class="card-body">
+          </h5>
+          <div class="card-body">
             <div class="col-md-12">
-                <label class="form-label">Kategori</label>
-                <select name="kategori" class="form-select" required>
-                    {% for kat in kategori_choice %}
-                    <option value="{{ kat.1 }}">{{ kat.1 }}</option>
-                    {% endfor %}
-                </select>
+              <label class="form-label">Kategori</label>
+              <select name="kategori" class="form-select" required>
+                {% for kat in kategori_choice %}
+                <option value="{{ kat.1 }}">{{ kat.1 }}</option>
+                {% endfor %}
+              </select>
             </div>
             <div class="row mt-2">
-                <div class="col-md-4">
-                    <label class="form-label">Jenis Pekerjaan</label>
-                    <input type="text" class="form-control" name="pekerjaan" required />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Detail Kegiatan</label>
-                    <input type="text" class="form-control" name="detail_kegiatan" required />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Pemberi Tugas</label>
-                    <input type="text" class="form-control" name="pemberi_tugas" required />
-                </div>
+              <div class="col-md-4">
+                <label class="form-label">Jenis Pekerjaan</label>
+                <input type="text" class="form-control" name="pekerjaan" required />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Detail Kegiatan</label>
+                <input type="text" class="form-control" name="detail_kegiatan" required />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Pemberi Tugas</label>
+                <input type="text" class="form-control" name="pemberi_tugas" required />
+              </div>
             </div>
             <div class="col-12 mt-2">
-                <label class="form-label">Uraian</label>
-                <input type="text" class="form-control" name="uraian" required />
+              <label class="form-label">Uraian</label>
+              <input type="text" class="form-control" name="uraian" required />
             </div>
+          </div>
         </div>
-    </div>
 
-    <div class="card mt-2 mb-2 shadow-sm">
-        <h5 class="card-header">
+        <div class="card my-3">
+          <h5 class="card-header pb-0">
             Pengisian Periode Pengerjaan
-        </h5>
-        <div class="card-body">
+          </h5>
+          <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
-                    <label class="form-label">Periode</label>
-                    <select name="periode" class="form-select" required>
-                        {% for periode in periode_choice %}
-                        <option value="{{ periode.1 }}">{{ periode.1 }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Bulan Pengerjaan</label>
-                    <select name="bulan_pengerjaan" class="form-select" required>
-                        {% for bulan in bulan_choice %}
-                        <option value="{{ bulan.1 }}">{{ bulan.1 }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+              <div class="col-md-6">
+                <label class="form-label">Periode</label>
+                <select name="periode" class="form-select" required>
+                  {% for periode in periode_choice %}
+                  <option value="{{ periode.1 }}">{{ periode.1 }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Bulan Pengerjaan</label>
+                <select name="bulan_pengerjaan" class="form-select" required>
+                  {% for bulan in bulan_choice %}
+                  <option value="{{ bulan.1 }}">{{ bulan.1 }}</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-    <div class="card mt-2 mb-2 shadow-sm">
-        <h5 class="card-header">
+        <div class="card my-3">
+          <h5 class="card-header pb-0">
             Pengisian Perkiraan Beban Kerja Per Pekan
+          </h5>
+          <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label">Jumlah Rencana Kinerja</label>
+              <input type="text" class="form-control" name="jumlah_kinerja" placeholder="Masukkan angka" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Satuan Rencana Kinerja</label>
+              <input type="text" class="form-control" name="satuan_kinerja" placeholder="Contoh: Tugas" required />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2 col-6 mx-auto mt-4">
+        <button id="realisasi_btn" type="button" class="btn btn-warning" onclick="myFunction()">Buka Tab Realisasi Kinerja</button>
+      </div>
+
+      <div id="realisasi_form" class="card">
+        <h5 class="card-header pb-0">
+          Pengisian Realisasi Beban Kerja per Pekan
         </h5>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <label class="form-label">Jumlah Rencana Kinerja</label>
-                    <input type="text" class="form-control" name="jumlah_kinerja" placeholder="Masukkan angka" required />
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Satuan Rencana Kinerja</label>
-                    <input type="text" class="form-control" name="satuan_kinerja" placeholder="Contoh: Tugas" required />
-                </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label">Jumlah Realisasi Kinerja</label>
+              <input type="text" class="form-control" name="jumlah_realisasi_kinerja" placeholder="Masukkan angka" />
             </div>
-        </div>
-    </div>
-
-    <div class="d-grid gap-2 col-6 mx-auto mt-2 mb-2">
-        <button type="button" class="btn btn-warning" onclick="myFunction()">Realisasi</button>
-    </div>
-    
-    <div id="realisasi_form" class="container" style="margin-top: 10px">
-        <div class="card mt-3 shadow-sm">
-            <h5 class="card-header">
-                Pengisian Realisasi Beban Kerja per Pekan
-            </h5>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label">Jumlah Realisasi Kinerja</label>
-                        <input type="text" class="form-control" name="jumlah_realisasi_kinerja" placeholder="Masukkan angka"/>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Satuan Realisasi Kinerja</label>
-                        <input type="text" class="form-control" name="satuan_realisasi_kinerja" placeholder="Contoh: Tugas"/>
-                    </div>
-                </div>
+            <div class="col-md-6">
+              <label class="form-label">Satuan Realisasi Kinerja</label>
+              <input type="text" class="form-control" name="satuan_realisasi_kinerja" placeholder="Contoh: Tugas" />
             </div>
+          </div>
         </div>
-    </div>    
+      </div>
 
-        <script>
-            function myFunction() {
-            var x = document.getElementById("realisasi_form");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
-            }
-        </script>
-        <div class="d-grid gap-2 col-6 mx-auto mt-2 mb-2">
-            <input type="submit" name="submit" class="btn btn-success" />
-        </div>
+      <div class="d-grid gap-2 col-6 mx-auto mt-5">
+        <input type="submit" name="submit" class="btn btn-success" />
+      </div>
     </form>
+  </div>
 </div>
 {% endblock content %}
+
+{% block script %}
+<script>
+  function myFunction() {
+    var form = document.getElementById("realisasi_form")
+    if (form.style.display === "none") {
+      form.style.display = "block"
+    } else {
+      form.style.display = "none"
+    }
+  }
+</script>
+{% endblock script %}
