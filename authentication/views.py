@@ -103,7 +103,10 @@ def change_role(request):
         for prodi in prodi_choices :
             if not (prodi[1] in filter_prodi):
                 users = users.exclude(teachingassistantprofile__prodi = prodi[1])
-
+    if len(filter_matkul) != 0:
+        for matkul in matkul_choices :
+            if not (matkul.nama in filter_matkul):
+                users = users.exclude(teachingassistantprofile__daftar_matkul__id = matkul.id)
     response = {'users':users,
         'kontrak_choices': kontrak_choices,
         'status_choices': status_choices,
