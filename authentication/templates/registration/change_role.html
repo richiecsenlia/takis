@@ -37,13 +37,13 @@
             <td scope="col">{{user.username}}</td>
             <td scope="col">{{user.role.role}}</td>
             <td scope="col">{% if user.role.role != "TA" %}
-                <a href="/auth/change_role/{{user.id}}/TA" class="btn btn-primary">TA</a>
+                <a href="/auth/change-role/{{user.id}}/TA" class="btn btn-primary">TA</a>
                 {% endif %}
                 {% if user.role.role != "admin" %}
-                <a href="/auth/change_role/{{user.id}}/admin" class="btn btn-primary">admin</a>
+                <a href="/auth/change-role/{{user.id}}/admin" class="btn btn-primary">admin</a>
                 {% endif %}
                 {% if user.role.role != "not-assign" %}
-                <a href="/auth/change_role/{{user.id}}/not-assign" class="btn btn-primary">not-assign</a>
+                <a href="/auth/change-role/{{user.id}}/not-assign" class="btn btn-primary">not-assign</a>
                 {% endif %}
             </td>
         </tr>
@@ -109,7 +109,7 @@
                 {% for matkul in matkul_choices %}
                 <div class="form-check ">
                   <input class="form-check-input" type="checkbox" value="{{matkul.nama}}"name="matkul" id="{{matkul.nama}}"
-                  {% if matkul.1 in filter_matkul %}
+                  {% if matkul.nama in filter_matkul %}
                     checked
                   {% endif %}>
                   <label class="form-check-label" for="{{matkul.nama}}">
