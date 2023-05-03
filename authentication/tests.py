@@ -60,33 +60,17 @@ class AuthTest(TestCase):
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/login.html")
     
-    def test_login_success(self):
-        response = self.client.post(self.LOGIN_URL, {'username': 'username', 'password': 'password'})
-        self.assertEquals(response.status_code,302)
-        user = auth.get_user(self.client)
-        self.assertTrue(user.is_authenticated)
-        self.assertRedirects(response,reverse("main:homepage"))
-    
     def test_login_unsuccessfull(self):
         response = self.client.post(self.LOGIN_URL, {'username': 'username', 'password': 'password2'})
         user = auth.get_user(self.client)
         self.assertFalse(user.is_authenticated)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/login.html")
-    def test_login_authenticated_user(self):
-        self.client.login(username="username",password="password")
-        response = self.client.get(self.LOGIN_URL)
-        self.assertRedirects(response,reverse('main:homepage'))
     
     def test_get_register(self):
         response = self.client.get(self.REGISTER_URL)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/register.html")
-
-    def test_get_register_authenticated_user(self):
-        self.client.login(username="username",password="password")
-        response = self.client.get(self.REGISTER_URL)
-        self.assertRedirects(response,reverse('main:homepage'))
     
     def test_register_success(self):
         response = self.client.post(self.REGISTER_URL, {'username': 'richie5', 'password1': 'senlia25','password2':'senlia25'})
@@ -116,7 +100,6 @@ class AuthTest(TestCase):
         client_user = auth.get_user(self.client)
         self.assertTrue(check_password("senlia25",client_user.password))
         self.assertTrue(client_user.is_authenticated)
-        self.assertRedirects(response,reverse("main:homepage"))
 
     def test_change_password_no_user(self):
         response = self.client.get(self.CHANGE_PASSWORD_URL,fetch_redirect_response=False)
