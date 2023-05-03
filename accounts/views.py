@@ -5,6 +5,7 @@ from accounts.models import TeachingAssistantProfile, MataKuliah
 from authentication.views import ta_required, admin_required
 
 # Create your views here.
+@ta_required
 def fill_profile(request):
     if request.method == 'POST':
         ta_profile = TeachingAssistantProfile(
@@ -27,8 +28,8 @@ def fill_profile(request):
     return render(request, 'accounts/fill_profile.html', context)
 
 @ta_required
-def profile(request, slug):
-    profile = TeachingAssistantProfile.objects.get(slug=slug)
+def profile(request, id):
+    profile = TeachingAssistantProfile.objects.get(user=id)
     context = {
         'profile': profile
     }
