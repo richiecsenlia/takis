@@ -30,7 +30,7 @@
       <ul class="navbar-nav ms-auto">
         {% if user.role.role == 'TA' %}
         <li class="nav-item me-2">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="{% url 'rekapanLog:rekapan_log' user %}">
             <em class="fa fa-clipboard-check opacity-6 me-1"></em>
             Rekapan
           </a>
@@ -47,7 +47,7 @@
             {{ user.teachingassistantprofile }}
           </a>
           <ul class="dropdown-menu">
-            <li><div class="dropdown-item">Lihat Profil</div></li>
+            <li><a class="dropdown-item" href="{% url 'accounts:profile' user.id %}">Lihat Profil</a></li>
             <li><hr class="dropdown-divider bg-dark mx-2"></hr></li>
             <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
             <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
@@ -88,6 +88,17 @@
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'authentication:change_role' %}">Atur Role Pengguna</a></li>
             <li><hr class="dropdown-divider bg-dark mx-2"></hr></li>
+            <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
+            <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
+          </ul>
+        </li>
+        {% elif user.role.role == 'not-assign' %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+            <em class="fa fa-user opacity-6 me-1"></em>
+            {{ user }}
+          </a>
+          <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
             <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
           </ul>
