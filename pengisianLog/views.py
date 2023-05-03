@@ -49,8 +49,7 @@ def form_log_ta(request):
                 'periode_choice': LogTA.periode.field.choices, 
                 'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
     
-@require_GET
-@ta_required
+@login_required(login_url=reverse_lazy('authentication:login'))
 def edit_log_ta(request, id):
     try:
         log = LogTA.objects.get(pk=id)
@@ -92,7 +91,7 @@ def edit_log_ta(request, id):
         messages.error(request, VALUE_ERROR)
         return render(request, 'edit_log.html', context)
 
-@ta_required
+@login_required(login_url=reverse_lazy('authentication:login'))
 def delete_log_ta(request, id):
     log = LogTA.objects.get(pk=id)
     log.delete()
