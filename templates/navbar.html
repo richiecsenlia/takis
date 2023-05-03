@@ -47,7 +47,7 @@
             {{ user.teachingassistantprofile }}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'accounts:profile' user.teachingassistantprofile.slug %}">Lihat Profil</a></li>
+            <li><a class="dropdown-item" href="{% url 'accounts:profile' user.id %}">Lihat Profil</a></li>
             <li><hr class="dropdown-divider bg-dark mx-2"></hr></li>
             <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
             <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
