@@ -25,15 +25,15 @@
     <div class="card mb-4">
       <div class="card-body px-0 pt-0 pb-2">
         <div class="table-responsive p-0">
-          <table class="table align-items-center mb-0">
+          <table class="table align-items-center mb-0" aria-label="Dashboard Evaluator">
             <thead>
               <tr>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Asisten</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kontrak</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Keterangan</th>
-                <th class="text-secondary opacity-7"></th>
-                <th class="text-secondary opacity-7"></th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Nama Asisten</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Kontrak</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Status</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Keterangan</th>
+                <th class="text-secondary opacity-7" scope="col"></th>
+                <th class="text-secondary opacity-7" scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -57,13 +57,13 @@
                   <span class="text-secondary text-xs font-weight-bold">TA ini sudah memenuhi beban kerja bulan ini</span>
                 </td>
                 <td class="align-middle">
-                  <a href="javascript:;" class="text-primary font-weight-bold text-xs">
+                  <a href="{% url 'pengisianLog:daftar_log_evaluator' %}" class="text-primary font-weight-bold text-xs">
                     Lihat Log
                   </a>
                 </td>
                 <td class="align-middle">
-                  <a href="javascript:;" class="text-primary font-weight-bold text-xs">
-                    Lihat Profil
+                  <a href="{% url 'rekapanLog:rekapan_log' ta.user %}" class="text-primary font-weight-bold text-xs">
+                    Lihat Rekap
                   </a>
                 </td>
               </tr>
@@ -93,7 +93,7 @@
                 </td>
                 <td class="align-middle">
                   <a href="javascript:;" class="text-primary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                    Lihat Profil
+                    Lihat Rekap
                   </a>
                 </td>
               </tr>

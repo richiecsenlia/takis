@@ -497,11 +497,6 @@ legend+* {
   padding: 0;
 }
 
-::file-selector-button {
-  font: inherit;
-  -webkit-appearance: button;
-}
-
 output {
   display: inline-block;
 }
@@ -2775,31 +2770,6 @@ progress {
   opacity: 1;
 }
 
-.form-control::file-selector-button {
-  padding: 0.5rem 0.75rem;
-  margin: -0.5rem -0.75rem;
-  margin-inline-end: 0.75rem;
-  color: #495057;
-  background-color: #fff;
-  pointer-events: none;
-  border-color: inherit;
-  border-style: solid;
-  border-width: 0;
-  border-inline-end-width: 1px;
-  border-radius: 0;
-  transition: all 0.15s ease-in;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .form-control::file-selector-button {
-    transition: none;
-  }
-}
-
-.form-control:hover:not(:disabled):not([readonly])::file-selector-button {
-  background-color: #f2f2f2;
-}
-
 .form-control-plaintext {
   display: block;
   width: 100%;
@@ -2825,23 +2795,11 @@ progress {
   border-radius: 0.5rem;
 }
 
-.form-control-sm::file-selector-button {
-  padding: 0.25rem 0.75rem;
-  margin: -0.25rem -0.75rem;
-  margin-inline-end: 0.75rem;
-}
-
 .form-control-lg {
   min-height: unset;
   padding: 0.75rem 0.75rem;
   font-size: 0.875rem;
   border-radius: 0.5rem;
-}
-
-.form-control-lg::file-selector-button {
-  padding: 0.75rem 0.75rem;
-  margin: -0.75rem -0.75rem;
-  margin-inline-end: 0.75rem;
 }
 
 textarea.form-control {
@@ -2975,7 +2933,6 @@ textarea.form-control-lg {
   background-size: contain;
   border: none;
   appearance: none;
-  print-color-adjust: exact;
   transition: background-color 0.25s ease, border-color 0.25s ease, background-position 0.15s ease-in-out, opacity 0.15s ease-out, box-shadow 0.15s ease-in-out;
 }
 
@@ -10638,6 +10595,10 @@ fieldset:disabled .btn {
 
 .bg-white-blue {
   background-color: #edf2fb !important;
+}
+
+.bg-light-blue {
+  background-color: #bcd4e6 !important;
 }
 
 .bg-yellow {
@@ -21104,7 +21065,7 @@ fieldset:disabled .btn {
   .dropstart .dropdown-toggle:after,
   .dropend .dropdown-toggle:after {
     content: "\f107";
-    font: normal normal normal 14px/1 FontAwesome;
+    font: normal normal normal 14px/1 FontAwesome, sans-serif;
     border: none;
     vertical-align: middle;
     font-weight: 600;
@@ -21163,7 +21124,7 @@ fieldset:disabled .btn {
   }
 
   .dropdown .dropdown-menu:before {
-    font-family: "FontAwesome";
+    font-family: "FontAwesome", sans-serif;
     content: "\f0d8";
     position: absolute;
     top: 0;
@@ -21199,7 +21160,7 @@ fieldset:disabled .btn {
   }
 
   .navbar-toggler+.navbar-collapse .dropdown:not(.nav-item) .dropdown-menu:before {
-    font-family: "FontAwesome";
+    font-family: "FontAwesome", sans-serif;
     content: "\f0d8";
     position: absolute;
     top: 0;
@@ -21244,7 +21205,7 @@ fieldset:disabled .btn {
   }
 
   .dropdown .dropdown-menu:before {
-    font-family: "FontAwesome";
+    font-family: "FontAwesome", sans-serif;
     content: "\f0d8";
     position: absolute;
     top: 0;
@@ -21407,7 +21368,7 @@ fieldset:disabled .btn {
 }
 
 .dropup .dropdown-menu:after {
-  font-family: "FontAwesome";
+  font-family: "FontAwesome", sans-serif;
   content: "\f0d7";
   position: absolute;
   z-index: -1;
@@ -21578,7 +21539,7 @@ fieldset:disabled .btn {
 
 .form-check:not(.form-switch) .form-check-input[type="checkbox"]:after {
   transition: opacity 0.25s ease-in-out;
-  font-family: "FontAwesome";
+  font-family: "FontAwesome", sans-serif;
   content: "\f00c";
   width: 100%;
   height: 100%;
@@ -22041,7 +22002,6 @@ html {
   transition: 0.2s ease-out;
   overflow: hidden;
   -webkit-transform-origin: 50% 0;
-  transform-origin: 50% 0;
   transform-origin: 50% 0;
   -webkit-transform: perspective(999px) rotateX(0deg) translate3d(0, 0, 0);
   transform: perspective(999px) rotateX(0deg) translate3d(0, 0, 0);
@@ -23425,7 +23385,7 @@ hr.horizontal.gray-light {
   font-variant: normal;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
-  font-family: 'Font Awesome 5 Free';
+  font-family: 'Font Awesome 5 Free', sans-serif;
   font-weight: 700;
   content: "\f107";
   margin-left: auto;
@@ -24724,7 +24684,6 @@ hr.horizontal.gray-light {
   position: relative;
   margin-left: 45px;
   padding-top: 0.35rem;
-  position: relative;
   top: -6px;
 }
 
@@ -25448,7 +25407,6 @@ body.dark-version {
   box-sizing: border-box;
   -ms-touch-action: manipulation;
   touch-action: manipulation;
-  background: #fff;
   -webkit-box-shadow: 0 8px 26px -4px rgba(20, 20, 20, 0.15), 0 8px 9px -5px rgba(20, 20, 20, 0.06);
 }
 
@@ -25793,7 +25751,6 @@ body.dark-version {
   width: 75%;
   left: 12.5%;
   padding: 7.48px 0 0 0;
-  line-height: 1;
   height: 34px;
   display: inline-block;
   text-align: center;
@@ -26196,10 +26153,6 @@ span.flatpickr-weekday {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   overflow: hidden;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .flatpickr-time:after {
@@ -26553,7 +26506,6 @@ span.flatpickr-weekday {
   border-radius: 100%;
   background: #5e72e4;
   cursor: default;
-  webkit-transition: .3s ease 0s;
   -moz-transition: .3s ease 0s;
   -ms-transition: .3s ease 0s;
   -o-transform: .3s ease 0s;
