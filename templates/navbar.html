@@ -31,19 +31,19 @@
         {% if user.role.role == 'TA' %}
         <li class="nav-item me-2">
           <a class="nav-link" href="#">
-            <i class="fa fa-clipboard-check opacity-6 me-1"></i>
+            <em class="fa fa-clipboard-check opacity-6 me-1"></em>
             Rekapan
           </a>
         </li>
         <li class="nav-item me-2">
           <a class="nav-link" href="{% url 'pengisianLog:daftar_log_ta' %}">
-            <i class="fa fa-file-alt opacity-6 me-1"></i>
+            <em class="fa fa-file-alt opacity-6 me-1"></em>
             Log
           </a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa fa-user opacity-6 me-1"></i>
+            <em class="fa fa-user opacity-6 me-1"></em>
             {{ user.teachingassistantprofile }}
           </a>
           <ul class="dropdown-menu">
@@ -56,13 +56,13 @@
         {% elif user.role.role == 'admin' %}
         <li class="nav-item me-2">
           <a class="nav-link" href="{% url 'accounts:dashboard_eval' %}">
-            <i class="fa fa-th-large opacity-6 me-1"></i>
+            <em class="fa fa-th-large opacity-6 me-1"></em>
             Dashboard
           </a>
         </li>
         <li class="nav-item dropdown me-2">
           <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa fa-file-alt opacity-6 me-1"></i>
+            <em class="fa fa-file-alt opacity-6 me-1"></em>
             Log
           </a>
           <ul class="dropdown-menu">
@@ -72,7 +72,7 @@
         </li>
         <li class="nav-item dropdown me-2">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa fa-users opacity-6 me-1"></i>
+            <em class="fa fa-users opacity-6 me-1"></em>
             Daftar TA
           </a>
           <ul class="dropdown-menu">
@@ -82,7 +82,7 @@
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa fa-user opacity-6 me-1"></i>
+            <em class="fa fa-user opacity-6 me-1"></em>
             {{ user }}
           </a>
           <ul class="dropdown-menu">
@@ -95,7 +95,7 @@
         {% else %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa fa-user opacity-6 me-1"></i>
+            <em class="fa fa-user opacity-6 me-1"></em>
             Guest
           </a>
           <ul class="dropdown-menu">
