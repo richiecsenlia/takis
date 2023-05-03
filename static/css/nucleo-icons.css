@@ -17,7 +17,7 @@ License - nucleoapp.com/license/
 -------------------------*/
 .ni {
   display: inline-block;
-  font: normal normal normal 14px/1 NucleoIcons;
+  font: normal normal normal 14px/1 NucleoIcons, sans-serif;
   font-size: inherit;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
