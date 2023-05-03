@@ -348,6 +348,13 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(response.context['filter_kategori'][0], "Harian")
         self.assertEquals(response.context['filter_periode'][0], "Persiapan Kuliah")
         self.assertEquals(response.context['filter_bulan'][0], "JAN")
+
+    def test_filter_LogTA_response_TA_context(self):
+        self.client.force_login(user=self.admin_user)
+        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator'),{"bulan":"JAN","kategori":"Harian","periode":"Persiapan Kuliah"})
+        self.assertEquals(response.context['filter_kategori'][0], "Harian")
+        self.assertEquals(response.context['filter_periode'][0], "Persiapan Kuliah")
+        self.assertEquals(response.context['filter_bulan'][0], "JAN")
         
     # Test edit log TA
     def test_display_form_edit_log_ta_as_ta(self):
