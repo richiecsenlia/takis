@@ -5,6 +5,7 @@ from accounts.models import TeachingAssistantProfile, MataKuliah
 from authentication.views import ta_required, admin_required
 
 # Create your views here.
+@ta_required
 def fill_profile(request):
     if request.method == 'POST':
         ta_profile = TeachingAssistantProfile(

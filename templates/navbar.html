@@ -92,6 +92,17 @@
             <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
           </ul>
         </li>
+        {% elif user.role.role == 'not-assign' %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+            <em class="fa fa-user opacity-6 me-1"></em>
+            {{ user }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
+            <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
+          </ul>
+        </li>
         {% else %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
