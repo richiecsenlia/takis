@@ -52,10 +52,10 @@
                 <td class="ps-sm-4 ps-3 text-sm font-weight-bold" scope="col">{{user.role.role}}</td>
                 <td scope="col">
                   {% if user.role.role != "TA" %}
-                    <a href="/auth/change_role/{{user.id}}/TA" class="btn btn-primary mb-0">TA</a>
+                    <a href="/auth/change-role/{{user.id}}/TA" class="btn btn-primary mb-0">TA</a>
                   {% endif %}
                   {% if user.role.role != "admin" %}
-                    <a href="/auth/change_role/{{user.id}}/admin" class="btn btn-warning mb-0">admin</a>
+                    <a href="/auth/change-role/{{user.id}}/admin" class="btn btn-warning mb-0">admin</a>
                   {% endif %}
                 </td>
               </tr>

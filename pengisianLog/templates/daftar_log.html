@@ -21,17 +21,14 @@
         {% endif %}
       </div>
       <div class="dropdown d-inline">  
-        {% for kontrak in filter_kontrak %}
-        <span class="badge rounded-pill bg-info text-dark">{{kontrak}}</span>
+        {% for bulan in filter_bulan %}
+        <span class="badge rounded-pill bg-info text-dark">{{bulan}}</span>
         {% endfor %}
-        {% for status in filter_status %}
-        <span class="badge rounded-pill bg-info text-dark">{{status}}</span>
+        {% for periode in filter_periode %}
+        <span class="badge rounded-pill bg-info text-dark">{{periode}}</span>
         {% endfor %}
-        {% for prodi in filter_prodi %}
-        <span class="badge rounded-pill bg-info text-dark">{{prodi}}</span>
-        {% endfor %}
-        {% for matkul in filter_matkul %}
-        <span class="badge rounded-pill bg-info text-dark">{{matkul}}</span>
+        {% for kategori in filter_kategori %}
+        <span class="badge rounded-pill bg-info text-dark">{{kategori}}</span>
         {% endfor %}
         {% if user.role.role == 'TA' %}
         <a href="{% url 'pengisianLog:mengisi_log' %}" class="btn btn-success mb-sm-1 ms-2">+&nbsp; Buat Log Baru</a>
