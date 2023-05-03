@@ -1,100 +1,106 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Profil
-{% endblock title %}
+{% block title %} Profil {% endblock title %}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
 
 {% block content %}
-<div class="container">
-  <h1 class="text-center my-5"> Profil </h1>
-
-  <div class="row g-0">
-    <div class="col-6 pe-3">
-      <div class="card rounded-0">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <div class="pt-3 h-100 bg-secondary">
-              <p class="text-center text-white">Nama</p>
+<div class="page-header py-8 bg-white-blue">
+  <div class="container">
+    <h2 class="text-center mb-5">Profil Anda</h2>
+  
+    <div class="row g-0">
+      <div class="col-6 pe-3">
+        <div class="card rounded-0">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <div class="pt-3 h-100 bg-secondary">
+                <p class="text-center text-white">Nama</p>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <p class="card-text fw-bold">{{ profile.nama }}</p>
+              </div>
             </div>
           </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <p class="card-text fw-bold">{{ profile.nama }}</p>
+        </div>
+        
+        <div class="card rounded-0">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <div class="pt-3 h-100 bg-secondary">
+                <p class="text-center text-white">Jenis TA</p>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <p class="card-text fw-bold">{{ profile.kontrak }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card rounded-0">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <div class="pt-3 h-100 bg-secondary">
+                <p class="text-center text-white">Status Kemahasiswaan</p>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <p class="card-text fw-bold">{{ profile.status }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card rounded-0">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <div class="pt-3 h-100 bg-secondary">
+                <p class="text-center text-white">Program Studi</p>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <p class="card-text fw-bold">{{ profile.prodi }}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      
-      <div class="card rounded-0">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <div class="pt-3 h-100 bg-secondary">
-              <p class="text-center text-white">Jenis TA</p>
+  
+      <div class="col-6 ps-3">
+        <div class="card rounded-0" style="max-height: 230px;">
+          <div class="row mx-0">
+            <div class="pt-3 bg-secondary">
+              <p class="text-center text-white">Daftar Mata Kuliah</p>
             </div>
           </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <p class="card-text fw-bold">{{ profile.kontrak }}</p>
+          <div class="row mx-0 overflow-auto">
+            {% if profile.daftar_matkul %}
+            {% for matkul in profile.daftar_matkul.all %}
+            <div class="card-body px-0">
+              <p class="card-text ps-3 fw-bold">{{ matkul }}</p>
             </div>
+            {% endfor %}
+            {% endif %}
           </div>
-        </div>
-      </div>
-      
-      <div class="card rounded-0">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <div class="pt-3 h-100 bg-secondary">
-              <p class="text-center text-white">Status Kemahasiswaan</p>
-            </div>
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <p class="card-text fw-bold">{{ profile.status }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="card rounded-0">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <div class="pt-3 h-100 bg-secondary">
-              <p class="text-center text-white">Program Studi</p>
-            </div>
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <p class="card-text fw-bold">{{ profile.prodi }}</p>
-            </div>
-          </div>
+  
         </div>
       </div>
     </div>
-
-    <div class="col-6 ps-3">
-      <div class="card rounded-0" style="max-height: 230px;">
-        <div class="row mx-0">
-          <div class="pt-3 bg-secondary">
-            <p class="text-center text-white">Daftar Mata Kuliah</p>
-          </div>
-        </div>
-        <div class="row mx-0 overflow-auto">
-          {% if profile.daftar_matkul %}
-          {% for matkul in profile.daftar_matkul.all %}
-          <div class="card-body px-0">
-            <p class="card-text ps-3 fw-bold">{{ matkul }}</p>
-          </div>
-          {% endfor %}
-          {% endif %}
-        </div>
-
-      </div>
+  
+    <div class="d-grid gap-2 col-6 mx-auto mt-4">
+      <button type="submit" class="btn btn-primary fw-bold">Edit Profil</button>
     </div>
+  
   </div>
-
-  <div class="d-grid gap-2 col-6 mx-auto mt-4">
-    <button type="submit" class="btn btn-primary fw-bold">Edit Profil</button>
-  </div>
-
 </div>
 {% endblock content %}
