@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'accounts',
     'rekapanLog',
     'simple_history',
+    'periode',
 ]
 
 MIDDLEWARE = [
