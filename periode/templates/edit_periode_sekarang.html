@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %} Edit Periode Sekarang {% endblock title%}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="page-header pt-8 pb-6 bg-white-blue">
+  <div class="container">
+    <h2 class="text-center mb-3">Edit Periode Sekarang</h2>
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="card my-2">
+          <div class="card-body">
+            <div class="row mt-2">
+              <div class="col-12 mt-2">
+                {% for field in form %}
+                  <div class="fieldWrapper">
+                      {{ field.label_tag }} {{ field }}
+                  </div>
+                  {{ field.errors }}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <div class="d-grid gap-2 col-6 mx-auto mt-5">
+        <input type="submit" name="submit" class="btn btn-success" />
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  function myFunction() {
+    var form = document.getElementById("realisasi_form")
+    if (form.style.display === "none") {
+      form.style.display = "block"
+    } else {
+      form.style.display = "none"
+    }
+  }
+</script>
+{% endblock script %}
