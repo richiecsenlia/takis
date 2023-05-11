@@ -15,11 +15,11 @@ def validate_tahun_ajaran(data):
 class Periode(models.Model):
     GANJIL = 'Ganjil'
     GENAP = 'Genap'
-    SP = 'SP'
+    PENDEK = 'Pendek'
     SEMESTER_CHOICES = [
         (GANJIL, 'Ganjil'),
         (GENAP, 'Genap'),
-        (SP, 'SP'),
+        (PENDEK, 'Pendek'),
     ]
 
     tahun_ajaran = models.CharField(max_length=9, validators=[validate_tahun_ajaran])
