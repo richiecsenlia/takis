@@ -13,7 +13,7 @@ class PeriodeSekarangForm(forms.Form):
                                             widget=forms.Select(attrs={'class': 'form-select'}))
         
     except (OperationalError, ProgrammingError):
-        periode = forms.ModelChoiceField(queryset=[], widget=forms.Select(attrs={'class': 'form-select'}))
+        periode = forms.ModelChoiceField(queryset=None, widget=forms.Select(attrs={'class': 'form-select'}))
 
     
 
