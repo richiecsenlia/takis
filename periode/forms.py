@@ -1,0 +1,28 @@
+import re
+from django import forms
+from .models import Periode, PeriodeSekarang
+from django.db.utils import OperationalError
+
+class PeriodeSekarangForm(forms.Form):
+    try:
+        queryset = Periode.objects.all().order_by('-tahun_ajaran', 'semester')
+        periode_sekarang = PeriodeSekarang.objects.all()
+        initial = None if not periode_sekarang.exists() else periode_sekarang.first().periode
+
+        periode = forms.ModelChoiceField(queryset=queryset, initial=initial, 
+                                            widget=forms.Select(attrs={'class': 'form-select'}))
+        
+    except OperationalError:
+        pass
+
+    
+
+class PeriodeForm(forms.ModelForm):
+    class Meta:
+        model = Periode
+        fields = ['tahun_ajaran', 'semester']
+        
+        widgets = {
+            'tahun_ajaran': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Contoh: 2022/2023'}),
+            'semester': forms.Select(attrs={'class': 'form-select'}),
+        }
