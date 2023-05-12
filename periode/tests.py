@@ -129,7 +129,14 @@ class PeriodeTestCase(TestCase):
 
     # Tes melihat daftar TA per periode
     def test_view_list_response_evaluator(self):
+        self.periode.save()
+        periode_context = {
+            'periode' : self.periode.id
+        }
+
         self.client.force_login(user=self.admin_user)
+        self.client.post(reverse(EDIT_PERIODE_SEKARANG_URL), periode_context)
+        
         response = self.client.get(reverse(URL_DAFTAR_TA_PER_PERIODE))
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)

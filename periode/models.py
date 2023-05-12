@@ -1,6 +1,7 @@
 import re
 from django.db import models
 from django.forms import ValidationError
+from accounts.models import TeachingAssistantProfile
 
 
 def validate_tahun_ajaran(data):
@@ -29,6 +30,8 @@ class Periode(models.Model):
         choices=SEMESTER_CHOICES,
         default=GANJIL,
     )
+
+    daftar_ta = models.ManyToManyField(TeachingAssistantProfile)
 
     class Meta:
         constraints = [
