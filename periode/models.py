@@ -4,11 +4,17 @@ from django.forms import ValidationError
 from accounts.models import TeachingAssistantProfile
 
 
-def validate_tahun_ajaran(data):
+def tahun_ajaran_validator(data):
     pattern = r"\d{4}/\d{4}"
     if not re.match(pattern, data):
         raise ValidationError(
-            'Harus diisi dalam format TAHUN/TAHUN (Contoh: 2023/2024)')
+            'Harus diisi dalam format TAHUN/TAHUN (Contoh: 2023/2024)', code="invalid_format")
+    
+    tahun_start, tahun_end = data.split('/')
+    if int(tahun_start) != int(tahun_end) - 1:
+        raise ValidationError(
+            'Tahun mulai/selesai tidak valid', code="invalid_time")
+    
     return data
 
 # Create your models here.
@@ -23,7 +29,7 @@ class Periode(models.Model):
         (PENDEK, 'Pendek'),
     ]
 
-    tahun_ajaran = models.CharField(max_length=9, validators=[validate_tahun_ajaran])
+    tahun_ajaran = models.CharField(max_length=9, validators=[tahun_ajaran_validator])
     semester = models.CharField(
 
         max_length=6,
