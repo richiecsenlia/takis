@@ -3,6 +3,7 @@ from django.test import RequestFactory
 from django.contrib.auth.models import User
 from .views import *
 from pengisianLog.models import LogTA
+from periode.models import Periode, PeriodeSekarang
 from django.urls import reverse
 
 # Create your tests here.
@@ -22,6 +23,21 @@ class RekapanLogTestCase(TestCase):
         self.admin_user.role.role = 'admin'
         self.admin_user.role.save()
 
+        self.periode = Periode(
+            tahun_ajaran = "2022/2023",
+            semester = 'Ganjil',
+        )
+        self.periode.save()
+
+        self.periode_alt = Periode(
+            tahun_ajaran = "2021/2022",
+            semester = 'Ganjil',
+        )
+        self.periode_alt.save()
+
+        periode_sekarang = PeriodeSekarang(periode = self.periode)
+        periode_sekarang.save()
+
         LogTA.objects.create(
             user = self.ta_user,
             kategori = "Penyelenggaraan Kuliah",
@@ -36,7 +52,8 @@ class RekapanLogTestCase(TestCase):
             konversi_jam_rencana_kinerja = 1,
             jumlah_realisasi_kinerja = 4,
             satuan_realisasi_kinerja = "Tugas",
-            konversi_jam_realisasi_kinerja = 1
+            konversi_jam_realisasi_kinerja = 1,
+            periode_log= self.periode
         )
 
         LogTA.objects.create(
@@ -53,7 +70,8 @@ class RekapanLogTestCase(TestCase):
             konversi_jam_rencana_kinerja = 0.5,
             jumlah_realisasi_kinerja = 1,
             satuan_realisasi_kinerja = "Tugas",
-            konversi_jam_realisasi_kinerja = 0.25
+            konversi_jam_realisasi_kinerja = 0.25,
+            periode_log= self.periode
         )
 
         LogTA.objects.create(
@@ -70,7 +88,8 @@ class RekapanLogTestCase(TestCase):
             konversi_jam_rencana_kinerja = 2,
             jumlah_realisasi_kinerja = 0,
             satuan_realisasi_kinerja = "",
-            konversi_jam_realisasi_kinerja = 0
+            konversi_jam_realisasi_kinerja = 0,
+            periode_log= self.periode
         )
 
         LogTA.objects.create(
@@ -87,7 +106,8 @@ class RekapanLogTestCase(TestCase):
             konversi_jam_rencana_kinerja = 1,
             jumlah_realisasi_kinerja = 1,
             satuan_realisasi_kinerja = "semester",
-            konversi_jam_realisasi_kinerja = 1
+            konversi_jam_realisasi_kinerja = 1,
+            periode_log= self.periode
         )
 
         LogTA.objects.create(
@@ -104,11 +124,32 @@ class RekapanLogTestCase(TestCase):
             konversi_jam_rencana_kinerja = 2,
             jumlah_realisasi_kinerja = 2,
             satuan_realisasi_kinerja = "",
-            konversi_jam_realisasi_kinerja = 2
+            konversi_jam_realisasi_kinerja = 2,
+            periode_log= self.periode
         )
 
+        LogTA.objects.create(
+            user = self.ta_user,
+            kategori = "Persiapan Kuliah",
+            jenis_pekerjaan = "Mempersiapkan",
+            detail_kegiatan = "",
+            pemberi_tugas = "",
+            uraian = "Rapat persiapan",
+            periode = "Adhoc",
+            bulan_pengerjaan = "SEP",
+            jumlah_rencana_kinerja = 2,
+            satuan_rencana_kinerja = "Tugas",
+            konversi_jam_rencana_kinerja = 2,
+            jumlah_realisasi_kinerja = 2,
+            satuan_realisasi_kinerja = "",
+            konversi_jam_realisasi_kinerja = 2,
+            periode_log= self.periode_alt
+        )
+
+        
+
     def test_get_average_all_rencana(self):
-        rencanaAvg = get_all_rencana(self.ta_user)
+        rencanaAvg = get_all_rencana(self.ta_user, self.periode)
         # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
 
         self.assertEquals(rencanaAvg['penyelenggaraan_plan'], 0.25)
@@ -119,8 +160,8 @@ class RekapanLogTestCase(TestCase):
         self.assertEquals(rencanaAvg['pengembangan_real'], (1/6))
 
     def test_get_average_month_rencana(self):
-        rencanaApr = get_month_rencana(self.ta_user, 'APR')
-        rencanaSep = get_month_rencana(self.ta_user, 'SEP')
+        rencanaApr = get_month_rencana(self.ta_user, 'APR', self.periode)
+        rencanaSep = get_month_rencana(self.ta_user, 'SEP', self.periode)
         # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
 
         self.assertEquals(rencanaApr['penyelenggaraan_plan'], 0.5)
