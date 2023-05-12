@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib import auth
 from .models import LogTA
-from periode.models import Periode
+from periode.models import Periode, PeriodeSekarang
 from django.urls import reverse
 from django.test import RequestFactory
 from django.contrib.auth.models import User
@@ -149,6 +149,9 @@ class PengisianLogTestCase(TestCase):
             semester = SEMESTER,
         )
         self.periode.save()
+
+        periode_sekarang = PeriodeSekarang(periode = self.periode)
+        periode_sekarang.save()
 
         self.logTA_1 = LogTA.objects.create(
             user = self.ta_user,
