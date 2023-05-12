@@ -8,9 +8,10 @@ from .models import Periode, PeriodeSekarang
 # Create your tests here.
 TAHUN_AJARAN = "2022/2023"
 TAHUN_AJARAN_ALT = "2023/2024"
-TAHUN_AJARAN_WRONG = "2019-2020"
-
+TAHUN_AJARAN_WRONG_FORMAT = "2019-2020"
+TAHUN_AJARAN_WRONG_TIME = "2019/2029"
 SEMESTER = 'Ganjil'
+
 BUAT_PERIODE_URL = "periode:buat-periode"
 EDIT_PERIODE_SEKARANG_URL = "periode:edit-periode-sekarang"
 URL_DAFTAR_TA_PER_PERIODE = "periode:daftar-ta"
@@ -20,8 +21,13 @@ create_context = {
     'semester' : SEMESTER,
 }
 
-wrong_create_context = {
-    'tahun_ajaran' : TAHUN_AJARAN_WRONG,
+wrong_format_create_context = {
+    'tahun_ajaran' : TAHUN_AJARAN_WRONG_FORMAT,
+    'semester' : SEMESTER,
+}
+
+wrong_time_create_context = {
+    'tahun_ajaran' : TAHUN_AJARAN_WRONG_TIME,
     'semester' : SEMESTER,
 }
 
@@ -79,7 +85,13 @@ class PeriodeTestCase(TestCase):
 
     def test_create_wrong_periode(self):
         self.client.force_login(user=self.admin_user)
-        self.client.post(reverse(BUAT_PERIODE_URL), wrong_create_context)
+        self.client.post(reverse(BUAT_PERIODE_URL), wrong_format_create_context)
+        all_periode = Periode.objects.all()
+
+        self.assertRaises(ValidationError)
+        self.assertEquals(all_periode.count(), 0)
+
+        self.client.post(reverse(BUAT_PERIODE_URL), wrong_time_create_context)
         all_periode = Periode.objects.all()
 
         self.assertRaises(ValidationError)
