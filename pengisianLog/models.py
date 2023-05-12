@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from periode.models import Periode
 from simple_history.models import HistoricalRecords
 
 KATEGORI_CHOICES = [('Persiapan Kuliah','Persiapan Kuliah'),
@@ -43,3 +44,4 @@ class LogTA(models.Model):
     satuan_realisasi_kinerja = models.CharField(default="", max_length=20,blank=True, null=True)
     konversi_jam_realisasi_kinerja = models.FloatField(default=0, blank=True, null=True)
     history = HistoricalRecords()
+    periode_log = models.ForeignKey(Periode, on_delete=models.CASCADE, blank=True)

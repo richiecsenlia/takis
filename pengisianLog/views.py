@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_GET
 from pengisianLog.models import LogTA
+from periode.models import Periode, PeriodeSekarang
 
 VALUE_ERROR = "Input tidak valid"
 
@@ -20,6 +21,7 @@ def form_log_ta(request):
         else:
             jumlah_realisasi_kinerja_validasi = 0
             konversi_jam_realisasi_kinerja_validasi = 0
+            periode_sekarang = PeriodeSekarang.objects.all()
             if (request.POST.get('jumlah_realisasi_kinerja')) == "":
                  jumlah_realisasi_kinerja_validasi = 0
                  konversi_jam_realisasi_kinerja_validasi = 0
@@ -40,7 +42,8 @@ def form_log_ta(request):
                 konversi_jam_rencana_kinerja = int(request.POST.get('jumlah_kinerja')) / 4,
                 jumlah_realisasi_kinerja = jumlah_realisasi_kinerja_validasi,
                 satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja'),
-                konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi
+                konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi,
+                periode_log = periode_sekarang[0].periode
             )
             return redirect(reverse("pengisianLog:daftar_log_ta"))
     except ValueError:
