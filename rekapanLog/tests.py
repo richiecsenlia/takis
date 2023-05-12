@@ -175,7 +175,7 @@ class RekapanLogTestCase(TestCase):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse("rekapanLog:rekapan_log", args=[self.ta_user.username]))
 
-        rencanaAvg = get_all_rencana(self.ta_user)
+        rencanaAvg = get_all_rencana(self.ta_user, self.periode)
 
         self.assertTemplateUsed(response, 'rekap_log.html')
         self.assertEquals(response.context['persiapan_plan'], rencanaAvg['persiapan_plan'])
@@ -195,7 +195,7 @@ class RekapanLogTestCase(TestCase):
         self.client.force_login(user=self.admin_user)
         response = self.client.get(reverse("rekapanLog:rekapan_log", args=[self.ta_user.username]))
 
-        rencanaAvg = get_all_rencana(self.ta_user)
+        rencanaAvg = get_all_rencana(self.ta_user, self.periode)
 
         self.assertTemplateUsed(response, 'rekap_log.html')
         self.assertEquals(response.context['persiapan_plan'], rencanaAvg['persiapan_plan'])
@@ -215,7 +215,7 @@ class RekapanLogTestCase(TestCase):
         self.client.force_login(user=self.ta_user)
         response = self.client.post(reverse("rekapanLog:rekapan_log", args=[self.ta_user.username]), {"bulan" : "APR"})
 
-        rencanaApr = get_month_rencana(self.ta_user, 'APR')
+        rencanaApr = get_month_rencana(self.ta_user, 'APR', self.periode)
 
         self.assertTemplateUsed(response, 'rekap_log.html')
         self.assertEquals(response.context['persiapan_plan'], rencanaApr['persiapan_plan'])
