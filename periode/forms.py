@@ -1,7 +1,7 @@
 import re
 from django import forms
 from .models import Periode, PeriodeSekarang
-from django.db.utils import OperationalError
+from django.db.utils import OperationalError, ProgrammingError
 
 class PeriodeSekarangForm(forms.Form):
     try:
@@ -12,8 +12,8 @@ class PeriodeSekarangForm(forms.Form):
         periode = forms.ModelChoiceField(queryset=queryset, initial=initial, 
                                             widget=forms.Select(attrs={'class': 'form-select'}))
         
-    except OperationalError:
-        pass
+    except (OperationalError, ProgrammingError):
+        periode = forms.ModelChoiceField(queryset=None, widget=forms.Select(attrs={'class': 'form-select'}))
 
     
 
