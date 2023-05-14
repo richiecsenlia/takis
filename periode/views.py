@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from authentication.views import admin_required
 
-from periode.models import PeriodeSekarang
+from periode.models import Periode, PeriodeSekarang
 from .forms import PeriodeForm, PeriodeSekarangForm
 
 # Create your views here.
@@ -42,3 +42,14 @@ def edit_periode_sekarang(request):
         form.fields['periode'].initial = initial
 
     return render(request, "edit_periode_sekarang.html", {"form": form})
+
+@admin_required
+def daftar_ta(request):
+    periode_sekarang = PeriodeSekarang.objects.first()
+    daftar_ta = periode_sekarang.periode.daftar_ta.all()
+    pilihan_periode = Periode.objects.all()
+
+    context = {'daftar_ta': daftar_ta,
+               'periode_sekarang': periode_sekarang,
+               'pilihan_periode': pilihan_periode}
+    return render(request, 'daftar_ta.html', context)
