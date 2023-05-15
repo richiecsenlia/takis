@@ -7,6 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_GET
 from pengisianLog.models import LogTA
 from periode.models import Periode, PeriodeSekarang
+from django.db.models import Q
 
 VALUE_ERROR = "Input tidak valid"
 
@@ -103,11 +104,13 @@ def delete_log_ta(request, id):
 @ta_required
 def daftar_log_ta(request):
     
+    periode_sekarang_all = PeriodeSekarang.objects.all()
+    periode_sekarang = periode_sekarang_all[0].periode
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
-    logs = LogTA.objects.filter(user=request.user)
-    
+    logs = LogTA.objects.filter(Q(user=request.user, periode_log=periode_sekarang))
+
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
     bulan_choice = LogTA.bulan_pengerjaan.field.choices
@@ -137,10 +140,12 @@ def daftar_log_ta(request):
 @admin_required
 def daftar_log_evaluator(request):
     print(request.GET)
+    periode_sekarang_all = PeriodeSekarang.objects.all()
+    periode_sekarang = periode_sekarang_all[0].periode
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
-    logs = LogTA.objects.all().order_by('user', 'id')
+    logs = LogTA.objects.filter(Q(periode_log=periode_sekarang)).order_by('user', 'id')
     
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
