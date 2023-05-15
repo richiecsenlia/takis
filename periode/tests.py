@@ -12,9 +12,9 @@ TAHUN_AJARAN_WRONG_FORMAT = "2019-2020"
 TAHUN_AJARAN_WRONG_TIME = "2019/2029"
 SEMESTER = 'Ganjil'
 
-BUAT_PERIODE_URL = "periode:buat-periode"
-EDIT_PERIODE_SEKARANG_URL = "periode:edit-periode-sekarang"
-URL_DAFTAR_TA_PER_PERIODE = "periode:daftar-ta"
+BUAT_PERIODE_URL = "periode:buat_periode"
+EDIT_PERIODE_SEKARANG_URL = "periode:edit_periode_sekarang"
+URL_DAFTAR_TA_PER_PERIODE = "periode:daftar_ta"
 
 create_context = {
     'tahun_ajaran' : TAHUN_AJARAN,
