@@ -16,9 +16,28 @@
         <h3>Dashboard Evaluator</h3>
       </div>
       <div class="dropdown d-inline">
-        <button class="btn btn-outline-brand border-radius-xl dropdown-toggle ms-sm-2 my-md-3 mx-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <form method="post" action = >
+          {% csrf_token %}
+          <select name="bulan" class="form-select" onchange="this.form.submit()">
+            <option value="Rata-rata" selected disabled>Selected : {{ choice }}</option>
+            <option value="Rata-rata">Rata-rata</option>
+            <option value="JAN">JAN</option>
+            <option value="FEB">FEB</option>
+            <option value="MAR">MAR</option>
+            <option value="APR">APR</option>
+            <option value="MEI">MEI</option>
+            <option value="JUN">JUN</option>
+            <option value="JUL">JUL</option>
+            <option value="AGT">AGT</option>
+            <option value="SEP">SEP</option>
+            <option value="OKT">OKT</option>
+            <option value="NOV">NOV</option>
+            <option value="DES">DES</option>
+          </select>
+        </form>
+        <!-- <button class="btn btn-outline-brand border-radius-xl dropdown-toggle ms-sm-2 my-md-3 mx-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           Filter by Status
-        </button>
+        </button> -->
       </div>
     </div>
     
@@ -42,30 +61,62 @@
                 <td>
                   <div class="px-3 py-1">
                     <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-sm">{{ ta.nama }}</h6>
-                      <p class="text-xs text-secondary mb-0">@{{ ta.user }}</p>
+                      <h6 class="mb-0 text-sm">{{ ta.0.nama }}</h6>
+                      <p class="text-xs text-secondary mb-0">@{{ ta.0.user }}</p>
                     </div>
                   </div>
                 </td>
                 <td>
-                  <p class="text-center text-xs font-weight-bold mb-0">{{ ta.kontrak }}</p>
+                  <p class="text-center text-xs font-weight-bold mb-0">{{ ta.0.kontrak }}</p>
                 </td>
-                <td class="align-middle text-center text-sm">
-                  <span class="badge badge-sm bg-success">Fulfilled</span>
-                </td>
-                <td class="align-middle text-center">
-                  <span class="text-secondary text-xs font-weight-bold">TA ini sudah memenuhi beban kerja bulan ini</span>
-                </td>
-                <td class="align-middle">
-                  <a href="{% url 'pengisianLog:daftar_log_evaluator' %}" class="text-primary font-weight-bold text-xs">
-                    Lihat Log
-                  </a>
-                </td>
-                <td class="align-middle">
-                  <a href="{% url 'rekapanLog:rekapan_log' ta.user %}" class="text-primary font-weight-bold text-xs">
-                    Lihat Rekap
-                  </a>
-                </td>
+                {% if ta.0.kontrak == "Part Time" %}
+                  {% if ta.1.0 > 20 %}
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm bg-success">Fulfilled</span>
+                    </td>
+                  
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">TA ini sudah memenuhi beban kerja bulan ini</span>
+                    </td>
+                  {% else %}
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm bg-warning">Underload</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">TA ini memerlukan {{ta.1.1}} jam lagi untuk memenuhi beban kerja bulan ini</span>
+                    </td>
+                  {% endif %}
+                {% else %}
+                    {% if ta.1.0 > 40 %}
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm bg-success">Fulfilled</span>
+                    </td>
+                  
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">TA ini sudah memenuhi beban kerja bulan ini</span>
+                    </td>
+                  {% else %}
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm bg-warning">Underload</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">TA ini memerlukan {{ta.1.1}} jam lagi untuk memenuhi beban kerja bulan ini</span>
+                    </td>
+                  {% endif %} 
+                {% endif %}
+                    <td class="align-middle">
+                      <a href="{% url 'pengisianLog:daftar_log_evaluator' ta.0.user %}" class="text-primary font-weight-bold text-xs">
+                        Lihat Log
+                      </a>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url 'rekapanLog:rekapan_log' ta.0.user %}" class="text-primary font-weight-bold text-xs">
+                        Lihat Rekap
+                      </a>
+                    </td>
+                    
+
+                    
               </tr>
               {% endfor %}
               <tr>

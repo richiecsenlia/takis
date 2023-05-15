@@ -132,12 +132,12 @@ def daftar_log_ta(request):
 
 @require_GET
 @admin_required
-def daftar_log_evaluator(request):
+def daftar_log_evaluator(request,username):
     print(request.GET)
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
-    logs = LogTA.objects.all().order_by('user', 'id')
+    logs = LogTA.objects.filter(user__username=username).order_by('user', 'id')
     
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
