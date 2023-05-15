@@ -150,6 +150,12 @@ class PengisianLogTestCase(TestCase):
         )
         self.periode.save()
 
+        self.periode_alt = Periode(
+            tahun_ajaran = TAHUN_AJARAN_ALT,
+            semester = SEMESTER,
+        )
+        self.periode_alt.save()
+
         periode_sekarang = PeriodeSekarang(periode = self.periode)
         periode_sekarang.save()
 
@@ -180,7 +186,7 @@ class PengisianLogTestCase(TestCase):
             jumlah_rencana_kinerja = 2,
             satuan_rencana_kinerja = "Tugas",
             konversi_jam_rencana_kinerja = 2,
-            periode_log= self.periode
+            periode_log= self.periode_alt
         )
 
     # Test membuat log TA
@@ -269,18 +275,26 @@ class PengisianLogTestCase(TestCase):
     def test_view_LogTA_response_as_TA(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse(URL_DAFTAR_LOG_TA))
+
         user = auth.get_user(self.client)
+        logs = response.context['logs']
+
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftar_log.html')
+        self.assertEqual(len(logs), 1)
     
     def test_view_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
         response = self.client.get(reverse('pengisianLog:daftar_log_evaluator'))
+        
         user = auth.get_user(self.client)
+        logs = response.context['logs']
+
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftar_log.html')
+        self.assertEqual(len(logs), 1)
     
 
     def test_view_history_log_as_registered(self):
