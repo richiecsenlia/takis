@@ -259,7 +259,7 @@ class PengisianLogTestCase(TestCase):
     
     def test_view_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator'))
+        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator',kwargs={'username':'ta'}))
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
@@ -337,7 +337,7 @@ class PengisianLogTestCase(TestCase):
 
     def test_filter_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator'))
+        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator',kwargs={'username':'ta'} ))
         self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
         self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
         self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
@@ -351,7 +351,7 @@ class PengisianLogTestCase(TestCase):
 
     def test_filter_LogTA_response_Admin_context(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator'),{"bulan":"JAN","kategori":"Harian","periode":"Persiapan Kuliah"})
+        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator',kwargs={'username':'ta'}),{"bulan":"JAN","kategori":"Harian","periode":"Persiapan Kuliah"})
         self.assertEquals(response.context['filter_kategori'][0], "Harian")
         self.assertEquals(response.context['filter_periode'][0], "Persiapan Kuliah")
         self.assertEquals(response.context['filter_bulan'][0], "JAN")
