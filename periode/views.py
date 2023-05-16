@@ -13,7 +13,7 @@ def create_periode(request):
         form = PeriodeForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(reverse("periode:edit-periode-sekarang"))
+            return redirect(reverse("periode:edit_periode_sekarang"))
 
     else:
         form = PeriodeForm()
@@ -33,8 +33,8 @@ def edit_periode_sekarang(request):
             else:
                 curr = PeriodeSekarang(periode = new)
                 curr.save()
-                
-            return redirect(reverse("main:homepage"))
+            
+            return redirect(reverse("periode:edit_periode_sekarang"))
 
     else:
         form = PeriodeSekarangForm()
