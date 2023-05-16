@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %} Assign Periode TA {% endblock title%}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
+
+{% block content %}
+
+<div class="page-header pt-8 pb-6 bg-white-blue">
+  <div class="container">
+    <h2 class="text-center mb-5">Assign Periode TA</h2>
+
+    <div class="card my-2">
+      <div class="card-body">
+        <div class="row mt-2">
+          <div class="col-12">
+            <p>Periode:</p>
+            <select name="periode" class="form-select" id="id_periode">
+              {% for periode in pilihan_periode %}
+                <option value="{{ periode.id }}">{{ periode }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-0">
+          <table
+            class="table align-items-center mb-0"
+            aria-label="Daftar TA Kontrak"
+          >
+            <thead>
+              <tr>
+                <th
+                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  scope="col"
+                >
+                  Nama Asisten
+                </th>
+                <th
+                  class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  scope="col"
+                >
+                  Kontrak
+                </th>
+                <th
+                  class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  scope="col"
+                >
+                  Status
+                </th>
+                <th
+                  class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  scope="col"
+                >
+                  Aksi
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ta in daftar_ta %}
+              <tr>
+                <td>
+                  <div class="px-3 py-1">
+                    <div class="d-flex flex-column justify-content-center">
+                      <h6 class="mb-0 text-sm">{{ ta.nama }}</h6>
+                      <p class="text-xs text-secondary mb-0">@{{ ta.user }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <p class="text-center text-xs font-weight-bold mb-0">
+                    {{ ta.kontrak }}
+                  </p>
+                </td>
+                <td class="align-middle text-center text-sm">
+                  <span class="badge badge-sm bg-success">Aktif</span>
+                </td>
+                <td class="align-middle text-center">
+                  <a
+                    href=""
+                    class="text-primary font-weight-bold text-xs"
+                  >
+                    Ubah Status
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td>
+                  <div class="px-3 py-1">
+                    <div class="d-flex flex-column justify-content-center">
+                      <h6 class="mb-0 text-sm">Billy Luthfi</h6>
+                      <p class="text-xs text-secondary mb-0">@billylthf</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <p class="text-center text-xs font-weight-bold mb-0">
+                    Part Time
+                  </p>
+                </td>
+                <td class="align-middle text-center text-sm">
+                  <span class="badge badge-sm bg-warning">Tidak Aktif</span>
+                </td>
+                <td class="align-middle text-center">
+                  <a href="" class="btn btn-success mb-0">Aktifkan</a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="px-3 py-1">
+                    <div class="d-flex flex-column justify-content-center">
+                      <h6 class="mb-0 text-sm">Gerard Moreno</h6>
+                      <p class="text-xs text-secondary mb-0">@gerard.moreno8</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <p class="text-center text-xs font-weight-bold mb-0">
+                    Part Time
+                  </p>
+                </td>
+                <td class="align-middle text-center text-sm">
+                  <span class="badge badge-sm bg-success">Aktif</span>
+                </td>
+                <td class="align-middle text-center">
+                  <a href="" class="btn btn-danger mb-0">Nonaktifkan</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

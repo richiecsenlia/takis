@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from accounts.models import TeachingAssistantProfile
 from authentication.views import admin_required
 
 from periode.models import Periode, PeriodeSekarang
@@ -53,3 +54,12 @@ def daftar_ta(request):
                'periode_sekarang': periode_sekarang,
                'pilihan_periode': pilihan_periode}
     return render(request, 'daftar_ta.html', context)
+
+@admin_required
+def assign_ta(request):
+    daftar_ta = TeachingAssistantProfile.objects.all()
+    pilihan_periode = Periode.objects.all()
+
+    context = {'daftar_ta': daftar_ta,
+               'pilihan_periode': pilihan_periode}
+    return render(request, 'assign_ta.html', context)

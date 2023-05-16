@@ -8,15 +8,12 @@
   {% endwith %}
 {% endblock navbar %}
 
-Ada dropdown Periode => ajax (?)
-Baru daftar TA
-
 {% block content %}
 <div class="page-header pt-8 pb-12 bg-white-blue">
   <div class="container">
     <div class="d-sm-flex justify-content-between align-items-center">
       <div class="ms-2 pt-2">
-        <h3>Daftar TA Kontrak</h3>
+        <h3>Daftar TA Kontrak Per Periode</h3>
       </div>
       <div class="dropdown d-inline">
         <button class="btn btn-outline-brand border-radius-xl dropdown-toggle ms-sm-2 my-md-3 mx-2" type="button" id="dropdownPeriode" data-bs-toggle="dropdown" aria-expanded="false">
@@ -33,13 +30,12 @@ Baru daftar TA
     <div class="card mb-4">
       <div class="card-body px-0 pt-0 pb-2">
         <div class="table-responsive p-0">
-          <table class="table align-items-center mb-0" aria-label="Daftar TA Kontrak">
+          <table class="table align-items-center mb-0" aria-label="Daftar TA Kontrak Per Periode">
             <thead>
               <tr>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Nama Asisten</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Kontrak</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Status</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Keterangan</th>
                 <th class="text-secondary opacity-7" scope="col"></th>
                 <th class="text-secondary opacity-7" scope="col"></th>
               </tr>
@@ -59,10 +55,7 @@ Baru daftar TA
                   <p class="text-center text-xs font-weight-bold mb-0">{{ ta.kontrak }}</p>
                 </td>
                 <td class="align-middle text-center text-sm">
-                  <span class="badge badge-sm bg-success">Fulfilled</span>
-                </td>
-                <td class="align-middle text-center">
-                  <span class="text-secondary text-xs font-weight-bold">TA ini sudah memenuhi beban kerja bulan ini</span>
+                  <span class="badge badge-sm bg-success">Aktif</span>
                 </td>
                 <td class="align-middle">
                   <a href="{% url 'pengisianLog:daftar_log_evaluator' %}" class="text-primary font-weight-bold text-xs">
@@ -89,10 +82,7 @@ Baru daftar TA
                   <p class="text-center text-xs font-weight-bold mb-0">Part Time</p>
                 </td>
                 <td class="align-middle text-center text-sm">
-                  <span class="badge badge-sm bg-warning">Underload</span>
-                </td>
-                <td class="align-middle text-center">
-                  <span class="text-secondary text-xs font-weight-bold">TA ini memerlukan 4 jam lagi untuk memenuhi beban kerja bulan ini</span>
+                  <span class="badge badge-sm bg-warning">Tidak Aktif</span>
                 </td>
                 <td class="align-middle">
                   <a href="javascript:;" class="text-primary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
@@ -118,10 +108,7 @@ Baru daftar TA
                   <p class="text-center text-xs font-weight-bold mb-0">Part Time</p>
                 </td>
                 <td class="align-middle text-center text-sm">
-                  <span class="badge badge-sm bg-warning">Underload</span>
-                </td>
-                <td class="align-middle text-center">
-                  <span class="text-secondary text-xs font-weight-bold">TA ini memerlukan 2 jam lagi untuk memenuhi beban kerja bulan ini</span>
+                  <span class="badge badge-sm bg-success">Aktif</span>
                 </td>
                 <td class="align-middle">
                   <a href="javascript:;" class="text-primary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
