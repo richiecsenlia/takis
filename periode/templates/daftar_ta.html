@@ -55,7 +55,11 @@
                   <p class="text-center text-xs font-weight-bold mb-0">{{ ta.kontrak }}</p>
                 </td>
                 <td class="align-middle text-center text-sm">
-                  <span class="badge badge-sm bg-success">Aktif</span>
+                  {% if ta in daftar_ta_aktif.split %}
+                    <span class="badge badge-sm bg-success">Aktif</span>
+                  {% else %}
+                    <span class="badge badge-sm bg-warning">Tidak Aktif</span>
+                  {% endif %}
                 </td>
                 <td class="align-middle">
                   <a href="{% url 'pengisianLog:daftar_log_evaluator' %}" class="text-primary font-weight-bold text-xs">

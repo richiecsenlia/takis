@@ -46,11 +46,13 @@ def edit_periode_sekarang(request):
 
 @admin_required
 def daftar_ta(request):
+    daftar_ta = TeachingAssistantProfile.objects.all()
     periode_sekarang = PeriodeSekarang.objects.first()
-    daftar_ta = periode_sekarang.periode.daftar_ta.all()
+    daftar_ta_aktif = periode_sekarang.periode.daftar_ta.all()
     pilihan_periode = Periode.objects.all()
 
     context = {'daftar_ta': daftar_ta,
+               'daftar_ta_aktif': daftar_ta_aktif,
                'periode_sekarang': periode_sekarang,
                'pilihan_periode': pilihan_periode}
     return render(request, 'daftar_ta.html', context)
