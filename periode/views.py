@@ -1,3 +1,4 @@
+from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from accounts.models import TeachingAssistantProfile
@@ -9,6 +10,7 @@ from .forms import PeriodeForm, PeriodeSekarangForm
 
 # Create your views here.
 @admin_required
+@require_http_methods(["GET", "POST"])
 def create_periode(request):
     if request.method == "POST":
         form = PeriodeForm(request.POST)
@@ -22,6 +24,7 @@ def create_periode(request):
     return render(request, "buat_periode.html", {"form": form})
 
 @admin_required
+@require_http_methods(["GET", "POST"])
 def edit_periode_sekarang(request):
     if request.method == "POST":
         form = PeriodeSekarangForm(request.POST)
@@ -46,6 +49,7 @@ def edit_periode_sekarang(request):
     return render(request, "edit_periode_sekarang.html", {"form": form})
 
 @admin_required
+@require_http_methods(["GET", "POST"])
 def daftar_ta(request):
     if request.method == 'POST':
         periode_id = request.POST.get("periode")
@@ -64,6 +68,7 @@ def daftar_ta(request):
     return render(request, 'daftar_ta.html', context)
 
 @admin_required
+@require_http_methods(["GET", "POST"])
 def assign_ta(request, periode_id):
     if periode_id is None:
         periode_terpilih = PeriodeSekarang.objects.first().periode

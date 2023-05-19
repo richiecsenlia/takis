@@ -35,6 +35,10 @@ wrong_time_create_context = {
     'semester' : SEMESTER,
 }
 
+wrong_semester_context = {
+    'tahun_ajaran' : TAHUN_AJARAN
+}
+
 
 class PeriodeTestCase(TestCase):
     def setUp(self):
@@ -89,6 +93,11 @@ class PeriodeTestCase(TestCase):
 
     def test_create_wrong_periode(self):
         self.client.force_login(user=self.admin_user)
+        self.client.post(reverse(BUAT_PERIODE_URL), wrong_semester_context)
+        all_periode = Periode.objects.all()
+
+        self.assertEquals(all_periode.count(), 0)
+
         self.client.post(reverse(BUAT_PERIODE_URL), wrong_format_create_context)
         all_periode = Periode.objects.all()
 
