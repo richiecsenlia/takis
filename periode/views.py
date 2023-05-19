@@ -1,7 +1,9 @@
+import requests
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from accounts.models import TeachingAssistantProfile
 from authentication.views import admin_required
+from django.http import HttpResponseRedirect
 
 from periode.models import Periode, PeriodeSekarang
 from .forms import PeriodeForm, PeriodeSekarangForm
@@ -46,22 +48,49 @@ def edit_periode_sekarang(request):
 
 @admin_required
 def daftar_ta(request):
+    if request.method == 'POST':
+        periode_id = request.POST.get("periode")
+        periode_terpilih = Periode.objects.get(id=periode_id)
+    else:
+        periode_terpilih = PeriodeSekarang.objects.first().periode
+
     daftar_ta = TeachingAssistantProfile.objects.all()
-    periode_sekarang = PeriodeSekarang.objects.first()
-    daftar_ta_aktif = periode_sekarang.periode.daftar_ta.all()
-    pilihan_periode = Periode.objects.all()
+    daftar_ta_aktif = periode_terpilih.daftar_ta.all()
+    pilihan_periode = Periode.objects.all().order_by('-id')
 
     context = {'daftar_ta': daftar_ta,
                'daftar_ta_aktif': daftar_ta_aktif,
-               'periode_sekarang': periode_sekarang,
+               'periode_terpilih': periode_terpilih,
                'pilihan_periode': pilihan_periode}
     return render(request, 'daftar_ta.html', context)
 
 @admin_required
-def assign_ta(request):
+def assign_ta(request, periode_id):
+    if periode_id is None:
+        periode_terpilih = PeriodeSekarang.objects.first().periode
+    else:
+        periode_terpilih = Periode.objects.get(id=periode_id)
+
     daftar_ta = TeachingAssistantProfile.objects.all()
-    pilihan_periode = Periode.objects.all()
+    daftar_ta_aktif = periode_terpilih.daftar_ta.all()
+    pilihan_periode = Periode.objects.all().order_by('-id')
 
     context = {'daftar_ta': daftar_ta,
+               'daftar_ta_aktif': daftar_ta_aktif,
+               'periode_terpilih': periode_terpilih,
                'pilihan_periode': pilihan_periode}
     return render(request, 'assign_ta.html', context)
+
+@admin_required
+def activate_ta(request, periode_id, ta_id):
+    periode = Periode.objects.get(id = periode_id)
+    ta = TeachingAssistantProfile.objects.get(id = ta_id)
+    periode.daftar_ta.add(ta)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@admin_required
+def deactivate_ta(request, periode_id, ta_id):
+    periode = Periode.objects.get(id = periode_id)
+    ta = TeachingAssistantProfile.objects.get(id = ta_id)
+    periode.daftar_ta.remove(ta)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -19,9 +19,10 @@
         <div class="row mt-2">
           <div class="col-12">
             <p>Periode:</p>
-            <select name="periode" class="form-select" id="id_periode">
+            <select name="periode" class="form-select" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+              <option value="{{ periode_terpilih }}" selected disabled hidden>{{ periode_terpilih }}</option>
               {% for periode in pilihan_periode %}
-                <option value="{{ periode.id }}">{{ periode }}</option>
+              <option value="{% url 'periode:assign-ta' periode_id=periode.pk %}">{{ periode }}</option>
               {% endfor %}
             </select>
           </div>
@@ -81,60 +82,21 @@
                   </p>
                 </td>
                 <td class="align-middle text-center text-sm">
-                  <span class="badge badge-sm bg-success">Aktif</span>
+                  {% if ta in daftar_ta_aktif %}
+                    <span class="badge badge-sm bg-success">Aktif</span>
+                  {% else %}
+                    <span class="badge badge-sm bg-warning">Tidak Aktif</span>
+                  {% endif %}
                 </td>
                 <td class="align-middle text-center">
-                  <a
-                    href=""
-                    class="text-primary font-weight-bold text-xs"
-                  >
-                    Ubah Status
-                  </a>
+                  {% if ta in daftar_ta_aktif %}
+                    <a href="{% url 'periode:deactivate-ta' periode_id=periode_terpilih.pk ta_id=ta.pk %}" class="btn btn-danger mb-0">Nonaktifkan</a>
+                  {% else %}
+                    <a href="{% url 'periode:activate-ta' periode_id=periode_terpilih.pk ta_id=ta.pk %}" class="btn btn-success mb-0">Aktifkan</a>
+                  {% endif %}
                 </td>
               </tr>
               {% endfor %}
-              <tr>
-                <td>
-                  <div class="px-3 py-1">
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-sm">Billy Luthfi</h6>
-                      <p class="text-xs text-secondary mb-0">@billylthf</p>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <p class="text-center text-xs font-weight-bold mb-0">
-                    Part Time
-                  </p>
-                </td>
-                <td class="align-middle text-center text-sm">
-                  <span class="badge badge-sm bg-warning">Tidak Aktif</span>
-                </td>
-                <td class="align-middle text-center">
-                  <a href="" class="btn btn-success mb-0">Aktifkan</a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="px-3 py-1">
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-sm">Gerard Moreno</h6>
-                      <p class="text-xs text-secondary mb-0">@gerard.moreno8</p>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <p class="text-center text-xs font-weight-bold mb-0">
-                    Part Time
-                  </p>
-                </td>
-                <td class="align-middle text-center text-sm">
-                  <span class="badge badge-sm bg-success">Aktif</span>
-                </td>
-                <td class="align-middle text-center">
-                  <a href="" class="btn btn-danger mb-0">Nonaktifkan</a>
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>
