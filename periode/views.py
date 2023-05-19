@@ -1,4 +1,3 @@
-import requests
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from accounts.models import TeachingAssistantProfile
