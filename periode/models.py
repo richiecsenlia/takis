@@ -19,13 +19,6 @@ def tahun_ajaran_validator(data):
 
 # Create your models here.
 
-class StatusTA(models.Model):
-    user = models.OneToOneField(TeachingAssistantProfile, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
-    
-    def __str__(self):
-        return self.role.user
-
 class Periode(models.Model):
     GANJIL = 'Ganjil'
     GENAP = 'Genap'
@@ -44,7 +37,7 @@ class Periode(models.Model):
         default=GANJIL,
     )
 
-    daftar_ta = models.ManyToManyField(StatusTA)
+    daftar_ta = models.ManyToManyField(TeachingAssistantProfile)
 
     class Meta:
         constraints = [
