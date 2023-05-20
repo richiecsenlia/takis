@@ -1,4 +1,4 @@
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_GET
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from accounts.models import TeachingAssistantProfile
@@ -85,6 +85,7 @@ def assign_ta(request, periode_id):
                'pilihan_periode': pilihan_periode}
     return render(request, 'assign_ta.html', context)
 
+@require_GET
 @admin_required
 def activate_ta(request, periode_id, ta_id):
     periode = Periode.objects.get(id = periode_id)
@@ -92,6 +93,7 @@ def activate_ta(request, periode_id, ta_id):
     periode.daftar_ta.add(ta)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+@require_GET
 @admin_required
 def deactivate_ta(request, periode_id, ta_id):
     periode = Periode.objects.get(id = periode_id)
