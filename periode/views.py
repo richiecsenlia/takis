@@ -1,12 +1,16 @@
+from django.views.decorators.http import require_http_methods, require_GET
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from accounts.models import TeachingAssistantProfile
 from authentication.views import admin_required
+from django.http import HttpResponseRedirect
 
 from periode.models import Periode, PeriodeSekarang
 from .forms import PeriodeForm, PeriodeSekarangForm
 
 # Create your views here.
 @admin_required
+@require_http_methods(["GET", "POST"])
 def create_periode(request):
     if request.method == "POST":
         form = PeriodeForm(request.POST)
@@ -20,6 +24,7 @@ def create_periode(request):
     return render(request, "buat_periode.html", {"form": form})
 
 @admin_required
+@require_http_methods(["GET", "POST"])
 def edit_periode_sekarang(request):
     if request.method == "POST":
         form = PeriodeSekarangForm(request.POST)
@@ -32,8 +37,8 @@ def edit_periode_sekarang(request):
             else:
                 curr = PeriodeSekarang(periode = new)
                 curr.save()
-                
-            return redirect(reverse("main:homepage"))
+            
+            return redirect(reverse("periode:edit-periode-sekarang"))
 
     else:
         form = PeriodeSekarangForm()
@@ -44,12 +49,54 @@ def edit_periode_sekarang(request):
     return render(request, "edit_periode_sekarang.html", {"form": form})
 
 @admin_required
+@require_http_methods(["GET", "POST"])
 def daftar_ta(request):
-    periode_sekarang = PeriodeSekarang.objects.first()
-    daftar_ta = periode_sekarang.periode.daftar_ta.all()
-    pilihan_periode = Periode.objects.all()
+    if request.method == 'POST':
+        periode_id = request.POST.get("periode")
+        periode_terpilih = Periode.objects.get(id=periode_id)
+    else:
+        periode_terpilih = PeriodeSekarang.objects.first().periode
+
+    daftar_ta = TeachingAssistantProfile.objects.all()
+    daftar_ta_aktif = periode_terpilih.daftar_ta.all()
+    pilihan_periode = Periode.objects.all().order_by('-id')
 
     context = {'daftar_ta': daftar_ta,
-               'periode_sekarang': periode_sekarang,
+               'daftar_ta_aktif': daftar_ta_aktif,
+               'periode_terpilih': periode_terpilih,
                'pilihan_periode': pilihan_periode}
     return render(request, 'daftar_ta.html', context)
+
+@require_GET
+@admin_required
+def assign_ta(request, periode_id):
+    if periode_id is None:
+        periode_terpilih = PeriodeSekarang.objects.first().periode
+    else:
+        periode_terpilih = Periode.objects.get(id=periode_id)
+
+    daftar_ta = TeachingAssistantProfile.objects.all()
+    daftar_ta_aktif = periode_terpilih.daftar_ta.all()
+    pilihan_periode = Periode.objects.all().order_by('-id')
+
+    context = {'daftar_ta': daftar_ta,
+               'daftar_ta_aktif': daftar_ta_aktif,
+               'periode_terpilih': periode_terpilih,
+               'pilihan_periode': pilihan_periode}
+    return render(request, 'assign_ta.html', context)
+
+@require_GET
+@admin_required
+def activate_ta(request, periode_id, ta_id):
+    periode = Periode.objects.get(id = periode_id)
+    ta = TeachingAssistantProfile.objects.get(id = ta_id)
+    periode.daftar_ta.add(ta)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@require_GET
+@admin_required
+def deactivate_ta(request, periode_id, ta_id):
+    periode = Periode.objects.get(id = periode_id)
+    ta = TeachingAssistantProfile.objects.get(id = ta_id)
+    periode.daftar_ta.remove(ta)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
