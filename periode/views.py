@@ -67,8 +67,8 @@ def daftar_ta(request):
                'pilihan_periode': pilihan_periode}
     return render(request, 'daftar_ta.html', context)
 
+@require_GET
 @admin_required
-@require_http_methods(["GET", "POST"])
 def assign_ta(request, periode_id):
     if periode_id is None:
         periode_terpilih = PeriodeSekarang.objects.first().periode
