@@ -2,16 +2,17 @@ from django.db import models
 from django.contrib.auth.models import User
 from simple_history.models import HistoricalRecords
 
-KATEGORI_CHOICES = [('Persiapan Kuliah','Persiapan Kuliah'),
-                    ('Penyelenggaraan Kuliah','Penyelenggaraan Kuliah'),
-                    ('Dukungan Kuliah Kakak Asuh','Dukungan Kuliah Kakak Asuh'),
+KATEGORI_CHOICES = [('Dukungan Kuliah Kakak Asuh','Dukungan Kuliah Kakak Asuh'),
                     ('Pengembangan Institusi','Pengembangan Institusi'),
+                    ('Penyelenggaraan Kuliah','Penyelenggaraan Kuliah'),
+                    ('Persiapan Kuliah','Persiapan Kuliah'),
                     ('Riset dan Pusilkom','Riset dan Pusilkom')]
-PERIODE_CHOICES = [('Semester Kuliah','Semester Kuliah'),
-                    ('Sepanjang Kontrak','Sepanjang Kontrak'),
+PERIODE_CHOICES = [ ('Adhoc','Adhoc'),
                     ('Bulanan','Bulanan'),
                     ('Harian','Harian'),
-                    ('Adhoc','Adhoc')]
+                    ('Semester Kuliah','Semester Kuliah'),
+                    ('Sepanjang Kontrak','Sepanjang Kontrak')
+                    ]
 BULAN_CHOICES = [('JAN','JAN'),
                  ('FEB','FEB'),
                  ('MAR','MAR'),
