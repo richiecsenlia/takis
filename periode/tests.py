@@ -3,6 +3,9 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.contrib import auth
+
+from accounts.models import TeachingAssistantProfile
+from periode.forms import PeriodeSekarangForm
 from .models import Periode, PeriodeSekarang
 
 # Create your tests here.
@@ -15,6 +18,7 @@ SEMESTER = 'Ganjil'
 BUAT_PERIODE_URL = "periode:buat-periode"
 EDIT_PERIODE_SEKARANG_URL = "periode:edit-periode-sekarang"
 URL_DAFTAR_TA_PER_PERIODE = "periode:daftar-ta"
+URL_ASSIGN_TA_PER_PERIODE = "periode:assign-ta"
 
 create_context = {
     'tahun_ajaran' : TAHUN_AJARAN,
@@ -29,6 +33,10 @@ wrong_format_create_context = {
 wrong_time_create_context = {
     'tahun_ajaran' : TAHUN_AJARAN_WRONG_TIME,
     'semester' : SEMESTER,
+}
+
+wrong_semester_context = {
+    'tahun_ajaran' : TAHUN_AJARAN
 }
 
 
@@ -85,6 +93,11 @@ class PeriodeTestCase(TestCase):
 
     def test_create_wrong_periode(self):
         self.client.force_login(user=self.admin_user)
+        self.client.post(reverse(BUAT_PERIODE_URL), wrong_semester_context)
+        all_periode = Periode.objects.all()
+
+        self.assertEquals(all_periode.count(), 0)
+
         self.client.post(reverse(BUAT_PERIODE_URL), wrong_format_create_context)
         all_periode = Periode.objects.all()
 
@@ -154,6 +167,25 @@ class PeriodeTestCase(TestCase):
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftar_ta.html')
+
+    def test_view_list_response_evaluator_different_periode(self):
+        self.periode.save()
+        self.periode_alt.save()
+        periode_context = {
+            'periode' : self.periode.id
+        }
+        periode_alt_context = {
+            'periode' : self.periode_alt.id
+        }
+
+        self.client.force_login(user=self.admin_user)
+        self.client.post(reverse(EDIT_PERIODE_SEKARANG_URL), periode_context)
+        
+        response = self.client.post(reverse(URL_DAFTAR_TA_PER_PERIODE), periode_alt_context)
+        user = auth.get_user(self.client)
+        self.assertTrue(user.is_authenticated)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'daftar_ta.html')
     
     def test_view_list_response_unauthorized(self):
         self.client.force_login(user=self.ta_user)
@@ -161,3 +193,81 @@ class PeriodeTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
 
     # Tes assign TA per periode
+    def test_view_assign_response_evaluator(self):
+        self.periode.save()
+        periode_context = {
+            'periode' : self.periode.id
+        }
+
+        self.client.force_login(user=self.admin_user)
+        self.client.post(reverse(EDIT_PERIODE_SEKARANG_URL), periode_context)
+        
+        response = self.client.get(reverse(URL_ASSIGN_TA_PER_PERIODE))
+        user = auth.get_user(self.client)
+        self.assertTrue(user.is_authenticated)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'assign_ta.html')
+    
+    def test_view_assign_response_evaluator_different_periode(self):
+        self.periode.save()
+        self.periode_alt.save()
+        periode_context = {
+            'periode' : self.periode.id
+        }
+
+        self.client.force_login(user=self.admin_user)
+        self.client.post(reverse(EDIT_PERIODE_SEKARANG_URL), periode_context)
+        
+        response = self.client.get(path=reverse(URL_ASSIGN_TA_PER_PERIODE, args=[self.periode_alt.id]))
+        user = auth.get_user(self.client)
+        self.assertTrue(user.is_authenticated)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'assign_ta.html')
+    
+    def test_view_assign_response_unauthorized(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse(URL_ASSIGN_TA_PER_PERIODE))
+        self.assertEqual(response.status_code, 403)
+    
+    # Tes aktivasi status TA
+    def test_activate_ta(self):
+        TeachingAssistantProfile.objects.create(
+            user = self.ta_user,
+            nama = 'Athal',
+            kontrak = 'Part Time',
+            status = 'Lulus S1',
+            prodi = 'Ilmu Komputer'
+        )
+
+        self.periode.save()
+
+        self.client.force_login(user=self.admin_user)
+
+        periode_context = {
+            'periode' : self.periode.id
+        }
+        self.client.post(reverse(EDIT_PERIODE_SEKARANG_URL), periode_context)
+
+        data_context = {
+            'periode_id': self.periode.id,
+            'ta_id': self.ta_user.id
+        }
+        response = self.client.get(reverse("periode:activate-ta", kwargs=data_context))
+
+        daftar_ta = self.periode.daftar_ta
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(daftar_ta.exists())
+        self.assertEqual(daftar_ta.first().user, self.ta_user)
+
+    # Tes deaktivasi status TA
+    def test_deactivate_ta(self):
+        self.test_activate_ta()
+
+        data_context = {
+            'periode_id': self.periode.id,
+            'ta_id': self.ta_user.id
+        }
+        response = self.client.get(reverse("periode:deactivate-ta", kwargs=data_context))
+
+        self.assertEqual(response.status_code, 302)
