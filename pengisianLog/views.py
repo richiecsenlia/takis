@@ -10,6 +10,7 @@ from periode.models import Periode, PeriodeSekarang
 from django.db.models import Q
 
 VALUE_ERROR = "Input tidak valid"
+URL_DAFTAR_LOG_TA = "pengisianLog:daftar_log_ta"
 
 # Create your views here.
 @ta_required
@@ -46,7 +47,7 @@ def form_log_ta(request):
                 konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi,
                 periode_log = periode_sekarang[0].periode
             )
-            return redirect(reverse("pengisianLog:daftar_log_ta"))
+            return redirect(reverse(URL_DAFTAR_LOG_TA))
     except ValueError:
         messages.error(request, VALUE_ERROR)
         return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
@@ -90,7 +91,7 @@ def edit_log_ta(request, id):
             log.satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja')
             log.konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi
             log.save()
-            return redirect(reverse("pengisianLog:daftar_log_ta"))
+            return redirect(reverse(URL_DAFTAR_LOG_TA))
     except ValueError:
         messages.error(request, VALUE_ERROR)
         return render(request, 'edit_log.html', context)
@@ -99,7 +100,28 @@ def edit_log_ta(request, id):
 def delete_log_ta(request, id):
     log = LogTA.objects.get(pk=id)
     log.delete()
-    return redirect(reverse("pengisianLog:daftar_log_ta"))
+    return redirect(reverse(URL_DAFTAR_LOG_TA))
+
+def exclude_periode(filter_periode, logs, periode_choice):
+    if len(filter_periode) != 0 :
+        for periode in periode_choice :
+            if periode[1] not in filter_periode:
+                logs = logs.exclude(periode = periode[1])
+    return logs
+
+def exclude_kategori(filter_kategori, logs, kategori_choice):
+    if len(filter_kategori) !=0 :
+        for kategori in kategori_choice :
+            if kategori[1] not in filter_kategori:
+                logs = logs.exclude(kategori= kategori[1])
+    return logs
+
+def exclude_bulan(filter_bulan, logs, bulan_choice):
+    if(len(filter_bulan) != 0) :
+        for bulan in bulan_choice :
+            if bulan[1] not in filter_bulan:
+                logs = logs.exclude(bulan_pengerjaan = bulan[1])
+    return logs
 
 @ta_required
 def daftar_log_ta(request):
@@ -114,18 +136,9 @@ def daftar_log_ta(request):
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
     bulan_choice = LogTA.bulan_pengerjaan.field.choices
-    if(len(filter_bulan) != 0) :
-        for bulan in bulan_choice :
-            if not (bulan[1] in filter_bulan):
-                logs = logs.exclude(bulan_pengerjaan = bulan[1])
-    if len(filter_kategori) !=0 :
-        for kategori in kategori_choice :
-            if not (kategori[1] in filter_kategori):
-                logs = logs.exclude(kategori= kategori[1])
-    if len(filter_periode) != 0 :
-        for periode in periode_choice :
-            if not (periode[1] in filter_periode):
-                logs = logs.exclude(periode = periode[1])
+    logs = exclude_bulan(filter_bulan, logs, bulan_choice)
+    logs = exclude_kategori(filter_kategori, logs, kategori_choice)
+    logs = exclude_periode(filter_periode, logs, periode_choice)
         
     context = {'logs': logs,
                 'kategori_choice': kategori_choice, 
@@ -139,7 +152,6 @@ def daftar_log_ta(request):
 @require_GET
 @admin_required
 def daftar_log_evaluator(request):
-    print(request.GET)
     periode_sekarang_all = PeriodeSekarang.objects.all()
     periode_sekarang = periode_sekarang_all[0].periode
     filter_bulan = request.GET.getlist("bulan")
@@ -150,18 +162,9 @@ def daftar_log_evaluator(request):
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
     bulan_choice = LogTA.bulan_pengerjaan.field.choices
-    if(len(filter_bulan) != 0) :
-        for bulan in bulan_choice :
-            if not (bulan[1] in filter_bulan):
-                logs = logs.exclude(bulan_pengerjaan = bulan[1])
-    if len(filter_kategori) !=0 :
-        for kategori in kategori_choice :
-            if not (kategori[1] in filter_kategori):
-                logs = logs.exclude(kategori= kategori[1])
-    if len(filter_periode) != 0 :
-        for periode in periode_choice :
-            if not (periode[1] in filter_periode):
-                logs = logs.exclude(periode = periode[1])
+    logs = exclude_bulan(filter_bulan, logs, bulan_choice)
+    logs = exclude_kategori(filter_kategori, logs, kategori_choice)
+    logs = exclude_periode(filter_periode, logs, periode_choice)
         
     context = {'logs': logs,
                 'kategori_choice': kategori_choice, 

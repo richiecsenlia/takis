@@ -46,14 +46,16 @@
             <thead>
               <tr>
                 {% if user.role.role == 'admin' %}
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Akun TA</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Akun TA</th>
                 {% endif %}
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Kategori Pekerjaan</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Jenis Pekerjaan</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Deskripsi</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Rencana Beban Kerja</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" scope="col">Realisasi Beban Kerja</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Kategori Pekerjaan</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Jenis Pekerjaan</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Deskripsi</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Rencana Beban Kerja</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Realisasi Beban Kerja</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Terakhir Diubah</th>
                 <th scope="col"></th>
+              </tr>
               </tr>
             </thead>
             <tbody>
@@ -67,6 +69,9 @@
                 <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.detail_kegiatan }}</td>
                 <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.konversi_jam_rencana_kinerja }}</td>
                 <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.konversi_jam_realisasi_kinerja }}</td>
+                {% for last_modified in log.history.all|slice:":1" %}
+                  <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ last_modified.history_date|date:"d M Y" }}</td>
+                {% endfor %}
                 <td>
                   <a href="{% url 'pengisianLog:detail_log' log.pk %}" class="btn btn-primary mb-0">Lihat Detail</a>
                 </td>
