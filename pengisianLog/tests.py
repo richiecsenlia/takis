@@ -163,8 +163,7 @@ class PengisianLogTestCase(TestCase):
         self.ta_user = User.objects.create(username='ta', password='ta', email='ta@ta.com')
         self.ta_user.role.role = 'TA'
         self.ta_user.role.save()
-        self.profile = TeachingAssistantProfile(user=self.ta_user,nama="richie",kontrak="Full Time",status="Lulus S1",prodi="Ilmu Komputer")
-        self.profile.save()
+
         self.ta_user_2 = User.objects.create(username='ta2', password='ta2', email='ta2@ta2.com')
         self.ta_user_2.role.role = 'TA'
         self.ta_user_2.role.save()
@@ -206,6 +205,15 @@ class PengisianLogTestCase(TestCase):
         self.profile_user_2.daftar_matkul.add(self.matkul_2)
         self.profile_user_2.save()
 
+        self.periode = Periode(
+            tahun_ajaran = TAHUN_AJARAN,
+            semester = SEMESTER_TAHUN_AJARAN,
+        )
+        self.periode.save()
+
+        self.periode_sekarang = PeriodeSekarang(periode = self.periode)
+        self.periode_sekarang.save()
+
         self.logTA_1 = LogTA.objects.create(
             user = self.ta_user,
             kategori = PENYELENGGARAN_KULIAH,
@@ -219,7 +227,8 @@ class PengisianLogTestCase(TestCase):
             jumlah_rencana_kinerja = 12,
             satuan_rencana_kinerja = "Tugas",
             bobot_jam_rencana_kinerja = 1,
-            jam_kerja_rencana = 0.375
+            jam_kerja_rencana = 0.375,
+            periode_log = self.periode_sekarang.periode
         )
 
         self.logTA_2 = LogTA.objects.create(
@@ -235,17 +244,9 @@ class PengisianLogTestCase(TestCase):
             jumlah_rencana_kinerja = 2,
             satuan_rencana_kinerja = "Tugas",
             bobot_jam_rencana_kinerja = 2,
-            jam_kerja_rencana = 2.0
+            jam_kerja_rencana = 2.0,
+            periode_log = self.periode_sekarang.periode
         )
-
-        self.periode = Periode(
-            tahun_ajaran = TAHUN_AJARAN,
-            semester = SEMESTER_TAHUN_AJARAN,
-        )
-        self.periode.save()
-
-        self.periode_sekarang = PeriodeSekarang(periode = self.periode)
-        self.periode_sekarang.save()
 
     # Test membuat log TA
     def test_create_LogTA(self):
@@ -274,8 +275,17 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_log_ta[0].kategori, PENYELENGGARAN_KULIAH)
         self.assertEquals(all_log_ta[1].kategori, PERSIAPAN_KULIAH)
 
-    def test_display_form_LogTA_as_TA(self):
+    def test_display_form_LogTA_as_TA_1(self):
         self.client.force_login(user=self.ta_user)
+        response = self.client.get(reverse(URL_MENGISI_LOG))
+
+        self.assertTemplateUsed(response, 'form_log.html')
+        self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
+        self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
+        self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
+    
+    def test_display_form_LogTA_as_TA_2(self):
+        self.client.force_login(user=self.ta_user_2)
         response = self.client.get(reverse(URL_MENGISI_LOG))
 
         self.assertTemplateUsed(response, 'form_log.html')
@@ -344,7 +354,7 @@ class PengisianLogTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
     
     # Test melihat log TA
-    def test_view_LogTA_response_as_TA(self):
+    def test_view_LogTA_response_as_TA_1(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse(URL_DAFTAR_LOG_TA))
 
@@ -354,7 +364,18 @@ class PengisianLogTestCase(TestCase):
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftar_log.html')
-        self.assertEqual(len(logs), 1)
+        self.assertEqual(len(logs), 2)
+    
+    def test_view_LogTA_response_as_TA_2(self):
+        self.client.force_login(user=self.ta_user_2)
+        response = self.client.get(reverse(URL_DAFTAR_LOG_TA))
+
+        user = auth.get_user(self.client)
+        logs = response.context['logs']
+
+        self.assertTrue(user.is_authenticated)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'daftar_log.html')
     
     def test_view_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
@@ -365,8 +386,7 @@ class PengisianLogTestCase(TestCase):
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftar_log.html')
-        self.assertEqual(len(logs), 1)
-    
+        self.assertEqual(len(logs), 2)
 
     def test_view_history_log_as_registered(self):
         self.client.force_login(user=self.admin_user)
