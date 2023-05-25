@@ -45,7 +45,6 @@ def profile(request, id):
 
 @admin_required
 def dashboard_eval(request):
-    ta_list = TeachingAssistantProfile.objects.all()
     
     filter_kontrak = request.GET.getlist("kontrak")
     filter_status = request.GET.getlist("status")
@@ -57,6 +56,7 @@ def dashboard_eval(request):
     prodi_choices = TeachingAssistantProfile.prodi.field.choices
     matkul_choices = MataKuliah.objects.order_by('nama')
     periode_sekarang = PeriodeSekarang.objects.all()
+    ta_list = TeachingAssistantProfile.objects.filter(periode=periode_sekarang[0].periode)
     if(len(filter_kontrak) != 0) :
         for kontrak in kontrak_choices :
             if not (kontrak[1] in filter_kontrak):
@@ -81,7 +81,10 @@ def dashboard_eval(request):
     print(request.POST)
     if bulan == "Rata-rata":
         for i in ta_list:
-            temp = get_all_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
+            try :
+                temp = get_all_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
+            except :
+                temp = {}
             total = 0
             cnt = 0
             for value in temp.values() :
@@ -96,7 +99,10 @@ def dashboard_eval(request):
             
     else:
         for i in ta_list:
-            temp = get_month_rencana(i.user,bulan,periode_sekarang[0].periode)
+            try :
+                temp = get_month_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
+            except :
+                temp = {}
             total = 0
             cnt = 0
             for value in temp.values() :
