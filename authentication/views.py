@@ -71,7 +71,6 @@ def change_password(request):
             user = authenticate(username=user.username,password=user.password)
             login(request,user,backend='django.contrib.auth.backends.ModelBackend')
             return HttpResponseRedirect(reverse('main:homepage'))
-    print(form)
     response={'form':form}
     return render(request,'registration/change_password.html',response)
 

@@ -1,4 +1,3 @@
-import re
 from django import forms
 from .models import Periode, PeriodeSekarang
 from django.db.utils import OperationalError, ProgrammingError
@@ -20,9 +19,11 @@ class PeriodeSekarangForm(forms.Form):
 class PeriodeForm(forms.ModelForm):
     class Meta:
         model = Periode
-        fields = ['tahun_ajaran', 'semester']
+        fields = ['tahun_ajaran', 'semester', 'bulan_mulai', 'bulan_selesai']
         
         widgets = {
             'tahun_ajaran': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Contoh: 2022/2023'}),
             'semester': forms.Select(attrs={'class': 'form-select'}),
+            'bulan_mulai': forms.Select(attrs={'class': 'form-select'}),
+            'bulan_selesai': forms.Select(attrs={'class': 'form-select'}),
         }

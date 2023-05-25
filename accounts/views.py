@@ -70,11 +70,13 @@ def dashboard_eval(request):
 
     rekap = []
     choice = "Rata-rata"
-    if request.method == 'GET':
+    bulan = request.GET.get("bulan","Rata-rata")    
+    print(request.POST)
+    if bulan == "Rata-rata":
         for i in ta_list:
+                
             temp = get_all_rencana(i.user)
             total = 0
-            print(temp)
             cnt = 0
             for value in temp.values() :
                 if cnt >= 6 :
@@ -85,41 +87,23 @@ def dashboard_eval(request):
                 rekap.append((total,20-total))
             else :
                 rekap.append((tota,40-total))
-        
-
-    else:
-        bulan = request.POST.get("bulan")
-
-        if bulan == "Rata-rata":
-            for i in ta_list:
-                
-                temp = get_all_rencana(i.user)
-                total = 0
-                for value in temp.values() :
-                    if cnt >= 6 :
-                        if value != None :
-                            total += value
-                    cnt += 1
-                if (i.kontrak == "Part Time"):
-                    rekap.append((total,20-total))
-                else :
-                    rekap.append((tota,40-total))
             
-        else:
-            for i in ta_list:
+    else:
+        for i in ta_list:
                 
-                temp = get_month_rencana(i.user,bulan)
-                total = 0
-                for value in temp.values() :
-                    if cnt >= 6 :
-                        if value != None :
-                            total += value
-                    cnt += 1
-                if (i.kontrak == "Part Time"):
-                    rekap.append((total,20-total))
-                else :
-                    rekap.append((tota,40-total))
-            choice = bulan
+            temp = get_month_rencana(i.user,bulan)
+            total = 0
+            cnt = 0
+            for value in temp.values() :
+                if cnt >= 6 :
+                    if value != None :
+                        total += value
+                cnt += 1
+            if (i.kontrak == "Part Time"):
+                rekap.append((total,20-total))
+            else :
+                rekap.append((tota,40-total))
+        choice = bulan
     temp = zip(ta_list,rekap)
     context = {
         'ta_list': temp,

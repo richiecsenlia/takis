@@ -15,28 +15,28 @@
       <div class="ms-2 pt-2">
         <h3>Dashboard Evaluator</h3>
       </div>
-      <div class="dropdown d-inline">  
-        {% for kontrak in filter_kontrak %}
-        <span class="badge rounded-pill bg-info text-dark">{{kontrak}}</span>
-        {% endfor %}
-        {% for status in filter_status %}
-        <span class="badge rounded-pill bg-info text-dark">{{status}}</span>
-        {% endfor %}
-        {% for prodi in filter_prodi %}
-        <span class="badge rounded-pill bg-info text-dark">{{prodi}}</span>
-        {% endfor %}
-        {% for matkul in filter_matkul %}
-        <span class="badge rounded-pill bg-info text-dark">{{matkul}}</span>
-        {% endfor %}
-        {% if filter_statuslog != "all" %}
-          <span class="badge rounded-pill bg-info text-dark">{{filter_statuslog}}</span>
-        {% endif %}
-        <button type="button" class="btn btn-outline-brand mb-sm-2 mx-2" data-bs-toggle="modal" data-bs-target="#filter">
-          +&nbsp; Filter
-        </button>
-      </div>
+      
+      {% for kontrak in filter_kontrak %}
+      <span class="badge rounded-pill bg-info text-dark">{{kontrak}}</span>
+      {% endfor %}
+      {% for status in filter_status %}
+      <span class="badge rounded-pill bg-info text-dark">{{status}}</span>
+      {% endfor %}
+      {% for prodi in filter_prodi %}
+      <span class="badge rounded-pill bg-info text-dark">{{prodi}}</span>
+      {% endfor %}
+      {% for matkul in filter_matkul %}
+      <span class="badge rounded-pill bg-info text-dark">{{matkul}}</span>
+      {% endfor %}
+      {% if filter_statuslog != "all" %}
+        <span class="badge rounded-pill bg-info text-dark">{{filter_statuslog}}</span>
+      {% endif %}
+      <button type="button" class="btn btn-outline-brand mb-sm-2 mx-2" data-bs-toggle="modal" data-bs-target="#filter">
+        +&nbsp; Filter
+      </button>
+
       <div class="dropdown d-inline">
-        <form method="post" action = >
+        <form method="Get" action = >
           {% csrf_token %}
           <select name="bulan" class="form-select" onchange="this.form.submit()">
             <option value="Rata-rata" selected disabled>Selected : {{ choice }}</option>
@@ -375,6 +375,7 @@
               Fulfiled
             </label>
           </div>
+          <input type="hidden" value ="{{choice}}" name="bulan">
           <button type="submit" class="btn btn-primary">Submit</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </form>

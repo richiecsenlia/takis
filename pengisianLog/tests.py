@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib import auth
 from .models import LogTA
+from accounts.models import TeachingAssistantProfile
 from django.urls import reverse
 from django.test import RequestFactory
 from django.contrib.auth.models import User
@@ -15,18 +16,21 @@ MEMBUAT_SOAL = "Membuat Soal"
 ESSAY_DAN_PILGAN = "Essay dan Pilgan"
 IBU_IKA_ALFINA = "Ibu Ika Alfina"
 MEMBUAT_SOAL_PR = "Membuat soal PR"
+DUKUNGAN_KULIAH_KAKAK_ASUH = "Dukungan Kuliah Kakak Asuh"
+PERSIAPAN_KULIAH = "Persiapan Kuliah"
 SEMESTER_KULIAH = "Semester Kuliah"
 RISET_DAN_PUSILKOM = "Riset dan Pusilkom"
 URL_MENGISI_LOG = "pengisianLog:mengisi_log"
 URL_DAFTAR_LOG_TA = "pengisianLog:daftar_log_ta"
 URL_EDIT_LOG_TA = "pengisianLog:edit_log"
+URL_DAFTAR_LOG_EVALUATOR = 'pengisianLog:daftar_log_evaluator'
 
 context_dict_1 = {
             'kategori' : PENYELENGGARAN_KULIAH,
             'pekerjaan' : MEMBUAT_SOAL,
             'detail_kegiatan' : ESSAY_DAN_PILGAN,
             'pemberi_tugas' : IBU_IKA_ALFINA,
-            'uraian' : "Membuat soal PR",
+            'uraian' : MEMBUAT_SOAL_PR,
             'periode' : SEMESTER_KULIAH,
             'bulan_pengerjaan' : "MAR",
             'jumlah_kinerja' : "4",
@@ -38,7 +42,7 @@ context_dict_1 = {
         }
 
 context_dict_2 = {
-            'kategori' : "Dukungan Kuliah Kakak Asuh",
+            'kategori' : DUKUNGAN_KULIAH_KAKAK_ASUH,
             'pekerjaan' : "Mentorring",
             'detail_kegiatan' : "Zoom",
             'pemberi_tugas' : "Ibu Ara",
@@ -74,7 +78,7 @@ context_dict_2_updated = {
             'pekerjaan' : MEMBUAT_SOAL,
             'detail_kegiatan' : ESSAY_DAN_PILGAN,
             'pemberi_tugas' : IBU_IKA_ALFINA,
-            'uraian' : "Membuat soal PR",
+            'uraian' : MEMBUAT_SOAL_PR,
             'periode' : SEMESTER_KULIAH,
             'bulan_pengerjaan' : "MAR",
             'jumlah_kinerja' : "4",
@@ -90,7 +94,7 @@ context_wrong = {
             'pekerjaan' : MEMBUAT_SOAL,
             'detail_kegiatan' : ESSAY_DAN_PILGAN,
             'pemberi_tugas' : IBU_IKA_ALFINA,
-            'uraian' : "Membuat soal PR",
+            'uraian' : MEMBUAT_SOAL_PR,
             'periode' : SEMESTER_KULIAH,
             'bulan_pengerjaan' : "MAR",
             'jumlah_kinerja' : "Empat",
@@ -106,7 +110,7 @@ context_wrong_updated = {
             'pekerjaan' : MEMBUAT_SOAL,
             'detail_kegiatan' : ESSAY_DAN_PILGAN,
             'pemberi_tugas' : IBU_IKA_ALFINA,
-            'uraian' : "Membuat soal PR",
+            'uraian' : MEMBUAT_SOAL_PR,
             'periode' : SEMESTER_KULIAH,
             'bulan_pengerjaan' : "MAR",
             'jumlah_kinerja' : "Empat",
@@ -127,7 +131,8 @@ class PengisianLogTestCase(TestCase):
         self.ta_user = User.objects.create(username='ta', password='ta', email='ta@ta.com')
         self.ta_user.role.role = 'TA'
         self.ta_user.role.save()
-
+        self.profile = TeachingAssistantProfile(user=self.ta_user,nama="richie",kontrak="Full Time",status="Lulus S1",prodi="Ilmu Komputer")
+        self.profile.save()
         self.ta_user_2 = User.objects.create(username='ta2', password='ta2', email='ta2@ta2.com')
         self.ta_user_2.role.role = 'TA'
         self.ta_user_2.role.save()
@@ -146,7 +151,7 @@ class PengisianLogTestCase(TestCase):
             jenis_pekerjaan = MEMBUAT_SOAL,
             detail_kegiatan = ESSAY_DAN_PILGAN,
             pemberi_tugas = IBU_IKA_ALFINA,
-            uraian = "Membuat soal PR",
+            uraian = MEMBUAT_SOAL_PR,
             periode = SEMESTER_KULIAH,
             bulan_pengerjaan = "MAR",
             jumlah_rencana_kinerja = 4,
@@ -156,7 +161,7 @@ class PengisianLogTestCase(TestCase):
 
         self.logTA_2 = LogTA.objects.create(
             user = self.ta_user,
-            kategori = "Persiapan Kuliah",
+            kategori = PERSIAPAN_KULIAH,
             jenis_pekerjaan = "Mempersiapkan Environment",
             detail_kegiatan = "SCELE",
             pemberi_tugas = "Ibu Putu",
@@ -174,7 +179,7 @@ class PengisianLogTestCase(TestCase):
         
         self.assertEquals(all_log_ta.count(), 2)
         self.assertEquals(all_log_ta[0].kategori, PENYELENGGARAN_KULIAH)
-        self.assertEquals(all_log_ta[1].kategori, "Persiapan Kuliah")
+        self.assertEquals(all_log_ta[1].kategori, PERSIAPAN_KULIAH)
 
     def test_create_LogTA_with_realisasi(self):
         self.logTA_1.jumlah_realisasi_kinerja = 8
@@ -191,7 +196,7 @@ class PengisianLogTestCase(TestCase):
         
         self.assertEquals(all_log_ta.count(), 2)
         self.assertEquals(all_log_ta[0].kategori, PENYELENGGARAN_KULIAH)
-        self.assertEquals(all_log_ta[1].kategori, "Persiapan Kuliah")
+        self.assertEquals(all_log_ta[1].kategori, PERSIAPAN_KULIAH)
 
     def test_display_form_LogTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
@@ -217,7 +222,7 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_log_ta[0].kategori, PENYELENGGARAN_KULIAH)
         self.assertEquals(all_log_ta[2].konversi_jam_rencana_kinerja, all_log_ta[2].jumlah_rencana_kinerja / 4)
         self.assertEquals(all_log_ta[2].konversi_jam_realisasi_kinerja, all_log_ta[2].jumlah_realisasi_kinerja / 4)
-        self.assertRedirects(response, reverse("pengisianLog:daftar_log_ta"))
+        self.assertRedirects(response, reverse(URL_DAFTAR_LOG_TA))
 
     def test_post_form_logTA_as_TA_with_realisasi(self):
         self.client.force_login(user=self.ta_user)
@@ -229,7 +234,8 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_log_ta[0].kategori, PENYELENGGARAN_KULIAH)
         self.assertEquals(all_log_ta[2].konversi_jam_rencana_kinerja, all_log_ta[2].jumlah_rencana_kinerja / 4)
         self.assertEquals(all_log_ta[2].konversi_jam_realisasi_kinerja, all_log_ta[2].jumlah_realisasi_kinerja / 4)
-        self.assertRedirects(response, reverse("pengisianLog:daftar_log_ta"))
+        new_var = URL_DAFTAR_LOG_TA
+        self.assertRedirects(response, reverse(new_var))
 
     def test_post_form_logTA_as_TA_wrong_input(self):
         self.client.force_login(user=self.ta_user)
@@ -259,7 +265,7 @@ class PengisianLogTestCase(TestCase):
     
     def test_view_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator',kwargs={'username':'ta'}))
+        response = self.client.get(reverse(URL_DAFTAR_LOG_EVALUATOR,kwargs={'username':'ta'}))
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
@@ -270,7 +276,7 @@ class PengisianLogTestCase(TestCase):
         self.client.force_login(user=self.admin_user)
 
         old_category = self.logTA_1.kategori
-        new_category = "Dukungan Kuliah Kakak Asuh"
+        new_category = DUKUNGAN_KULIAH_KAKAK_ASUH
         self.logTA_1.kategori = new_category
         self.logTA_1.save()
 
@@ -285,7 +291,7 @@ class PengisianLogTestCase(TestCase):
 
     def test_view_history_log_history_user(self):
         self.client.force_login(user=self.ta_user)
-        self.logTA_1.kategori = "Dukungan Kuliah Kakak Asuh"
+        self.logTA_1.kategori = DUKUNGAN_KULIAH_KAKAK_ASUH
         self.logTA_1._history_user = self.ta_user
         self.logTA_1.save()
 
@@ -337,23 +343,23 @@ class PengisianLogTestCase(TestCase):
 
     def test_filter_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator',kwargs={'username':'ta'} ))
+        response = self.client.get(reverse(URL_DAFTAR_LOG_EVALUATOR,kwargs={'username':'ta'}))
         self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
         self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
         self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
 
     def test_filter_LogTA_response_TA_context(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.get(reverse(URL_DAFTAR_LOG_TA),{"bulan":"JAN","kategori":"Harian","periode":"Persiapan Kuliah"})
+        response = self.client.get(reverse(URL_DAFTAR_LOG_TA),{"bulan":"JAN","kategori":"Harian","periode":PERSIAPAN_KULIAH})
         self.assertEquals(response.context['filter_kategori'][0], "Harian")
-        self.assertEquals(response.context['filter_periode'][0], "Persiapan Kuliah")
+        self.assertEquals(response.context['filter_periode'][0], PERSIAPAN_KULIAH)
         self.assertEquals(response.context['filter_bulan'][0], "JAN")
 
     def test_filter_LogTA_response_Admin_context(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse('pengisianLog:daftar_log_evaluator',kwargs={'username':'ta'}),{"bulan":"JAN","kategori":"Harian","periode":"Persiapan Kuliah"})
+        response = self.client.get(reverse(URL_DAFTAR_LOG_EVALUATOR,kwargs={'username':'ta'}),{"bulan":"JAN","kategori":"Harian","periode":PERSIAPAN_KULIAH})
         self.assertEquals(response.context['filter_kategori'][0], "Harian")
-        self.assertEquals(response.context['filter_periode'][0], "Persiapan Kuliah")
+        self.assertEquals(response.context['filter_periode'][0], PERSIAPAN_KULIAH)
         self.assertEquals(response.context['filter_bulan'][0], "JAN")
         
     # Test edit log TA
@@ -374,7 +380,7 @@ class PengisianLogTestCase(TestCase):
 
     def test_post_form_edit_log_ta_without_realisasi_as_TA(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.get(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}))
+        self.client.get(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}))
 
         response = self.client.post(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}), context_dict_1_updated)
         response_updated = self.client.get(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}))
@@ -387,11 +393,11 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(updated_log.jumlah_rencana_kinerja, 3)
         self.assertEquals(all_log_ta[0].konversi_jam_rencana_kinerja, all_log_ta[0].jumlah_rencana_kinerja / 4)
         self.assertEquals(all_log_ta[0].konversi_jam_realisasi_kinerja, all_log_ta[0].jumlah_realisasi_kinerja / 4)
-        self.assertRedirects(response, reverse("pengisianLog:daftar_log_ta"))
+        self.assertRedirects(response, reverse(URL_DAFTAR_LOG_TA))
 
     def test_post_form_edit_log_ta_with_realisasi_as_TA(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.get(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}))
+        self.client.get(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}))
 
         response = self.client.post(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}), context_dict_2_updated)
         response_updated = self.client.get(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}))
@@ -403,11 +409,11 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(updated_log.kategori, RISET_DAN_PUSILKOM)
         self.assertEquals(all_log_ta[0].konversi_jam_rencana_kinerja, all_log_ta[0].jumlah_rencana_kinerja / 4)
         self.assertEquals(all_log_ta[0].konversi_jam_realisasi_kinerja, all_log_ta[0].jumlah_realisasi_kinerja / 4)
-        self.assertRedirects(response, reverse("pengisianLog:daftar_log_ta"))
+        self.assertRedirects(response, reverse(URL_DAFTAR_LOG_TA))
 
     def test_post_form_edit_log_ta_as_ta_wrong_input(self):
         self.client.force_login(user=self.ta_user)
-        response = self.client.get(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}))
+        self.client.get(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}))
 
         self.client.post(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}), context_wrong_updated)
         response = self.client.get(reverse(URL_EDIT_LOG_TA, kwargs={'id':1}))

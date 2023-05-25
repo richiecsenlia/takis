@@ -14,6 +14,8 @@ TAHUN_AJARAN_ALT = "2023/2024"
 TAHUN_AJARAN_WRONG_FORMAT = "2019-2020"
 TAHUN_AJARAN_WRONG_TIME = "2019/2029"
 SEMESTER = 'Ganjil'
+BULAN_MULAI = 'NOV'
+BULAN_SELESAI = 'FEB'
 
 BUAT_PERIODE_URL = "periode:buat-periode"
 EDIT_PERIODE_SEKARANG_URL = "periode:edit-periode-sekarang"
@@ -23,20 +25,28 @@ URL_ASSIGN_TA_PER_PERIODE = "periode:assign-ta"
 create_context = {
     'tahun_ajaran' : TAHUN_AJARAN,
     'semester' : SEMESTER,
+    'bulan_mulai' : BULAN_MULAI,
+    'bulan_selesai' : BULAN_SELESAI
 }
 
 wrong_format_create_context = {
     'tahun_ajaran' : TAHUN_AJARAN_WRONG_FORMAT,
     'semester' : SEMESTER,
+    'bulan_mulai' : BULAN_MULAI,
+    'bulan_selesai' : BULAN_SELESAI
 }
 
 wrong_time_create_context = {
     'tahun_ajaran' : TAHUN_AJARAN_WRONG_TIME,
     'semester' : SEMESTER,
+    'bulan_mulai' : BULAN_MULAI,
+    'bulan_selesai' : BULAN_SELESAI
 }
 
 wrong_semester_context = {
-    'tahun_ajaran' : TAHUN_AJARAN
+    'tahun_ajaran' : TAHUN_AJARAN,
+    'bulan_mulai' : BULAN_MULAI,
+    'bulan_selesai' : BULAN_SELESAI
 }
 
 
@@ -57,11 +67,15 @@ class PeriodeTestCase(TestCase):
         self.periode = Periode(
             tahun_ajaran = TAHUN_AJARAN,
             semester = SEMESTER,
+            bulan_mulai = BULAN_MULAI,
+            bulan_selesai = BULAN_SELESAI
         )
 
         self.periode_alt = Periode(
             tahun_ajaran = TAHUN_AJARAN_ALT,
             semester = SEMESTER,
+            bulan_mulai = BULAN_MULAI,
+            bulan_selesai = BULAN_SELESAI
         )
 
 
@@ -90,6 +104,13 @@ class PeriodeTestCase(TestCase):
         self.assertEquals(all_periode.count(), 1)
         self.assertEquals(all_periode[0].tahun_ajaran, TAHUN_AJARAN)
         self.assertEquals(all_periode[0].semester, SEMESTER)
+
+    def test_periode_bulan(self):
+        self.client.force_login(user=self.admin_user)
+        self.client.post(reverse(BUAT_PERIODE_URL), create_context)
+        periode = Periode.objects.first()
+        bulan = periode.get_bulan()
+        self.assertEquals(bulan, ['NOV', 'DES', 'JAN', 'FEB'])
 
     def test_create_wrong_periode(self):
         self.client.force_login(user=self.admin_user)
