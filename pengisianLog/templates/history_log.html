@@ -39,27 +39,35 @@
                         Pengisian Kegiatan
                     </h5>
                     <div class="card-body">
-                        <div class="col-md-12">
-                            <label class="form-label">Kategori</label>
-                            <input type="text" class="form-control" name="kategori" readonly value="{{entry.kategori}}"/>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Jenis Pekerjaan</label>
-                                <input type="text" class="form-control" name="pekerjaan" readonly value="{{entry.jenis_pekerjaan}}"/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Mata Kuliah</label>
+                                <input type="text" class="form-control" name="matkul" readonly value="{{entry.matkul}}"/>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Detail Kegiatan</label>
-                                <input type="text" class="form-control" name="detail_kegiatan" readonly value="{{entry.detail_kegiatan}}"/>
-                            </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label">Pemberi Tugas</label>
                                 <input type="text" class="form-control" name="pemberi_tugas" readonly value="{{entry.pemberi_tugas}}"/>
                             </div>
                         </div>
-                        <div class="col-12 mt-2">
-                            <label class="form-label">Uraian</label>
-                            <input type="text" class="form-control" name="uraian" readonly value="{{entry.uraian}}"/>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Kategori</label>
+                                <input type="text" class="form-control" name="kategori" readonly value="{{entry.kategori}}"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Jenis Pekerjaan</label>
+                                <input type="text" class="form-control" name="pekerjaan" readonly value="{{entry.jenis_pekerjaan}}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Detail Kegiatan</label>
+                                <input type="text" class="form-control" name="detail_kegiatan" readonly value="{{entry.detail_kegiatan}}"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Uraian</label>
+                                <input type="text" class="form-control" name="uraian" readonly value="{{entry.uraian}}"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,13 +96,17 @@
                     </h5>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Jumlah Rencana Kinerja</label>
                                 <input type="text" class="form-control" name="jumlah_rencana_kinerja" readonly value="{{entry.jumlah_rencana_kinerja}}" />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Satuan Rencana Kinerja</label>
                                 <input type="text" class="form-control" name="satuan_rencana_kinerja" readonly value="{{entry.satuan_rencana_kinerja}}" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Bobot Jam Rencana Kinerja</label>
+                                <input type="text" class="form-control" name="satuan_rencana_kinerja" readonly value="{{entry.bobot_jam_rencana_kinerja}}" />
                             </div>
                         </div>
                     </div>
@@ -106,13 +118,17 @@
                     </h5>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Jumlah Realisasi Kinerja</label>
                                 <input type="text" class="form-control" name="jumlah_realisasi_kinerja" readonly value="{{entry.jumlah_realisasi_kinerja}}" />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Satuan Realisasi Kinerja</label>
                                 <input type="text" class="form-control" name="satuan_realisasi_kinerja" readonly value="{{entry.satuan_realisasi_kinerja}}" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Bobot Jam Realisasi Kinerja</label>
+                                <input type="text" class="form-control" name="satuan_rencana_kinerja" readonly value="{{entry.bobot_jam_realisasi_kinerja}}" />
                             </div>
                         </div>
                     </div>
