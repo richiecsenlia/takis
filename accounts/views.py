@@ -14,7 +14,9 @@ def fill_profile(request):
             nama = request.POST.get('nama'),
             kontrak = request.POST.get('kontrak'),
             status = request.POST.get('status'),
-            prodi = request.POST.get('prodi')
+            prodi = request.POST.get('prodi'),
+            bulan_mulai = request.POST.get('bulan_mulai'),
+            bulan_selesai = request.POST.get('bulan_selesai')
         )
         ta_profile.save()
         return redirect(reverse("main:homepage"))
@@ -23,6 +25,7 @@ def fill_profile(request):
         'kontrak_choices': TeachingAssistantProfile.kontrak.field.choices,
         'status_choices': TeachingAssistantProfile.status.field.choices,
         'prodi_choices': TeachingAssistantProfile.prodi.field.choices,
+        'bulan_choices': TeachingAssistantProfile.bulan_mulai.field.choices,
         'matkul_choices': MataKuliah.objects.order_by('nama')
     }
 
@@ -34,7 +37,10 @@ def profile(request, id):
     context = {
         'profile': profile
     }
-    
+
+    # for x in range(len(profile.get_bulan())):
+    #     print(profile.get_bulan()[x])
+    print(profile.get_bulan())
     return render(request, 'accounts/profile.html', context)
 
 @admin_required
@@ -75,8 +81,7 @@ def dashboard_eval(request):
     print(request.POST)
     if bulan == "Rata-rata":
         for i in ta_list:
-                
-            temp = get_all_rencana(i.user,periode_sekarang[0].periode)
+            temp = get_all_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
             total = 0
             cnt = 0
             for value in temp.values() :
@@ -91,7 +96,6 @@ def dashboard_eval(request):
             
     else:
         for i in ta_list:
-                
             temp = get_month_rencana(i.user,bulan,periode_sekarang[0].periode)
             total = 0
             cnt = 0

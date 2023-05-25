@@ -46,27 +46,35 @@
         Kegiatan
       </h5>
       <div class="card-body py-2">
-        <div class="col-md-12">
-          <p class="font-weight-bold">Kategori</p>
-          <p class="text-sm">{{ log.kategori }}</p>
-        </div>
-        <div class="row mt-2">
-          <div class="col-md-4">
-            <p class="font-weight-bold">Jenis Pekerjaan</p>
-            <p class="text-sm">{{ log.jenis_pekerjaan }}</p>
+        <div class="row">
+          <div class="col-md-6">
+            <p class="font-weight-bold">Mata Kuliah</p>
+            <p class="text-sm">{{ log.matkul }}</p>
           </div>
-          <div class="col-md-4">
-            <p class="font-weight-bold">Detail Kegiatan</p>
-            <p class="text-sm">{{ log.detail_kegiatan }}</p>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <p class="font-weight-bold">Pemberi Tugas</p>
             <p class="text-sm">{{ log.pemberi_tugas }}</p>
           </div>
         </div>
-        <div class="col-12 mt-2">
-          <p class="font-weight-bold">Uraian</p>
-          <p class="text-sm">{{ log.uraian }}</p>
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <p class="font-weight-bold">Kategori</p>
+            <p class="text-sm">{{ log.kategori }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Jenis Pekerjaan</p>
+            <p class="text-sm">{{ log.jenis_pekerjaan }}</p>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <p class="font-weight-bold">Detail Kegiatan</p>
+            <p class="text-sm">{{ log.detail_kegiatan }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Uraian</p>
+            <p class="text-sm">{{ log.uraian }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -104,8 +112,12 @@
             <p class="text-sm">{{ log.satuan_rencana_kinerja }}</p>
           </div>
           <div class="col-md-6">
-            <p class="font-weight-bold">Konversi Jam</p>
-            <p class="text-sm">{{ log.konversi_jam_rencana_kinerja }}</p>
+            <p class="font-weight-bold">Bobot Jam Rencana Kinerja</p>
+            <p class="text-sm">{{ log.bobot_jam_rencana_kinerja }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Konversi Rencana Jam Kerja</p>
+            <p class="text-sm">{{ log.jam_kerja_rencana }}</p>
           </div>
         </div>
       </div>
@@ -125,8 +137,12 @@
               <p class="text-sm">{{ log.satuan_realisasi_kinerja }}</p>
             </div>
             <div class="col-md-6">
-              <p class="font-weight-bold">Konversi Jam</p>
-              <p class="text-sm">{{ log.konversi_jam_realisasi_kinerja }}</p>
+              <p class="font-weight-bold">Bobot Jam Rencana Kinerja</p>
+              <p class="text-sm">{{ log.bobot_jam_realisasi_kinerja }}</p>
+            </div>
+            <div class="col-md-6">
+              <p class="font-weight-bold">Konversi Rencana Jam Kerja</p>
+              <p class="text-sm">{{ log.jam_kerja_realisasi }}</p>
             </div>
           </div>
         </div>

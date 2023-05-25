@@ -23,6 +23,18 @@ class TeachingAssistantProfile(models.Model):
                      ('Ilmu Komputer KKI','Ilmu Komputer KKI'),
                      ('Sistem Informasi','Sistem Informasi'),
                      ('Teknologi Informasi','Teknologi Informasi')]
+    BULAN_CHOICES = [('JAN','JAN'),
+                 ('FEB','FEB'),
+                 ('MAR','MAR'),
+                 ('APR','APR'),
+                 ('MEI','MEI'),
+                 ('JUN','JUN'),
+                 ('JUL','JUL'),
+                 ('AGT','AGT'),
+                 ('SEP','SEP'),
+                 ('OKT','OKT'),
+                 ('NOV','NOV'),
+                 ('DES','DES')]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nama = models.CharField(max_length=50, verbose_name='Nama Lengkap')
@@ -30,6 +42,8 @@ class TeachingAssistantProfile(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, verbose_name='Status Kemahasiswaan')
     prodi = models.CharField(max_length=30, choices=PRODI_CHOICES, verbose_name='Program Studi')
     daftar_matkul = models.ManyToManyField(MataKuliah)
+    bulan_mulai = models.CharField(max_length=3,choices=BULAN_CHOICES,verbose_name='Bulan Mulai')
+    bulan_selesai = models.CharField(max_length=3,choices=BULAN_CHOICES,verbose_name='Bulan Selesai')
     slug = models.SlugField(unique=True, verbose_name='URL Slug')
 
     def __str__(self):
@@ -42,3 +56,16 @@ class TeachingAssistantProfile(models.Model):
     
     def get_absolute_url(self):
         return reverse('profile', args=[str(self.slug)])
+    
+    def bulan_index_generator(self, index_mulai, index_selesai):
+        yield index_mulai
+        while index_mulai != index_selesai:
+            index_mulai += 1
+            index_mulai %= 12
+            yield index_mulai
+
+    def get_bulan(self):
+        list_bulan = [bulan[0] for bulan in self.BULAN_CHOICES]
+        index_mulai = list_bulan.index(self.bulan_mulai)
+        index_selesai = list_bulan.index(self.bulan_selesai)
+        return [list_bulan[i] for i in self.bulan_index_generator(index_mulai, index_selesai)]

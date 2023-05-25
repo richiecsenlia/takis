@@ -5,8 +5,12 @@ from .views import *
 from pengisianLog.models import LogTA
 from periode.models import Periode, PeriodeSekarang
 from django.urls import reverse
+from accounts.models import MataKuliah
+from periode.models import Periode, PeriodeSekarang
 
-# Create your tests here.
+TAHUN_AJARAN = "2023/2024"
+SEMESTER_TAHUN_AJARAN = "Genap"
+
 class RekapanLogTestCase(TestCase):
 
     def setUp(self):
@@ -23,20 +27,45 @@ class RekapanLogTestCase(TestCase):
         self.admin_user.role.role = 'admin'
         self.admin_user.role.save()
 
+        self.matkul_1 = MataKuliah.objects.create(nama='Basis Data')
+        self.matkul_2 = MataKuliah.objects.create(nama='Aljabar Linier')
+
+        self.profile_user_1 = TeachingAssistantProfile.objects.create(
+            user = self.ta_user,
+            nama = 'TA USER 1',
+            kontrak = 'Part Time',
+            status = 'Lulus S1',
+            prodi = 'Ilmu Komputer',
+            bulan_mulai = 'JAN',
+            bulan_selesai = 'MAR'
+        )
+
+        self.profile_user_1.daftar_matkul.add(self.matkul_1)
+        self.profile_user_1.save()
+
+        self.profile_user_2 = TeachingAssistantProfile.objects.create(
+            user = self.ta_user_other,
+            nama = 'TA USER 2',
+            kontrak = 'Full Time',
+            status = 'Lulus S2',
+            prodi = 'Sistem Informasi',
+            bulan_mulai = 'JAN',
+            bulan_selesai = 'MAR'
+        )
+
+        self.profile_user_2.daftar_matkul.add(self.matkul_2)
+        self.profile_user_2.save()
+
         self.periode = Periode(
-            tahun_ajaran = "2022/2023",
-            semester = 'Ganjil',
+            tahun_ajaran = TAHUN_AJARAN,
+            semester = SEMESTER_TAHUN_AJARAN,
+            bulan_mulai = "JAN",
+            bulan_selesai = "JUL"
         )
         self.periode.save()
 
-        self.periode_alt = Periode(
-            tahun_ajaran = "2021/2022",
-            semester = 'Ganjil',
-        )
-        self.periode_alt.save()
-
-        periode_sekarang = PeriodeSekarang(periode = self.periode)
-        periode_sekarang.save()
+        self.periode_sekarang = PeriodeSekarang(periode = self.periode)
+        self.periode_sekarang.save()
 
         LogTA.objects.create(
             user = self.ta_user,
@@ -45,137 +74,89 @@ class RekapanLogTestCase(TestCase):
             detail_kegiatan = "Essay dan Pilgan",
             pemberi_tugas = "Ibu Ika Alfina",
             uraian = "Membuat soal PR",
-            periode = "Semester Kuliah",
-            bulan_pengerjaan = "MAR",
-            jumlah_rencana_kinerja = 4,
+            matkul = self.matkul_1,
+            periode = "Adhoc",
+            bulan_pengerjaan = "FEB",
+            jumlah_rencana_kinerja = 12,
             satuan_rencana_kinerja = "Tugas",
-            konversi_jam_rencana_kinerja = 1,
-            jumlah_realisasi_kinerja = 4,
+            bobot_jam_rencana_kinerja = 1,
+            jam_kerja_rencana = 3.0,
+            jumlah_realisasi_kinerja = 12,
             satuan_realisasi_kinerja = "Tugas",
-            konversi_jam_realisasi_kinerja = 1,
-            periode_log= self.periode
-        )
-
-        LogTA.objects.create(
-            user = self.ta_user,
-            kategori = "Penyelenggaraan Kuliah",
-            jenis_pekerjaan = "Koreksi Tugas",
-            detail_kegiatan = "Essay dan Pilgan",
-            pemberi_tugas = "Ibu Ika Alfina",
-            uraian = "Mengoreksi PR",
-            periode = "Semester Kuliah",
-            bulan_pengerjaan = "APR",
-            jumlah_rencana_kinerja = 2,
-            satuan_rencana_kinerja = "Tugas",
-            konversi_jam_rencana_kinerja = 0.5,
-            jumlah_realisasi_kinerja = 1,
-            satuan_realisasi_kinerja = "Tugas",
-            konversi_jam_realisasi_kinerja = 0.25,
-            periode_log= self.periode
+            bobot_jam_realisasi_kinerja = 1,
+            jam_kerja_realisasi = 3.0
         )
 
         LogTA.objects.create(
             user = self.ta_user,
             kategori = "Persiapan Kuliah",
-            jenis_pekerjaan = "Mempersiapkan Environment",
-            detail_kegiatan = "SCELE",
-            pemberi_tugas = "Ibu Putu",
-            uraian = "Rapat persiapan",
-            periode = "Adhoc",
-            bulan_pengerjaan = "SEP",
-            jumlah_rencana_kinerja = 2,
+            jenis_pekerjaan = "Membuat Soal",
+            detail_kegiatan = "Essay dan Pilgan",
+            pemberi_tugas = "Ibu Ika Alfina",
+            uraian = "Membuat soal PR",
+            matkul = self.matkul_1,
+            periode = "Semester Kuliah",
+            bulan_pengerjaan = "Semester Kuliah",
+            jumlah_rencana_kinerja = 7,
             satuan_rencana_kinerja = "Tugas",
-            konversi_jam_rencana_kinerja = 2,
-            jumlah_realisasi_kinerja = 0,
-            satuan_realisasi_kinerja = "",
-            konversi_jam_realisasi_kinerja = 0,
-            periode_log= self.periode
+            bobot_jam_rencana_kinerja = 7,
+            jam_kerja_rencana = 0.25,
+            jumlah_realisasi_kinerja = 7,
+            satuan_realisasi_kinerja = "Tugas",
+            bobot_jam_realisasi_kinerja = 1,
+            jam_kerja_realisasi = 0.25
         )
 
         LogTA.objects.create(
             user = self.ta_user,
             kategori = "Pengembangan Institusi",
-            jenis_pekerjaan = "Manajemen Lembaga Asisten",
-            detail_kegiatan = "",
-            pemberi_tugas = "",
-            uraian = "Meeting Lembaga asisten",
-            periode = "Adhoc",
-            bulan_pengerjaan = "SEP",
-            jumlah_rencana_kinerja = 1,
-            satuan_rencana_kinerja = "semester",
-            konversi_jam_rencana_kinerja = 1,
-            jumlah_realisasi_kinerja = 1,
-            satuan_realisasi_kinerja = "semester",
-            konversi_jam_realisasi_kinerja = 1,
-            periode_log= self.periode
-        )
-
-        LogTA.objects.create(
-            user = self.ta_user_other,
-            kategori = "Persiapan Kuliah",
-            jenis_pekerjaan = "Mempersiapkan Environment",
-            detail_kegiatan = "",
-            pemberi_tugas = "",
-            uraian = "Rapat persiapan",
-            periode = "Adhoc",
-            bulan_pengerjaan = "SEP",
-            jumlah_rencana_kinerja = 2,
+            jenis_pekerjaan = "Membuat Soal",
+            detail_kegiatan = "Essay dan Pilgan",
+            pemberi_tugas = "Ibu Ika Alfina",
+            uraian = "Membuat soal PR",
+            matkul = self.matkul_1,
+            periode = "Sepanjang Kontrak",
+            bulan_pengerjaan = "Sepanjang Kontrak",
+            jumlah_rencana_kinerja = 9,
             satuan_rencana_kinerja = "Tugas",
-            konversi_jam_rencana_kinerja = 2,
-            jumlah_realisasi_kinerja = 2,
-            satuan_realisasi_kinerja = "",
-            konversi_jam_realisasi_kinerja = 2,
-            periode_log= self.periode
-        )
-
-        LogTA.objects.create(
-            user = self.ta_user,
-            kategori = "Persiapan Kuliah",
-            jenis_pekerjaan = "Mempersiapkan",
-            detail_kegiatan = "",
-            pemberi_tugas = "",
-            uraian = "Rapat persiapan",
-            periode = "Adhoc",
-            bulan_pengerjaan = "SEP",
-            jumlah_rencana_kinerja = 2,
-            satuan_rencana_kinerja = "Tugas",
-            konversi_jam_rencana_kinerja = 2,
-            jumlah_realisasi_kinerja = 2,
-            satuan_realisasi_kinerja = "",
-            konversi_jam_realisasi_kinerja = 2,
-            periode_log= self.periode_alt
+            bobot_jam_rencana_kinerja = 3,
+            jam_kerja_rencana = 2.25,
+            jumlah_realisasi_kinerja = 9,
+            satuan_realisasi_kinerja = "Tugas",
+            bobot_jam_realisasi_kinerja = 3,
+            jam_kerja_realisasi = 2.25
         )
 
         
 
     def test_get_average_all_rencana(self):
-        rencanaAvg = get_all_rencana(self.ta_user, self.periode)
-        # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
+        rekapan_total = get_all_rencana(self.ta_user, self.profile_user_1, self.periode_sekarang.periode)
 
-        self.assertEquals(rencanaAvg['penyelenggaraan_plan'], 0.25)
-        self.assertEquals(rencanaAvg['penyelenggaraan_real'], (1.25/6))
-        self.assertEquals(rencanaAvg['persiapan_plan'], (1/3))
-        self.assertEquals(rencanaAvg['persiapan_real'], 0)
-        self.assertEquals(rencanaAvg['pengembangan_plan'], (1/6))
-        self.assertEquals(rencanaAvg['pengembangan_real'], (1/6))
+        self.assertEquals(rekapan_total['total_plan'],3.5)
+        self.assertEquals(rekapan_total['persiapan_plan'], 0.25)
+        self.assertEquals(rekapan_total['persiapan_real'], 0.25)
+        self.assertEquals(rekapan_total['penyelenggaraan_plan'], 1.0)
+        self.assertEquals(rekapan_total['penyelenggaraan_real'], 1.0)
+        self.assertEquals(rekapan_total['pengembangan_plan'], 2.25)
+        self.assertEquals(rekapan_total['pengembangan_real'], 2.25)
 
     def test_get_average_month_rencana(self):
-        rencanaApr = get_month_rencana(self.ta_user, 'APR', self.periode)
-        rencanaSep = get_month_rencana(self.ta_user, 'SEP', self.periode)
-        # penyelenggaraan harusnya 0.25, persiapan harusnya 0.33 (rata2)
+        rencana_jan = get_month_rencana(self.ta_user, self.profile_user_1, self.periode_sekarang.periode, 'JAN')
+        rencana_feb = get_month_rencana(self.ta_user, self.profile_user_1, self.periode_sekarang.periode, 'FEB')
 
-        self.assertEquals(rencanaApr['penyelenggaraan_plan'], 0.5)
-        self.assertEquals(rencanaApr['penyelenggaraan_real'], 0.25)
-        self.assertEquals(rencanaSep['persiapan_plan'], 2)
-        self.assertEquals(rencanaSep['persiapan_real'], 0)
-        self.assertEquals(rencanaSep['pengembangan_plan'], 1)
-        self.assertEquals(rencanaSep['pengembangan_real'], 1)
+        self.assertEquals(rencana_jan['total_plan'], 2.5)
+        self.assertEquals(rencana_jan['persiapan_plan'], 0.25)
+        self.assertEquals(rencana_jan['pengembangan_plan'], 2.25)
+        self.assertEquals(rencana_feb['total_plan'], 5.5)
+        self.assertEquals(rencana_feb['persiapan_plan'], 0.25)
+        self.assertEquals(rencana_feb['penyelenggaraan_plan'], 3.0)
+        self.assertEquals(rencana_feb['pengembangan_plan'], 2.25)
 
     def test_display_rekap_LogTA_as_TA(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse("rekapanLog:rekapan_log", args=[self.ta_user.username]))
 
-        rencanaAvg = get_all_rencana(self.ta_user, self.periode)
+        rencanaAvg = get_all_rencana(self.ta_user, self.profile_user_1, self.periode_sekarang.periode)
 
         self.assertTemplateUsed(response, 'rekap_log.html')
         self.assertEquals(response.context['persiapan_plan'], rencanaAvg['persiapan_plan'])
@@ -195,7 +176,7 @@ class RekapanLogTestCase(TestCase):
         self.client.force_login(user=self.admin_user)
         response = self.client.get(reverse("rekapanLog:rekapan_log", args=[self.ta_user.username]))
 
-        rencanaAvg = get_all_rencana(self.ta_user, self.periode)
+        rencanaAvg = get_all_rencana(self.ta_user, self.profile_user_1, self.periode_sekarang.periode)
 
         self.assertTemplateUsed(response, 'rekap_log.html')
         self.assertEquals(response.context['persiapan_plan'], rencanaAvg['persiapan_plan'])
@@ -215,27 +196,7 @@ class RekapanLogTestCase(TestCase):
         self.client.force_login(user=self.ta_user)
         response = self.client.post(reverse("rekapanLog:rekapan_log", args=[self.ta_user.username]), {"bulan" : "APR"})
 
-        rencanaApr = get_month_rencana(self.ta_user, 'APR', self.periode)
-
-        self.assertTemplateUsed(response, 'rekap_log.html')
-        self.assertEquals(response.context['persiapan_plan'], rencanaApr['persiapan_plan'])
-        self.assertEquals(response.context['persiapan_real'], rencanaApr['persiapan_real'])
-        self.assertEquals(response.context['penyelenggaraan_plan'], rencanaApr['penyelenggaraan_plan'])
-        self.assertEquals(response.context['penyelenggaraan_plan'], rencanaApr['penyelenggaraan_plan'])
-        self.assertEquals(response.context['dukungan_plan'], rencanaApr['dukungan_plan'])
-        self.assertEquals(response.context['dukungan_real'], rencanaApr['dukungan_real'])
-        self.assertEquals(response.context['pengembangan_plan'], rencanaApr['pengembangan_plan'])
-        self.assertEquals(response.context['pengembangan_real'], rencanaApr['pengembangan_real'])
-        self.assertEquals(response.context['riset_plan'], rencanaApr['riset_plan'])
-        self.assertEquals(response.context['riset_real'], rencanaApr['riset_real'])
-
-        self.assertEquals(response.context['choice'], "APR")
-
-        def test_display_rekap_LogTA_with_choice_rata_rata(self):
-            self.client.force_login(user=self.ta_user)
-            response = self.client.post(reverse("rekapanLog:rekapan_log", args=[self.ta_user.username]), {"bulan" : "Rata-rata"})
-
-            rencanaApr = get_month_rencana(self.ta_user, 'APR')
+        rencanaApr = get_month_rencana(self.ta_user, self.profile_user_1, self.periode_sekarang.periode, 'APR')
 
             self.assertTemplateUsed(response, 'rekap_log.html')
             self.assertEquals(response.context['persiapan_plan'], rencanaApr['persiapan_plan'])
@@ -249,4 +210,24 @@ class RekapanLogTestCase(TestCase):
             self.assertEquals(response.context['riset_plan'], rencanaApr['riset_plan'])
             self.assertEquals(response.context['riset_real'], rencanaApr['riset_real'])
 
-            self.assertEquals(response.context['choice'], "APR")
+        self.assertEquals(response.context['choice'], "APR")
+    
+    def test_display_rekap_LogTA_with_choice_rata_rata(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.post(reverse("rekapanLog:rekapan_log", args=[self.ta_user.username]), {"bulan" : "Rata-rata"})
+
+        rencanaAvg = get_all_rencana(self.ta_user, self.profile_user_1, self.periode_sekarang.periode)
+
+        self.assertTemplateUsed(response, 'rekap_log.html')
+        self.assertEquals(response.context['persiapan_plan'], rencanaAvg['persiapan_plan'])
+        self.assertEquals(response.context['persiapan_real'], rencanaAvg['persiapan_real'])
+        self.assertEquals(response.context['penyelenggaraan_plan'], rencanaAvg['penyelenggaraan_plan'])
+        self.assertEquals(response.context['penyelenggaraan_plan'], rencanaAvg['penyelenggaraan_plan'])
+        self.assertEquals(response.context['dukungan_plan'], rencanaAvg['dukungan_plan'])
+        self.assertEquals(response.context['dukungan_real'], rencanaAvg['dukungan_real'])
+        self.assertEquals(response.context['pengembangan_plan'], rencanaAvg['pengembangan_plan'])
+        self.assertEquals(response.context['pengembangan_real'], rencanaAvg['pengembangan_real'])
+        self.assertEquals(response.context['riset_plan'], rencanaAvg['riset_plan'])
+        self.assertEquals(response.context['riset_real'], rencanaAvg['riset_real'])
+
+        self.assertEquals(response.context['choice'], "Rata-rata")

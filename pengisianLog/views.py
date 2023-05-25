@@ -8,91 +8,148 @@ from django.views.decorators.http import require_GET
 from pengisianLog.models import LogTA
 from datetime import datetime
 from rekapanLog.views import get_month_rencana,get_all_rencana
-from periode.models import Periode, PeriodeSekarang
 from django.db.models import Q
+from django.contrib.auth.models import User
+from accounts.models import TeachingAssistantProfile, MataKuliah
+from periode.models import PeriodeSekarang
 
 VALUE_ERROR = "Input tidak valid"
 URL_DAFTAR_LOG_TA = "pengisianLog:daftar_log_ta"
+URL_DASHBOARD = "accounts:dashboard_eval"
 
-# Create your views here.
+def count_jam_kerja(profile,periode_sekarang,periode,jumlah_rencana_kinerja,bobot_jam_rencana_kinerja):
+    print(periode_sekarang.get_bulan())
+    semester_kuliah_divider = (len(periode_sekarang.get_bulan()))*4
+    sepanjang_kontrak_divider = (len(profile.get_bulan()))*4
+
+    jam_kerja = 0
+    if periode == "Semester Kuliah":
+        jam_kerja = (jumlah_rencana_kinerja*bobot_jam_rencana_kinerja)/semester_kuliah_divider
+    elif periode == "Sepanjang Kontrak":
+        jam_kerja = (jumlah_rencana_kinerja*bobot_jam_rencana_kinerja)/sepanjang_kontrak_divider
+    else:
+        jam_kerja = (jumlah_rencana_kinerja*bobot_jam_rencana_kinerja)/4
+    return jam_kerja
+
+
 @ta_required
 def form_log_ta(request):
     try:
         if request.method == 'GET':
+            profile = TeachingAssistantProfile.objects.get(user=request.user)
+            
             return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
                 'periode_choice': LogTA.periode.field.choices, 
-                'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
+                'bulan_choice': LogTA.bulan_pengerjaan.field.choices,
+                'matkul_choice': [matkul.nama for matkul in profile.daftar_matkul.all()]})
         else:
+            profile = TeachingAssistantProfile.objects.get(user=request.user)
+            periode_sekarang = PeriodeSekarang.objects.get().periode
+
             jumlah_realisasi_kinerja_validasi = 0
-            konversi_jam_realisasi_kinerja_validasi = 0
-            periode_sekarang = PeriodeSekarang.objects.all()
+            bobot_jam_realisasi_kinerja_validasi = 0
             if (request.POST.get('jumlah_realisasi_kinerja')) == "":
                  jumlah_realisasi_kinerja_validasi = 0
-                 konversi_jam_realisasi_kinerja_validasi = 0
+                 bobot_jam_realisasi_kinerja_validasi = 0
             else:
-                 jumlah_realisasi_kinerja_validasi = int(request.POST.get('jumlah_realisasi_kinerja'))
-                 konversi_jam_realisasi_kinerja_validasi = int(request.POST.get('jumlah_realisasi_kinerja')) / 4
+                jumlah_realisasi_kinerja_validasi = int(request.POST.get('jumlah_realisasi_kinerja'))
+                bobot_jam_realisasi_kinerja_validasi = float(request.POST.get('bobot_realisasi_kinerja'))
+
+            user = request.user
+            kategori = request.POST.get('kategori')
+            jenis_pekerjaan = request.POST.get('pekerjaan')
+            detail_kegiatan = request.POST.get('detail_kegiatan')
+            pemberi_tugas = request.POST.get('pemberi_tugas')
+            uraian = request.POST.get('uraian')
+            matkul = MataKuliah.objects.get(nama=request.POST.get('matkul'))
+            periode = request.POST.get('periode')
+            bulan_pengerjaan = request.POST.get('bulan_pengerjaan')
+            jumlah_rencana_kinerja = int(request.POST.get('jumlah_kinerja'))
+            satuan_rencana_kinerja = request.POST.get('satuan_kinerja')
+            bobot_jam_rencana_kinerja = float(request.POST.get('bobot_kinerja'))
+            jam_kerja_rencana = float(count_jam_kerja(profile,periode_sekarang,periode,jumlah_rencana_kinerja,bobot_jam_rencana_kinerja))
+            jumlah_realisasi_kinerja = jumlah_realisasi_kinerja_validasi
+            satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja')
+            bobot_jam_realisasi_kinerja = bobot_jam_realisasi_kinerja_validasi
+            jam_kerja_realisasi = float(count_jam_kerja(profile,periode_sekarang,periode,jumlah_realisasi_kinerja,bobot_jam_realisasi_kinerja))
+            periode_log = periode_sekarang
+
             LogTA.objects.create(
-                user = request.user,
-                kategori = request.POST.get('kategori'),
-                jenis_pekerjaan = request.POST.get('pekerjaan'),
-                detail_kegiatan = request.POST.get('detail_kegiatan'),
-                pemberi_tugas = request.POST.get('pemberi_tugas'),
-                uraian = request.POST.get('uraian'),
-                periode = request.POST.get('periode'),
-                bulan_pengerjaan = request.POST.get('bulan_pengerjaan'),
-                jumlah_rencana_kinerja = int(request.POST.get('jumlah_kinerja')),
-                satuan_rencana_kinerja = request.POST.get('satuan_kinerja'),
-                konversi_jam_rencana_kinerja = int(request.POST.get('jumlah_kinerja')) / 4,
-                jumlah_realisasi_kinerja = jumlah_realisasi_kinerja_validasi,
-                satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja'),
-                konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi,
-                periode_log = periode_sekarang[0].periode
+                user=user,
+                kategori=kategori,
+                jenis_pekerjaan=jenis_pekerjaan,
+                detail_kegiatan=detail_kegiatan,
+                pemberi_tugas=pemberi_tugas,
+                uraian=uraian,
+                matkul=matkul,
+                periode=periode,
+                bulan_pengerjaan=bulan_pengerjaan,
+                jumlah_rencana_kinerja=jumlah_rencana_kinerja,
+                satuan_rencana_kinerja=satuan_rencana_kinerja,
+                bobot_jam_rencana_kinerja=bobot_jam_rencana_kinerja,
+                jam_kerja_rencana=jam_kerja_rencana,
+                jumlah_realisasi_kinerja=jumlah_realisasi_kinerja,
+                satuan_realisasi_kinerja=satuan_realisasi_kinerja,
+                bobot_jam_realisasi_kinerja=bobot_jam_realisasi_kinerja,
+                jam_kerja_realisasi=jam_kerja_realisasi,
+                periode_log=periode_log,
             )
             return redirect(reverse(URL_DAFTAR_LOG_TA))
     except ValueError:
         messages.error(request, VALUE_ERROR)
+        profile = TeachingAssistantProfile.objects.get(user=request.user)
         return render(request, 'form_log.html', {'kategori_choice': LogTA.kategori.field.choices, 
                 'periode_choice': LogTA.periode.field.choices, 
-                'bulan_choice': LogTA.bulan_pengerjaan.field.choices})
+                'bulan_choice': LogTA.bulan_pengerjaan.field.choices,
+                'matkul_choice': [matkul.nama for matkul in profile.daftar_matkul.all()]})
     
 @login_required(login_url=reverse_lazy('authentication:login'))
 def edit_log_ta(request, id):
     try:
         log = LogTA.objects.get(pk=id)
+        profile = TeachingAssistantProfile.objects.get(user=log.user)
+        periode_sekarang = PeriodeSekarang.objects.get().periode
+
 
         context = {'log': log,
                 'kategori_choice': [kategori for kategori in LogTA.kategori.field.choices if log.kategori not in kategori], 
                 'periode_choice': [periode for periode in LogTA.periode.field.choices if log.periode not in periode], 
-                'bulan_choice': [bulan_pengerjaan for bulan_pengerjaan in LogTA.bulan_pengerjaan.field.choices if log.bulan_pengerjaan not in bulan_pengerjaan]}
+                'bulan_choice': [bulan_pengerjaan for bulan_pengerjaan in LogTA.bulan_pengerjaan.field.choices if log.bulan_pengerjaan not in bulan_pengerjaan],
+                'matkul_choice': [matkul.nama for matkul in profile.daftar_matkul.all() if log.matkul.nama not in matkul.nama]}
 
         if request.method == 'GET':
             return render(request, 'edit_log.html', context)
         else:
             jumlah_realisasi_kinerja_validasi = 0
-            konversi_jam_realisasi_kinerja_validasi = 0
+            bobot_jam_realisasi_kinerja_validasi = 0
             if (request.POST.get('jumlah_realisasi_kinerja')) == "":
                  jumlah_realisasi_kinerja_validasi = 0
-                 konversi_jam_realisasi_kinerja_validasi = 0
+                 bobot_jam_realisasi_kinerja_validasi = 0
             else:
                 jumlah_realisasi_kinerja_validasi = int(request.POST.get('jumlah_realisasi_kinerja'))
-                konversi_jam_realisasi_kinerja_validasi = int(request.POST.get('jumlah_realisasi_kinerja')) / 4
+                bobot_jam_realisasi_kinerja_validasi = float(request.POST.get('bobot_realisasi_kinerja'))
 
-            log.user = request.user
+            log.user = log.user
             log.kategori = request.POST.get('kategori')
             log.jenis_pekerjaan = request.POST.get('pekerjaan')
             log.detail_kegiatan = request.POST.get('detail_kegiatan')
             log.pemberi_tugas = request.POST.get('pemberi_tugas')
             log.uraian = request.POST.get('uraian')
+            log.matkul = MataKuliah.objects.get(nama=request.POST.get('matkul'))
             log.periode = request.POST.get('periode')
             log.bulan_pengerjaan = request.POST.get('bulan_pengerjaan')
             log.jumlah_rencana_kinerja = int(request.POST.get('jumlah_kinerja'))
             log.satuan_rencana_kinerja = request.POST.get('satuan_kinerja')
-            log.konversi_jam_rencana_kinerja = int(request.POST.get('jumlah_kinerja')) / 4
+            log.bobot_jam_rencana_kinerja = float(request.POST.get('bobot_kinerja'))
+            log.jam_kerja_rencana = float(count_jam_kerja(profile,periode_sekarang,log.periode,log.jumlah_rencana_kinerja,log.bobot_jam_rencana_kinerja))
             log.jumlah_realisasi_kinerja = jumlah_realisasi_kinerja_validasi
             log.satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja')
-            log.konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi
+            log.bobot_jam_realisasi_kinerja = bobot_jam_realisasi_kinerja_validasi
+            log.jam_kerja_realisasi = float(count_jam_kerja(profile,periode_sekarang,log.periode,log.jumlah_realisasi_kinerja,log.bobot_jam_realisasi_kinerja))
             log.save()
+
+            if str(request.user.role) == 'admin':
+                return redirect(reverse("accounts:dashboard_eval"))
             return redirect(reverse(URL_DAFTAR_LOG_TA))
     except ValueError:
         messages.error(request, VALUE_ERROR)
@@ -102,6 +159,9 @@ def edit_log_ta(request, id):
 def delete_log_ta(request, id):
     log = LogTA.objects.get(pk=id)
     log.delete()
+
+    if str(request.user.role) == 'admin':
+                return redirect(reverse("accounts:dashboard_eval"))
     return redirect(reverse(URL_DAFTAR_LOG_TA))
 
 def exclude_periode(filter_periode, logs, periode_choice):
@@ -144,7 +204,8 @@ def daftar_log_ta(request):
     bulan = datetime.now().month
     print(bulan_choice[bulan-1][0])
     print(periode_sekarang)
-    rekap = get_month_rencana(request.user, bulan_choice[bulan-1][0],periode_sekarang)
+    rekap = get_month_rencana(request.user,TeachingAssistantProfile.objects.get(user=request.user),periode_sekarang,bulan_choice[bulan-1][0])
+    # rekap = get_month_rencana(request.user, bulan_choice[bulan-1][0],periode_sekarang)
     print(rekap)
     total = 0
     cnt = 0
