@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_GET
 from pengisianLog.models import LogTA
+from datetime import datetime
+from rekapanLog.views import get_month_rencana,get_all_rencana
 from periode.models import Periode, PeriodeSekarang
 from django.db.models import Q
 
@@ -139,25 +141,43 @@ def daftar_log_ta(request):
     logs = exclude_bulan(filter_bulan, logs, bulan_choice)
     logs = exclude_kategori(filter_kategori, logs, kategori_choice)
     logs = exclude_periode(filter_periode, logs, periode_choice)
-        
+    bulan = datetime.now().month
+    print(bulan_choice[bulan-1][0])
+    print(periode_sekarang)
+    rekap = get_month_rencana(request.user, bulan_choice[bulan-1][0],periode_sekarang)
+    print(rekap)
+    total = 0
+    cnt = 0
+    for key in rekap:
+        if cnt >= 6 :
+            if rekap[key] != None :
+                total = rekap[key]
+        cnt += 1
+    
+    if request.user.teachingassistantprofile.kontrak == 'Part Time':
+        defisit = 20 - total
+    else :
+        defisit = 40 - total
     context = {'logs': logs,
                 'kategori_choice': kategori_choice, 
                 'periode_choice': periode_choice, 
                 'bulan_choice': bulan_choice,
                 'filter_bulan':filter_bulan,
                 'filter_kategori':filter_kategori,
-                'filter_periode':filter_periode}
+                'filter_periode':filter_periode,
+                'defisit':defisit,
+                'total':total}
     return render(request, 'daftar_log.html', context)
 
 @require_GET
 @admin_required
-def daftar_log_evaluator(request):
+def daftar_log_evaluator(request,username):
     periode_sekarang_all = PeriodeSekarang.objects.all()
     periode_sekarang = periode_sekarang_all[0].periode
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
-    logs = LogTA.objects.filter(Q(periode_log=periode_sekarang)).order_by('user', 'id')
+    logs = LogTA.objects.filter(Q(periode_log=periode_sekarang,user__username=username)).order_by('user', 'id')
     
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices

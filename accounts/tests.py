@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-
+from django.urls import reverse
 from accounts.models import MataKuliah, TeachingAssistantProfile
-
+from periode.models import Periode, PeriodeSekarang
 class AccountsTest(TestCase):
     
     def setUp(self):
@@ -33,16 +33,22 @@ class AccountsTest(TestCase):
         TeachingAssistantProfile.objects.create(
             user = self.ta_user_2,
             nama = 'Virdian Harun',
-            kontrak = 'Part Time',
+            kontrak = 'Full Time',
             status = 'Lulus S1',
             prodi = 'Sistem Informasi'
         )
-
+        self.admin_user = User.objects.create(username='admin', password='admin', email='admin@admin.com')
+        self.admin_user.role.role = 'admin'
+        self.admin_user.role.save()
         MataKuliah.objects.create(nama='Aljabar Linear')
         MataKuliah.objects.create(nama='Basis Data')
         MataKuliah.objects.create(nama='Jaringan Komputer')
         MataKuliah.objects.create(nama='Rekayasa Perangkat Lunak')
         MataKuliah.objects.create(nama='Proyek Perangkat Lunak')
+        self.periode = Periode(tahun_ajaran = "2022/2023",semester = "ganjil")
+        self.periode.save()
+        self.periode_sekarang = PeriodeSekarang(periode = self.periode)
+        self.periode_sekarang.save()
 
     def test_total_mata_kuliah(self):
         all_matkul = MataKuliah.objects.all()
@@ -60,3 +66,12 @@ class AccountsTest(TestCase):
 
         self.assertEquals(str(ta_1), 'Immanuel Nadeak')
         self.assertEquals(str(ta_2), 'Virdian Harun')
+
+    def test_dashboard(self):
+        self.client.force_login(user=self.admin_user)
+        response = self.client.get(reverse("accounts:dashboard_eval"),{"kontrak":'Part Time','status':'Lulus S1','prodi':'Ilmu Komputer'})
+        self.assertEquals(response.templates[0].name,'accounts/dashboard_eval.html')
+    def test_dashboard_bulan(self):
+        self.client.force_login(user=self.admin_user)
+        response = self.client.get(reverse("accounts:dashboard_eval"),{"kontrak":'Part Time','status':'Lulus S1','prodi':'Ilmu Komputer','bulan':'JAN'})
+        self.assertEquals(response.templates[0].name,'accounts/dashboard_eval.html')

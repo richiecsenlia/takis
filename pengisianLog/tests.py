@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib import auth
 from .models import LogTA
+from accounts.models import TeachingAssistantProfile
 from periode.models import Periode, PeriodeSekarang
 from django.urls import reverse
 from django.test import RequestFactory
@@ -134,7 +135,8 @@ class PengisianLogTestCase(TestCase):
         self.ta_user = User.objects.create(username='ta', password='ta', email='ta@ta.com')
         self.ta_user.role.role = 'TA'
         self.ta_user.role.save()
-
+        self.profile = TeachingAssistantProfile(user=self.ta_user,nama="richie",kontrak="Full Time",status="Lulus S1",prodi="Ilmu Komputer")
+        self.profile.save()
         self.ta_user_2 = User.objects.create(username='ta2', password='ta2', email='ta2@ta2.com')
         self.ta_user_2.role.role = 'TA'
         self.ta_user_2.role.save()
@@ -290,7 +292,7 @@ class PengisianLogTestCase(TestCase):
     
     def test_view_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse(URL_DAFTAR_LOG_EVALUATOR))
+        response = self.client.get(reverse(URL_DAFTAR_LOG_EVALUATOR,kwargs={'username':'ta'}))
         user = auth.get_user(self.client)
         logs = response.context['logs']
 
@@ -371,7 +373,7 @@ class PengisianLogTestCase(TestCase):
 
     def test_filter_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse(URL_DAFTAR_LOG_EVALUATOR))
+        response = self.client.get(reverse(URL_DAFTAR_LOG_EVALUATOR,kwargs={'username':'ta'}))
         self.assertEquals(response.context['kategori_choice'], LogTA.kategori.field.choices)
         self.assertEquals(response.context['periode_choice'], LogTA.periode.field.choices)
         self.assertEquals(response.context['bulan_choice'], LogTA.bulan_pengerjaan.field.choices)
@@ -385,7 +387,7 @@ class PengisianLogTestCase(TestCase):
 
     def test_filter_LogTA_response_Admin_context(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse(URL_DAFTAR_LOG_EVALUATOR),{"bulan":"JAN","kategori":"Harian","periode":PERSIAPAN_KULIAH})
+        response = self.client.get(reverse(URL_DAFTAR_LOG_EVALUATOR,kwargs={'username':'ta'}),{"bulan":"JAN","kategori":"Harian","periode":PERSIAPAN_KULIAH})
         self.assertEquals(response.context['filter_kategori'][0], "Harian")
         self.assertEquals(response.context['filter_periode'][0], PERSIAPAN_KULIAH)
         self.assertEquals(response.context['filter_bulan'][0], "JAN")

@@ -15,9 +15,12 @@
     <div class="d-sm-flex justify-content-between align-items-center">
       <div class="ms-2 pt-2">
         {% if user.role.role == 'TA' %}
-        <h3>Daftar Log Pekerjaan</h3>
+          <h3>Daftar Log Pekerjaan</h3>
+        {% if defisit > 0 %}
+            <h4>Bulan ini anda masih memerlukan {{defisit}} jam kerja</h4>
+        {% endif %}
         {% else %}
-        <h3>Riwayat Log Seluruh TA</h3>
+          <h3>Riwayat Log Seluruh TA</h3>
         {% endif %}
       </div>
       <div class="dropdown d-inline">  

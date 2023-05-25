@@ -60,12 +60,26 @@ class AuthTest(TestCase):
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/login.html")
     
+    def test_login_authenticated(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(self.LOGIN_URL)
+        self.assertRedirects(response,reverse('main:homepage'),fetch_redirect_response=False)
+    
     def test_login_unsuccessfull(self):
         response = self.client.post(self.LOGIN_URL, {'username': 'username', 'password': 'password2'})
         user = auth.get_user(self.client)
         self.assertFalse(user.is_authenticated)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/login.html")
+    
+    def test_login_successfull(self):
+        response = self.client.post(self.LOGIN_URL, {'username': 'username', 'password': 'password'})
+        self.assertRedirects(response,reverse('main:homepage'),fetch_redirect_response=False)
+    
+    def test_register_authenticated(self):
+        self.client.force_login(user=self.ta_user)
+        response = self.client.get(self.REGISTER_URL)
+        self.assertRedirects(response,reverse('main:homepage'),fetch_redirect_response=False)
     
     def test_get_register(self):
         response = self.client.get(self.REGISTER_URL)
@@ -100,14 +114,28 @@ class AuthTest(TestCase):
         client_user = auth.get_user(self.client)
         self.assertTrue(check_password("senlia25",client_user.password))
         self.assertTrue(client_user.is_authenticated)
+        self.assertRedirects(response,reverse('main:homepage'),fetch_redirect_response=False)
 
+    def test_change_password_form_invalid(self):
+        user = User.objects.create(username='richie',email='richie@gmail.com')
+        user.role.role = "TA"
+        self.client.force_login(user=user)
+        response = self.client.post(self.CHANGE_PASSWORD_URL,{'password1':"senlia",'password2':'senlia25'})
+        client_user = auth.get_user(self.client)
+        self.assertEquals(response.status_code,200)
+        self.assertEquals(response.templates[0].name,"registration/change_password.html")
     def test_change_password_no_user(self):
         response = self.client.get(self.CHANGE_PASSWORD_URL,fetch_redirect_response=False)
         self.assertRedirects(response,self.LOGIN_URL,fetch_redirect_response=False)
     
+    def test_not_assign(self):
+        response = self.client.get(reverse("authentication:not_assign"))
+        self.assertEquals(response.status_code,200)
+        self.assertEquals(response.templates[0].name,'registration/not_assign.html')
+
     def test_change_role_admin_user(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(self.CHANGE_ROLE_URL)
+        response = self.client.get(self.CHANGE_ROLE_URL,{"kontrak":'Part Time','status':'Lulus S1','prodi':'Ilmu Komputer'})
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/change_role.html")
 
