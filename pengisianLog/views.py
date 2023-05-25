@@ -205,10 +205,9 @@ def daftar_log_ta(request):
     bulan = datetime.now().month
     print(bulan_choice[bulan-1][0])
     print(periode_sekarang)
-    try :
-        rekap = get_month_rencana(request.user,TeachingAssistantProfile.objects.get(user=request.user),periode_sekarang,bulan_choice[bulan-1][0])
-    except :
-        rekap ={}
+    
+    rekap = get_month_rencana(request.user,TeachingAssistantProfile.objects.get(user=request.user),periode_sekarang,bulan_choice[bulan-1][0])
+    
     # rekap = get_month_rencana(request.user, bulan_choice[bulan-1][0],periode_sekarang)
     print(rekap)
     total = 0
