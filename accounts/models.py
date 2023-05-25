@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 
+
 # Create your models here.
 class MataKuliah(models.Model):
     nama = models.CharField(max_length=30)
@@ -23,6 +24,7 @@ class TeachingAssistantProfile(models.Model):
                      ('Ilmu Komputer KKI','Ilmu Komputer KKI'),
                      ('Sistem Informasi','Sistem Informasi'),
                      ('Teknologi Informasi','Teknologi Informasi')]
+    
     BULAN_CHOICES = [('JAN','JAN'),
                  ('FEB','FEB'),
                  ('MAR','MAR'),

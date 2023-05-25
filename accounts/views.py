@@ -1,51 +1,86 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.urls import reverse, reverse_lazy
 
+from accounts.forms import TAProfileForm
 from accounts.models import TeachingAssistantProfile, MataKuliah
 from authentication.views import ta_required, admin_required
-from rekapanLog.views import get_month_rencana,get_all_rencana
 from periode.models import Periode, PeriodeSekarang
+from rekapanLog.views import get_month_rencana,get_all_rencana
+
+
 # Create your views here.
 @ta_required
 def fill_profile(request):
-    if request.method == 'POST':
-        ta_profile = TeachingAssistantProfile(
-            user = request.user,
-            nama = request.POST.get('nama'),
-            kontrak = request.POST.get('kontrak'),
-            status = request.POST.get('status'),
-            prodi = request.POST.get('prodi'),
-            bulan_mulai = request.POST.get('bulan_mulai'),
-            bulan_selesai = request.POST.get('bulan_selesai')
-        )
-        ta_profile.save()
-        return redirect(reverse("main:homepage"))
-    
+    form = TAProfileForm()
+    try:
+        if request.user.teachingassistantprofile != None:
+            return redirect(reverse("main:homepage"))
+    except ObjectDoesNotExist:
+        if request.method == 'POST':
+            form = TAProfileForm(request.POST)
+            if form.is_valid():
+                new_profile = form.save(commit=False)
+                new_profile.user = request.user
+                new_profile.save()
+                for matkul in form.cleaned_data['daftar_matkul']:
+                    new_profile.daftar_matkul.add(matkul)
+                return redirect(reverse("main:homepage"))
     context = {
-        'kontrak_choices': TeachingAssistantProfile.kontrak.field.choices,
-        'status_choices': TeachingAssistantProfile.status.field.choices,
-        'prodi_choices': TeachingAssistantProfile.prodi.field.choices,
-        'bulan_choices': TeachingAssistantProfile.bulan_mulai.field.choices,
-        'matkul_choices': MataKuliah.objects.order_by('nama')
+        'form': form
     }
 
     return render(request, 'accounts/fill_profile.html', context)
 
-@ta_required
+
+@login_required(login_url=reverse_lazy('authentication:login'))
 def profile(request, id):
     profile = TeachingAssistantProfile.objects.get(user=id)
     context = {
         'profile': profile
     }
 
-    # for x in range(len(profile.get_bulan())):
-    #     print(profile.get_bulan()[x])
-    print(profile.get_bulan())
     return render(request, 'accounts/profile.html', context)
+
+
+@login_required(login_url=reverse_lazy('authentication:login'))
+def edit_profile(request, id):
+    form = TAProfileForm()
+    profile = get_object_or_404(TeachingAssistantProfile, user=id)
+
+    form.fields['nama'].initial = profile.nama
+    form.fields['kontrak'].initial = profile.kontrak
+    form.fields['prodi'].initial = profile.prodi
+    form.fields['status'].initial = profile.status
+    form.fields['bulan_mulai'].initial = profile.bulan_mulai
+    form.fields['bulan_selesai'].initial = profile.bulan_selesai
+    form.fields['daftar_matkul'].initial = [matkul for matkul in profile.daftar_matkul.all()]
+    
+    if request.method == 'POST':
+        form = TAProfileForm(request.POST)
+        if form.is_valid():
+            profile.nama = form.cleaned_data['nama']
+            profile.kontrak = form.cleaned_data['kontrak']
+            profile.prodi = form.cleaned_data['prodi']
+            profile.status = form.cleaned_data['status']
+            profile.bulan_mulai = form.cleaned_data['bulan_mulai']
+            profile.bulan_selesai = form.cleaned_data['bulan_selesai']
+            profile.save()
+            for matkul in form.cleaned_data['daftar_matkul']:
+                profile.daftar_matkul.add(matkul)
+            return redirect(reverse("accounts:profile", kwargs={'id': profile.user.id}))
+
+    context = {
+        'form': form,
+        'profile': profile
+    }
+
+    return render(request, 'accounts/edit_profile.html', context)
+
 
 @admin_required
 def dashboard_eval(request):
-    
     filter_kontrak = request.GET.getlist("kontrak")
     filter_status = request.GET.getlist("status")
     filter_prodi = request.GET.getlist("prodi")
@@ -57,44 +92,43 @@ def dashboard_eval(request):
     matkul_choices = MataKuliah.objects.order_by('nama')
     periode_sekarang = PeriodeSekarang.objects.all()
     ta_list = TeachingAssistantProfile.objects.filter(periode=periode_sekarang[0].periode)
-    if(len(filter_kontrak) != 0) :
-        for kontrak in kontrak_choices :
+
+    if(len(filter_kontrak) != 0):
+        for kontrak in kontrak_choices:
             if not (kontrak[1] in filter_kontrak):
                 ta_list = ta_list.exclude(kontrak = kontrak[1])
-    if len(filter_status) !=0 :
-        for status in status_choices :
+    if len(filter_status) !=0:
+        for status in status_choices:
             if not (status[1] in filter_status):
                 ta_list = ta_list.exclude(status= status[1])
-    if len(filter_prodi) != 0 :
-        for prodi in prodi_choices :
+    if len(filter_prodi) != 0:
+        for prodi in prodi_choices:
             if not (prodi[1] in filter_prodi):
                 ta_list = ta_list.exclude(prodi = prodi[1])
     if len(filter_matkul) != 0:
-        for matkul in matkul_choices :
+        for matkul in matkul_choices:
             if not (matkul.nama in filter_matkul):
                 ta_list = ta_list.exclude(daftar_matkul__id = matkul.id)
     
-
     rekap = []
     choice = "Rata-rata"
     bulan = request.GET.get("bulan","Rata-rata")    
-    print(request.POST)
     if bulan == "Rata-rata":
         for i in ta_list:
-            try :
+            try:
                 temp = get_all_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
-            except :
+            except:
                 temp = {}
             total = 0
             cnt = 0
-            for value in temp.values() :
-                if cnt >= 6 :
-                    if value != None :
+            for value in temp.values():
+                if cnt >= 6:
+                    if value != None:
                         total += value
                 cnt += 1
             if (i.kontrak == "Part Time"):
                 rekap.append((total,20-total))
-            else :
+            else:
                 rekap.append((total,40-total))
             
     else:
@@ -105,14 +139,14 @@ def dashboard_eval(request):
                 temp = {}
             total = 0
             cnt = 0
-            for value in temp.values() :
-                if cnt >= 6 :
-                    if value != None :
+            for value in temp.values():
+                if cnt >= 6:
+                    if value != None:
                         total += value
                 cnt += 1
             if (i.kontrak == "Part Time"):
                 rekap.append((total,20-total))
-            else :
+            else:
                 rekap.append((total,40-total))
         choice = bulan
     temp = zip(ta_list,rekap)
