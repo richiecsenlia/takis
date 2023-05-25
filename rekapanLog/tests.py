@@ -84,7 +84,8 @@ class RekapanLogTestCase(TestCase):
             jumlah_realisasi_kinerja = 12,
             satuan_realisasi_kinerja = "Tugas",
             bobot_jam_realisasi_kinerja = 1,
-            jam_kerja_realisasi = 3.0
+            jam_kerja_realisasi = 3.0,
+            periode_log = self.periode_sekarang.periode
         )
 
         LogTA.objects.create(
@@ -104,7 +105,8 @@ class RekapanLogTestCase(TestCase):
             jumlah_realisasi_kinerja = 7,
             satuan_realisasi_kinerja = "Tugas",
             bobot_jam_realisasi_kinerja = 1,
-            jam_kerja_realisasi = 0.25
+            jam_kerja_realisasi = 0.25,
+            periode_log = self.periode_sekarang.periode
         )
 
         LogTA.objects.create(
@@ -124,10 +126,9 @@ class RekapanLogTestCase(TestCase):
             jumlah_realisasi_kinerja = 9,
             satuan_realisasi_kinerja = "Tugas",
             bobot_jam_realisasi_kinerja = 3,
-            jam_kerja_realisasi = 2.25
+            jam_kerja_realisasi = 2.25,
+            periode_log = self.periode_sekarang.periode
         )
-
-        
 
     def test_get_average_all_rencana(self):
         rekapan_total = get_all_rencana(self.ta_user, self.profile_user_1, self.periode_sekarang.periode)
@@ -198,17 +199,17 @@ class RekapanLogTestCase(TestCase):
 
         rencanaApr = get_month_rencana(self.ta_user, self.profile_user_1, self.periode_sekarang.periode, 'APR')
 
-            self.assertTemplateUsed(response, 'rekap_log.html')
-            self.assertEquals(response.context['persiapan_plan'], rencanaApr['persiapan_plan'])
-            self.assertEquals(response.context['persiapan_real'], rencanaApr['persiapan_real'])
-            self.assertEquals(response.context['penyelenggaraan_plan'], rencanaApr['penyelenggaraan_plan'])
-            self.assertEquals(response.context['penyelenggaraan_plan'], rencanaApr['penyelenggaraan_plan'])
-            self.assertEquals(response.context['dukungan_plan'], rencanaApr['dukungan_plan'])
-            self.assertEquals(response.context['dukungan_real'], rencanaApr['dukungan_real'])
-            self.assertEquals(response.context['pengembangan_plan'], rencanaApr['pengembangan_plan'])
-            self.assertEquals(response.context['pengembangan_real'], rencanaApr['pengembangan_real'])
-            self.assertEquals(response.context['riset_plan'], rencanaApr['riset_plan'])
-            self.assertEquals(response.context['riset_real'], rencanaApr['riset_real'])
+        self.assertTemplateUsed(response, 'rekap_log.html')
+        self.assertEquals(response.context['persiapan_plan'], rencanaApr['persiapan_plan'])
+        self.assertEquals(response.context['persiapan_real'], rencanaApr['persiapan_real'])
+        self.assertEquals(response.context['penyelenggaraan_plan'], rencanaApr['penyelenggaraan_plan'])
+        self.assertEquals(response.context['penyelenggaraan_plan'], rencanaApr['penyelenggaraan_plan'])
+        self.assertEquals(response.context['dukungan_plan'], rencanaApr['dukungan_plan'])
+        self.assertEquals(response.context['dukungan_real'], rencanaApr['dukungan_real'])
+        self.assertEquals(response.context['pengembangan_plan'], rencanaApr['pengembangan_plan'])
+        self.assertEquals(response.context['pengembangan_real'], rencanaApr['pengembangan_real'])
+        self.assertEquals(response.context['riset_plan'], rencanaApr['riset_plan'])
+        self.assertEquals(response.context['riset_real'], rencanaApr['riset_real'])
 
         self.assertEquals(response.context['choice'], "APR")
     
