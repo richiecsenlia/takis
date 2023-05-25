@@ -51,8 +51,8 @@ class Periode(models.Model):
         default=GANJIL,
     )
 
-    bulan_mulai = models.CharField(max_length=3,choices=BULAN_CHOICES, default=BULAN_CHOICES[0])
-    bulan_selesai = models.CharField(max_length=3,choices=BULAN_CHOICES, default=BULAN_CHOICES[4])
+    bulan_mulai = models.CharField(max_length=3,choices=BULAN_CHOICES, default=BULAN_CHOICES[0][0])
+    bulan_selesai = models.CharField(max_length=3,choices=BULAN_CHOICES, default=BULAN_CHOICES[4][0])
 
     daftar_ta = models.ManyToManyField(TeachingAssistantProfile)
 
