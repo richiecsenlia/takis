@@ -133,9 +133,9 @@ def dashboard_eval(request):
             
     else:
         for i in ta_list:
-            try:
-                temp = get_month_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
-            except:
+            try :
+                temp = get_month_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode,bulan)
+            except :
                 temp = {}
             total = 0
             cnt = 0
