@@ -8,6 +8,8 @@ from django.views.decorators.http import require_GET
 from pengisianLog.models import LogTA
 from datetime import datetime
 from rekapanLog.views import get_month_rencana,get_all_rencana
+from periode.models import Periode, PeriodeSekarang
+from django.db.models import Q
 
 VALUE_ERROR = "Input tidak valid"
 URL_DAFTAR_LOG_TA = "pengisianLog:daftar_log_ta"
@@ -23,6 +25,7 @@ def form_log_ta(request):
         else:
             jumlah_realisasi_kinerja_validasi = 0
             konversi_jam_realisasi_kinerja_validasi = 0
+            periode_sekarang = PeriodeSekarang.objects.all()
             if (request.POST.get('jumlah_realisasi_kinerja')) == "":
                  jumlah_realisasi_kinerja_validasi = 0
                  konversi_jam_realisasi_kinerja_validasi = 0
@@ -43,7 +46,8 @@ def form_log_ta(request):
                 konversi_jam_rencana_kinerja = int(request.POST.get('jumlah_kinerja')) / 4,
                 jumlah_realisasi_kinerja = jumlah_realisasi_kinerja_validasi,
                 satuan_realisasi_kinerja = request.POST.get('satuan_realisasi_kinerja'),
-                konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi
+                konversi_jam_realisasi_kinerja = konversi_jam_realisasi_kinerja_validasi,
+                periode_log = periode_sekarang[0].periode
             )
             return redirect(reverse(URL_DAFTAR_LOG_TA))
     except ValueError:
@@ -124,12 +128,13 @@ def exclude_bulan(filter_bulan, logs, bulan_choice):
 @ta_required
 def daftar_log_ta(request):
     
+    periode_sekarang_all = PeriodeSekarang.objects.all()
+    periode_sekarang = periode_sekarang_all[0].periode
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
-    
-    logs = LogTA.objects.filter(user=request.user)
-    
+    logs = LogTA.objects.filter(Q(user=request.user, periode_log=periode_sekarang))
+
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
     bulan_choice = LogTA.bulan_pengerjaan.field.choices
@@ -138,7 +143,9 @@ def daftar_log_ta(request):
     logs = exclude_periode(filter_periode, logs, periode_choice)
     bulan = datetime.now().month
     print(bulan_choice[bulan-1][0])
-    rekap = get_month_rencana(request.user, bulan)
+    print(periode_sekarang)
+    rekap = get_month_rencana(request.user, bulan_choice[bulan-1][0],periode_sekarang)
+    print(rekap)
     total = 0
     cnt = 0
     for key in rekap:
@@ -165,11 +172,12 @@ def daftar_log_ta(request):
 @require_GET
 @admin_required
 def daftar_log_evaluator(request,username):
-    print(request.GET)
+    periode_sekarang_all = PeriodeSekarang.objects.all()
+    periode_sekarang = periode_sekarang_all[0].periode
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
-    logs = LogTA.objects.filter(user__username=username).order_by('user', 'id')
+    logs = LogTA.objects.filter(Q(periode_log=periode_sekarang,user__username=username)).order_by('user', 'id')
     
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices

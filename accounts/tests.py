@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from accounts.models import MataKuliah, TeachingAssistantProfile
-
+from periode.models import Periode, PeriodeSekarang
 class AccountsTest(TestCase):
     
     def setUp(self):
@@ -45,6 +45,10 @@ class AccountsTest(TestCase):
         MataKuliah.objects.create(nama='Jaringan Komputer')
         MataKuliah.objects.create(nama='Rekayasa Perangkat Lunak')
         MataKuliah.objects.create(nama='Proyek Perangkat Lunak')
+        self.periode = Periode(tahun_ajaran = "2022/2023",semester = "ganjil")
+        self.periode.save()
+        self.periode_sekarang = PeriodeSekarang(periode = self.periode)
+        self.periode_sekarang.save()
 
     def test_total_mata_kuliah(self):
         all_matkul = MataKuliah.objects.all()

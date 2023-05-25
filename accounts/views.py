@@ -4,6 +4,7 @@ from django.urls import reverse
 from accounts.models import TeachingAssistantProfile, MataKuliah
 from authentication.views import ta_required, admin_required
 from rekapanLog.views import get_month_rencana,get_all_rencana
+from periode.models import Periode, PeriodeSekarang
 # Create your views here.
 @ta_required
 def fill_profile(request):
@@ -49,7 +50,7 @@ def dashboard_eval(request):
     status_choices = TeachingAssistantProfile.status.field.choices
     prodi_choices = TeachingAssistantProfile.prodi.field.choices
     matkul_choices = MataKuliah.objects.order_by('nama')
-
+    periode_sekarang = PeriodeSekarang.objects.all()
     if(len(filter_kontrak) != 0) :
         for kontrak in kontrak_choices :
             if not (kontrak[1] in filter_kontrak):
@@ -75,7 +76,7 @@ def dashboard_eval(request):
     if bulan == "Rata-rata":
         for i in ta_list:
                 
-            temp = get_all_rencana(i.user)
+            temp = get_all_rencana(i.user,periode_sekarang[0].periode)
             total = 0
             cnt = 0
             for value in temp.values() :
@@ -86,12 +87,12 @@ def dashboard_eval(request):
             if (i.kontrak == "Part Time"):
                 rekap.append((total,20-total))
             else :
-                rekap.append((tota,40-total))
+                rekap.append((total,40-total))
             
     else:
         for i in ta_list:
                 
-            temp = get_month_rencana(i.user,bulan)
+            temp = get_month_rencana(i.user,bulan,periode_sekarang[0].periode)
             total = 0
             cnt = 0
             for value in temp.values() :
@@ -102,9 +103,10 @@ def dashboard_eval(request):
             if (i.kontrak == "Part Time"):
                 rekap.append((total,20-total))
             else :
-                rekap.append((tota,40-total))
+                rekap.append((total,40-total))
         choice = bulan
     temp = zip(ta_list,rekap)
+
     context = {
         'ta_list': temp,
         'choice' : choice,
