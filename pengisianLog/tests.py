@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib import auth
 from .models import LogTA
+from periode.models import Periode, PeriodeSekarang
 from django.urls import reverse
 from django.test import RequestFactory
 from django.contrib.auth.models import User
@@ -22,6 +23,9 @@ RISET_DAN_PUSILKOM = "Riset dan Pusilkom"
 URL_MENGISI_LOG = "pengisianLog:mengisi_log"
 URL_DAFTAR_LOG_TA = "pengisianLog:daftar_log_ta"
 URL_EDIT_LOG_TA = "pengisianLog:edit_log"
+TAHUN_AJARAN = "2022/2023"
+TAHUN_AJARAN_ALT = "2023/2024"
+SEMESTER = 'Ganjil'
 URL_DAFTAR_LOG_EVALUATOR = 'pengisianLog:daftar_log_evaluator'
 
 context_dict_1 = {
@@ -143,6 +147,21 @@ class PengisianLogTestCase(TestCase):
         self.na_user.role.role = 'not-assign'
         self.na_user.role.save()
 
+        self.periode = Periode(
+            tahun_ajaran = TAHUN_AJARAN,
+            semester = SEMESTER,
+        )
+        self.periode.save()
+
+        self.periode_alt = Periode(
+            tahun_ajaran = TAHUN_AJARAN_ALT,
+            semester = SEMESTER,
+        )
+        self.periode_alt.save()
+
+        periode_sekarang = PeriodeSekarang(periode = self.periode)
+        periode_sekarang.save()
+
         self.logTA_1 = LogTA.objects.create(
             user = self.ta_user,
             kategori = PENYELENGGARAN_KULIAH,
@@ -154,7 +173,8 @@ class PengisianLogTestCase(TestCase):
             bulan_pengerjaan = "MAR",
             jumlah_rencana_kinerja = 4,
             satuan_rencana_kinerja = "Tugas",
-            konversi_jam_rencana_kinerja = 1
+            konversi_jam_rencana_kinerja = 1,
+            periode_log= self.periode
         )
 
         self.logTA_2 = LogTA.objects.create(
@@ -168,7 +188,8 @@ class PengisianLogTestCase(TestCase):
             bulan_pengerjaan = "SEP",
             jumlah_rencana_kinerja = 2,
             satuan_rencana_kinerja = "Tugas",
-            konversi_jam_rencana_kinerja = 2
+            konversi_jam_rencana_kinerja = 2,
+            periode_log= self.periode_alt
         )
 
     # Test membuat log TA
@@ -220,7 +241,9 @@ class PengisianLogTestCase(TestCase):
         self.assertEquals(all_log_ta[0].kategori, PENYELENGGARAN_KULIAH)
         self.assertEquals(all_log_ta[2].konversi_jam_rencana_kinerja, all_log_ta[2].jumlah_rencana_kinerja / 4)
         self.assertEquals(all_log_ta[2].konversi_jam_realisasi_kinerja, all_log_ta[2].jumlah_realisasi_kinerja / 4)
-        self.assertRedirects(response, reverse(URL_DAFTAR_LOG_TA))
+        self.assertEquals(all_log_ta[0].periode_log, self.periode)
+        self.assertEquals(all_log_ta[2].periode_log, self.periode)
+        self.assertRedirects(response, reverse("pengisianLog:daftar_log_ta"))
 
     def test_post_form_logTA_as_TA_with_realisasi(self):
         self.client.force_login(user=self.ta_user)
@@ -256,18 +279,25 @@ class PengisianLogTestCase(TestCase):
     def test_view_LogTA_response_as_TA(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(reverse(URL_DAFTAR_LOG_TA))
+
         user = auth.get_user(self.client)
+        logs = response.context['logs']
+
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftar_log.html')
+        self.assertEqual(len(logs), 1)
     
     def test_view_LogTA_response_as_evaluator(self):
         self.client.force_login(user=self.admin_user)
         response = self.client.get(reverse(URL_DAFTAR_LOG_EVALUATOR))
         user = auth.get_user(self.client)
+        logs = response.context['logs']
+
         self.assertTrue(user.is_authenticated)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'daftar_log.html')
+        self.assertEqual(len(logs), 1)
     
 
     def test_view_history_log_as_registered(self):
