@@ -210,13 +210,7 @@ def daftar_log_ta(request):
     
     # rekap = get_month_rencana(request.user, bulan_choice[bulan-1][0],periode_sekarang)
     print(rekap)
-    total = 0
-    cnt = 0
-    for key in rekap:
-        if cnt >= 6 :
-            if rekap[key] != None :
-                total = rekap[key]
-        cnt += 1
+    total = rekap['total_real']
     
     if request.user.teachingassistantprofile.kontrak == 'Part Time':
         defisit = 20 - total
