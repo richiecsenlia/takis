@@ -245,7 +245,8 @@ def daftar_log_evaluator(request,username):
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
-    logs = LogTA.objects.filter(Q(periode_log=periode_sekarang,user__username=username)).order_by('user', 'id')
+    filter_term = request.GET.get("term",periode_sekarang.id)
+    logs = LogTA.objects.filter(Q(periode_log=filter_term,user__username=username)).order_by('user', 'id')
     
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
@@ -254,13 +255,19 @@ def daftar_log_evaluator(request,username):
     logs = exclude_kategori(filter_kategori, logs, kategori_choice)
     logs = exclude_periode(filter_periode, logs, periode_choice)
         
+    term = User.objects.get(username=username).teachingassistantprofile.periode_set.all()
+
+    filter_term = Periode.objects.get(id=filter_term)
+
     context = {'logs': logs,
                 'kategori_choice': kategori_choice, 
                 'periode_choice': periode_choice, 
                 'bulan_choice': bulan_choice,
                 'filter_bulan':filter_bulan,
                 'filter_kategori':filter_kategori,
-                'filter_periode':filter_periode}
+                'filter_periode':filter_periode,
+                'term':term,
+                'current':filter_term}
     return render(request, 'daftar_log.html', context)
 
 @require_GET
