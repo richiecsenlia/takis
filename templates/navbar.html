@@ -28,7 +28,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navigation">
       <ul class="navbar-nav ms-auto">
-        {% if user.role.role == 'TA' %}
+        {% if user.role.role == 'TA' and user.teachingassistantprofile %}
         <li class="nav-item me-2">
           <a class="nav-link" href="{% url 'rekapanLog:rekapan_log' user %}">
             <em class="fa fa-clipboard-check opacity-6 me-1"></em>
@@ -53,19 +53,25 @@
             <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
           </ul>
         </li>
+        {% elif user.role.role == 'TA' and user.teachingassistantprofile != None %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <em class="fa fa-user opacity-6 me-1"></em>
+            Pengguna Baru
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'accounts:fill_profile' %}">Isi Profil</a></li>
+            <li><hr class="dropdown-divider bg-dark mx-2"></hr></li>
+            <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
+            <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
+          </ul>
+        </li>
         {% elif user.role.role == 'admin' %}
         <li class="nav-item me-2">
           <a class="nav-link" href="{% url 'accounts:dashboard_eval' %}">
             <em class="fa fa-th-large opacity-6 me-1"></em>
             Dashboard
           </a>
-        </li>
-        <li class="nav-item dropdown me-2">
-          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-            <em class="fa fa-file-alt opacity-6 me-1"></em>
-            Log
-          </a>
-          
         </li>
         <li class="nav-item dropdown me-2">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -106,7 +112,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
             <em class="fa fa-user opacity-6 me-1"></em>
-            Guest
+            Tamu
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'authentication:register' %}">Daftar</a></li>
