@@ -11,7 +11,7 @@ from rekapanLog.views import get_month_rencana,get_all_rencana
 from django.db.models import Q
 from django.contrib.auth.models import User
 from accounts.models import TeachingAssistantProfile, MataKuliah
-from periode.models import PeriodeSekarang
+from periode.models import PeriodeSekarang,Periode
 
 VALUE_ERROR = "Input tidak valid"
 URL_DAFTAR_LOG_TA = "pengisianLog:daftar_log_ta"
@@ -193,8 +193,9 @@ def daftar_log_ta(request):
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
-    logs = LogTA.objects.filter(Q(user=request.user, periode_log=periode_sekarang))
-
+    filter_term = request.GET.get("term",periode_sekarang.id)
+    logs = LogTA.objects.filter(Q(user=request.user, periode_log=filter_term))
+    term = request.user.teachingassistantprofile.periode_set.all()
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
     bulan_choice = LogTA.bulan_pengerjaan.field.choices
@@ -204,7 +205,10 @@ def daftar_log_ta(request):
     bulan = datetime.now().month
     print(bulan_choice[bulan-1][0])
     print(periode_sekarang)
-    rekap = get_month_rencana(request.user,TeachingAssistantProfile.objects.get(user=request.user),periode_sekarang,bulan_choice[bulan-1][0])
+    try :
+        rekap = get_month_rencana(request.user,TeachingAssistantProfile.objects.get(user=request.user),periode_sekarang,bulan_choice[bulan-1][0])
+    except :
+        rekap ={}
     # rekap = get_month_rencana(request.user, bulan_choice[bulan-1][0],periode_sekarang)
     print(rekap)
     total = 0
@@ -219,6 +223,7 @@ def daftar_log_ta(request):
         defisit = 20 - total
     else :
         defisit = 40 - total
+    filter_term = Periode.objects.get(id=filter_term)
     context = {'logs': logs,
                 'kategori_choice': kategori_choice, 
                 'periode_choice': periode_choice, 
@@ -227,7 +232,9 @@ def daftar_log_ta(request):
                 'filter_kategori':filter_kategori,
                 'filter_periode':filter_periode,
                 'defisit':defisit,
-                'total':total}
+                'total':total,
+                'term':term,
+                'current':filter_term}
     return render(request, 'daftar_log.html', context)
 
 @require_GET

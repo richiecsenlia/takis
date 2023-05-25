@@ -81,7 +81,10 @@ def dashboard_eval(request):
     print(request.POST)
     if bulan == "Rata-rata":
         for i in ta_list:
-            temp = get_all_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
+            try :
+                temp = get_all_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
+            except :
+                temp = {}
             total = 0
             cnt = 0
             for value in temp.values() :
@@ -96,7 +99,10 @@ def dashboard_eval(request):
             
     else:
         for i in ta_list:
-            temp = get_month_rencana(i.user,bulan,periode_sekarang[0].periode)
+            try :
+                temp = get_month_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
+            except :
+                temp = {}
             total = 0
             cnt = 0
             for value in temp.values() :

@@ -40,6 +40,20 @@
           +&nbsp; Filter
         </button>
       </div>
+      <div class="dropdown d-inline">
+        <form method="Get" action = >
+          {% csrf_token %}
+          <select name="term" class="form-select" onchange="this.form.submit()">
+            <option value="Rata-rata" selected disabled>Selected : {{ current }}</option>
+            {% for t in term %}
+              <option value="{{t.id}}">{{t}}</option>
+            {% endfor %}
+          </select>
+        </form>
+        <!-- <button class="btn btn-outline-brand border-radius-xl dropdown-toggle ms-sm-2 my-md-3 mx-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Filter by Status
+        </button> -->
+      </div>
     </div>
     
     <div class="card mb-5">
@@ -142,7 +156,7 @@
             </label>
           </div>
           {% endfor %}
-
+          <input type="hidden" value = "{{current}}">
           <button type="submit" class="btn btn-primary">Submit</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </form>
