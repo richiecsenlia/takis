@@ -72,6 +72,9 @@
                 <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.detail_kegiatan }}</td>
                 <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.jam_kerja_rencana }}</td>
                 <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.jam_kerja_realisasi }}</td>
+                {% for last_modified in log.history.all|slice:":1" %}
+                  <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ last_modified.history_date|date:"d M Y" }}</td>
+                {% endfor %}
                 <td>
                   <a href="{% url 'pengisianLog:detail_log' log.pk %}" class="btn btn-primary mb-0">Lihat Detail</a>
                 </td>
