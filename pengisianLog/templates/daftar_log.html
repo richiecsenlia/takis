@@ -70,11 +70,8 @@
                 <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.kategori }}</td>
                 <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.jenis_pekerjaan }}</td>
                 <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.detail_kegiatan }}</td>
-                <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.konversi_jam_rencana_kinerja }}</td>
-                <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.konversi_jam_realisasi_kinerja }}</td>
-                {% for last_modified in log.history.all|slice:":1" %}
-                  <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ last_modified.history_date|date:"d M Y" }}</td>
-                {% endfor %}
+                <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.jam_kerja_rencana }}</td>
+                <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ log.jam_kerja_realisasi }}</td>
                 <td>
                   <a href="{% url 'pengisianLog:detail_log' log.pk %}" class="btn btn-primary mb-0">Lihat Detail</a>
                 </td>
@@ -99,7 +96,7 @@
         <form method ='GET'>
          
           <div id="bulan" class="form-text">
-            bulan
+            Bulan
           </div>
           {% for bulan in bulan_choice %}
           <div class="form-check form-check-inline" id = "bulan">
@@ -115,7 +112,7 @@
           {% endfor %}
 
           <div id="periode" class="form-text">
-            periode
+            Periode
           </div>
           {% for periode in periode_choice %}
           <div class="form-check form-check-inline">
@@ -131,7 +128,7 @@
           {% endfor %}
 
           <div id="kategori" class="form-text">
-            kategori
+            Kategori
           </div>
           {% for kategori in kategori_choice %}
           <div class="form-check ">

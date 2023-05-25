@@ -47,6 +47,22 @@ Edit Profil
         {% endfor %}
       </select>
     </div>
+    <div class="col-md-6">
+      <label class="form-label">Bulan Mulai</label>
+      <select name="bulan_mulai" class="form-select">
+        {% for bulan in bulan_choices %}
+        <option value="{{ bulan.1 }}">{{ bulan.1 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Bulan Selesai</label>
+      <select name="bulan_selesai" class="form-select">
+        {% for bulan in bulan_choices %}
+        <option value="{{ bulan.1 }}">{{ bulan.1 }}</option>
+        {% endfor %}
+      </select>
+    </div>
     <div class="d-grid gap-2 col-6 mx-auto mt-4">
         <button type="submit" class="btn btn-success">Simpan</button>
     </div>
