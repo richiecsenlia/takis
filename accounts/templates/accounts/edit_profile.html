@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} Isi Profil Diri {% endblock title %}
+{% block title %} Ubah Profil {% endblock title %}
 
 {% block navbar %}
   {% with variant='light' %}
@@ -11,8 +11,11 @@
 {% block content %}
 <div class="page-header pt-8 pb-5 bg-white-blue">
   <div class="container">
-    <h2 class="text-center mb-0">Isi Profil Akun Anda</h2>
-    <h6 class="text-center mb-3">Mulai dengan melengkapi biodata anda terlebih dahulu sebelum melanjutkan menggunakan TAKIS</h6>
+    {% if user.role.role == 'TA' %}
+    <h2 class="text-center">Ubah Profil Akun Saya</h2>
+    {% else %}
+    <h2 class="text-center">Tinjau Kembali Profil Akun - {{ profile.user }}</h2>
+    {% endif %}
     <form method="post" class="row g-3">
       {% csrf_token %}
       <div class="col-md-12">
@@ -32,21 +35,21 @@
         {{ form.kontrak }}
       </div>
       <div class="col-md-6">
-        <label class="form-label">Status Kemahasiswaan</label>
-        {{ form.status }}
-      </div>
-      <div class="col-md-6">
         <label class="form-label">Program Studi</label>
         {{ form.prodi }}
       </div>
       <div class="col-md-6">
-        <label class="form-label">Mata Kuliah yang Diajar Saat Ini</label>
+        <label class="form-label">Status Kemahasiswaan</label>
+        {{ form.status }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Mata Kuliah yang Disanggupi maupun Sedang Diampu Saat Ini</label>
         <div class="card p-2 border-gray border-1 max-height-200 overflow-y-scroll">
           {{ form.daftar_matkul }}
         </div>
       </div>
       <div class="d-grid gap-2 col-6 mx-auto mt-5">
-          <button type="submit" class="btn btn-success">Simpan</button>
+        <button type="submit" class="btn btn-success">Simpan</button>
       </div>
     </form>
   </div>
