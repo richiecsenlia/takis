@@ -33,7 +33,7 @@
         {% for kategori in filter_kategori %}
         <span class="badge rounded-pill bg-info text-dark">{{kategori}}</span>
         {% endfor %}
-        {% if user.role.role == 'TA' %}
+        {% if user.role.role == 'TA' and active_validation == "active"%}
         <a href="{% url 'pengisianLog:mengisi_log' %}" class="btn btn-success mb-sm-1 ms-2">+&nbsp; Buat Log Baru</a>
         {% endif %}
         {% for matkul in filter_matkul %}
