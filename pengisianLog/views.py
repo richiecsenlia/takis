@@ -185,6 +185,13 @@ def exclude_bulan(filter_bulan, logs, bulan_choice):
                 logs = logs.exclude(bulan_pengerjaan = bulan[1])
     return logs
 
+def exclude_matkul(filter_matkul,logs,matkul_choices):
+    if len(filter_matkul) != 0:
+        for matkul in matkul_choices:
+            if not (matkul.nama in filter_matkul):
+                logs = logs.exclude(matkul__id = matkul.id)
+    return logs
+
 @ta_required
 def daftar_log_ta(request):
     
@@ -194,14 +201,20 @@ def daftar_log_ta(request):
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
     filter_term = request.GET.get("term",periode_sekarang.id)
+    filter_matkul = request.GET.getlist("matkul")
     logs = LogTA.objects.filter(Q(user=request.user, periode_log=filter_term))
     term = request.user.teachingassistantprofile.periode_set.all()
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
     bulan_choice = LogTA.bulan_pengerjaan.field.choices
+    matkul_choices = MataKuliah.objects.order_by('nama')
+
     logs = exclude_bulan(filter_bulan, logs, bulan_choice)
     logs = exclude_kategori(filter_kategori, logs, kategori_choice)
     logs = exclude_periode(filter_periode, logs, periode_choice)
+    print(logs)
+    logs = exclude_matkul(filter_matkul,logs,matkul_choices)
+    print(logs)
     bulan = datetime.now().month
     print(bulan_choice[bulan-1][0])
     print(periode_sekarang)
@@ -217,13 +230,16 @@ def daftar_log_ta(request):
     else :
         defisit = 40 - total
     filter_term = Periode.objects.get(id=filter_term)
+    print("aa",matkul_choices)
     context = {'logs': logs,
                 'kategori_choice': kategori_choice, 
                 'periode_choice': periode_choice, 
                 'bulan_choice': bulan_choice,
+                'matkul_choices':matkul_choices,
                 'filter_bulan':filter_bulan,
                 'filter_kategori':filter_kategori,
                 'filter_periode':filter_periode,
+                'filter_matkul':filter_matkul,
                 'defisit':defisit,
                 'total':total,
                 'term':term,
