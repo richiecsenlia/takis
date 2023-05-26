@@ -12,9 +12,9 @@
 
 <div class="page-header pt-8 pb-9 bg-white-blue">
   <div class="container">
-    <h1 class="text-center mb-3">Rekap Log</h1>
+    <h2 class="text-center mb-3">Rekap Log</h2>
     <div class="m-auto w-50">
-      <form method="post">
+      <form method="POST">
         {% csrf_token %}
         <select name="bulan" class="form-select" onchange="this.form.submit()">
           <option value="Rata-rata" selected disabled>Selected : {{ choice }}</option>
