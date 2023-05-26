@@ -36,6 +36,9 @@
         {% if user.role.role == 'TA' and active_validation == "active"%}
         <a href="{% url 'pengisianLog:mengisi_log' %}" class="btn btn-success mb-sm-1 ms-2">+&nbsp; Buat Log Baru</a>
         {% endif %}
+        {% for matkul in filter_matkul %}
+        <span class="badge rounded-pill bg-info text-dark">{{matkul}}</span>
+        {% endfor %}
         <button type="button" class="btn btn-outline-brand mb-sm-1 mx-2" data-bs-toggle="modal" data-bs-target="#filter">
           +&nbsp; Filter
         </button>
@@ -156,6 +159,21 @@
             >
             <label class="form-check-label" for="{{kategori.1}}">
               {{ kategori.1 }}
+            </label>
+          </div>
+          {% endfor %}
+          <div id="kategori" class="form-text">
+            Mata Kuliah
+          </div>
+          {% for matkul in matkul_choices %}
+          <div class="form-check ">
+            <input class="form-check-input" type="checkbox" value="{{matkul.nama}}"name="matkul" id="{{matkul.nama}}"
+              {% if matkul.1 in filter_matkul %}
+                checked
+              {% endif %}
+            >
+            <label class="form-check-label" for="{{matkul.nama}}">
+              {{ matkul.nama }}
             </label>
           </div>
           {% endfor %}
