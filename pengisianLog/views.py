@@ -127,8 +127,7 @@ def edit_log_ta(request, id):
             else:
                 jumlah_realisasi_kinerja_validasi = int(request.POST.get('jumlah_realisasi_kinerja'))
                 bobot_jam_realisasi_kinerja_validasi = float(request.POST.get('bobot_realisasi_kinerja'))
-
-            log.user = log.user
+            
             log.kategori = request.POST.get('kategori')
             log.jenis_pekerjaan = request.POST.get('pekerjaan')
             log.detail_kegiatan = request.POST.get('detail_kegiatan')
