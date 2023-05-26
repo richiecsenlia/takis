@@ -214,6 +214,9 @@ class PengisianLogTestCase(TestCase):
         self.periode_sekarang = PeriodeSekarang(periode = self.periode)
         self.periode_sekarang.save()
 
+        self.periode_sekarang.periode.daftar_ta.add(self.profile_user_2)
+        self.periode_sekarang.save()
+
         self.logTA_1 = LogTA.objects.create(
             user = self.ta_user,
             kategori = PENYELENGGARAN_KULIAH,

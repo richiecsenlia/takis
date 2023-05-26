@@ -76,7 +76,9 @@ class AccountsTest(TestCase):
             nama = 'Immanuel Nadeak',
             kontrak = 'Part Time',
             status = 'Lulus S1',
-            prodi = 'Ilmu Komputer'
+            prodi = 'Ilmu Komputer',
+            bulan_mulai = "JAN",
+            bulan_selesai = "MEI"
         )
         self.ta_profile_1.daftar_matkul.add(self.matkul_1)
         self.ta_profile_1.save()
@@ -86,7 +88,9 @@ class AccountsTest(TestCase):
             nama = 'Virdian Harun',
             kontrak = 'Full Time',
             status = 'Lulus S2',
-            prodi = 'Sistem Informasi'
+            prodi = 'Sistem Informasi',
+            bulan_mulai = "JAN",
+            bulan_selesai = "MEI"
         )
         self.ta_profile_2.daftar_matkul.add(self.matkul_2)
         self.ta_profile_2.save()
@@ -95,8 +99,11 @@ class AccountsTest(TestCase):
             tahun_ajaran = "2022/2023",
             semester = "ganjil"
         )
+        
         self.periode.save()
-
+        self.periode.daftar_ta.add(self.ta_profile_2)
+        self.periode.daftar_ta.add(self.ta_profile_1)
+        self.periode.save()
         self.periode_sekarang = PeriodeSekarang(periode = self.periode)
         self.periode_sekarang.save()
         
@@ -169,5 +176,10 @@ class AccountsTest(TestCase):
 
     def test_dashboard_bulan(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse("accounts:dashboard_eval"),{"kontrak":'Part Time','status':'Lulus S1','prodi':'Ilmu Komputer','bulan':'JAN'})
+        response = self.client.get(reverse("accounts:dashboard_eval"),{"kontrak":'Part Time','bulan':'JAN'})
+        self.assertEquals(response.templates[0].name,'accounts/dashboard_eval.html')
+
+    def test_dashboard_bulan2(self):
+        self.client.force_login(user=self.admin_user)
+        response = self.client.get(reverse("accounts:dashboard_eval"),{"kontrak":'Full Time','bulan':'JAN'})
         self.assertEquals(response.templates[0].name,'accounts/dashboard_eval.html')

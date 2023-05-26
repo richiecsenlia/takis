@@ -115,17 +115,8 @@ def dashboard_eval(request):
     bulan = request.GET.get("bulan","Rata-rata")    
     if bulan == "Rata-rata":
         for i in ta_list:
-            try:
-                temp = get_all_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
-            except:
-                temp = {}
-            total = 0
-            cnt = 0
-            for value in temp.values():
-                if cnt >= 6:
-                    if value != None:
-                        total += value
-                cnt += 1
+            temp = get_all_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
+            total = temp['total_real']
             if (i.kontrak == "Part Time"):
                 rekap.append((total,20-total))
             else:
@@ -133,17 +124,8 @@ def dashboard_eval(request):
             
     else:
         for i in ta_list:
-            try:
-                temp = get_month_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode)
-            except:
-                temp = {}
-            total = 0
-            cnt = 0
-            for value in temp.values():
-                if cnt >= 6:
-                    if value != None:
-                        total += value
-                cnt += 1
+            temp = get_month_rencana(i.user,TeachingAssistantProfile.objects.get(user=i.user),periode_sekarang[0].periode,bulan)
+            total = temp['total_real']
             if (i.kontrak == "Part Time"):
                 rekap.append((total,20-total))
             else:
