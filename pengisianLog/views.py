@@ -31,7 +31,6 @@ def count_jam_kerja(profile,periode_sekarang,periode,jumlah_rencana_kinerja,bobo
         jam_kerja = (jumlah_rencana_kinerja*bobot_jam_rencana_kinerja)/4
     return jam_kerja
 
-
 @ta_required
 def form_log_ta(request):
     try:
@@ -185,6 +184,12 @@ def exclude_bulan(filter_bulan, logs, bulan_choice):
                 logs = logs.exclude(bulan_pengerjaan = bulan[1])
     return logs
 
+def check_active_or_not(user, daftar_ta_periode_sekarang):
+    if user not in daftar_ta_periode_sekarang:
+        return "inactive"
+    else:
+        return "active"
+
 @ta_required
 def daftar_log_ta(request):
     
@@ -203,13 +208,8 @@ def daftar_log_ta(request):
     logs = exclude_kategori(filter_kategori, logs, kategori_choice)
     logs = exclude_periode(filter_periode, logs, periode_choice)
     bulan = datetime.now().month
-    print(bulan_choice[bulan-1][0])
-    print(periode_sekarang)
     
     rekap = get_month_rencana(request.user,TeachingAssistantProfile.objects.get(user=request.user),periode_sekarang,bulan_choice[bulan-1][0])
-    
-    # rekap = get_month_rencana(request.user, bulan_choice[bulan-1][0],periode_sekarang)
-    print(rekap)
     total = rekap['total_real']
     
     if request.user.teachingassistantprofile.kontrak == 'Part Time':
@@ -217,6 +217,10 @@ def daftar_log_ta(request):
     else :
         defisit = 40 - total
     filter_term = Periode.objects.get(id=filter_term)
+
+    daftar_ta_periode_sekarang = [ta_profile.user for ta_profile in periode_sekarang.daftar_ta.all()]
+    active_validation = check_active_or_not(request.user,daftar_ta_periode_sekarang)
+
     context = {'logs': logs,
                 'kategori_choice': kategori_choice, 
                 'periode_choice': periode_choice, 
@@ -227,7 +231,8 @@ def daftar_log_ta(request):
                 'defisit':defisit,
                 'total':total,
                 'term':term,
-                'current':filter_term}
+                'current':filter_term,
+                'active_validation':active_validation}
     return render(request, 'daftar_log.html', context)
 
 @require_GET
