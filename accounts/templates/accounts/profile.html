@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %} Profil {% endblock title %}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="page-header pt-8 pb-5 bg-white-blue">
+  <div class="container">
+    <h2 class="text-center mb-5">Profil Akun Saya</h2>
+  
+    <div class="row g-0">
+      <div class="col-7 pe-md-5 pe-4">
+        <div class="card rounded-0">
+          <div class="row g-0 align-items-center">
+            <div class="col-xl-4 col-lg-5 col-6">
+              <div class="bg-light-blue py-3">
+                <p class="card-text text-center text-dark fw-bold fs-7">Nama</p>
+              </div>
+            </div>
+            <div class="col-xl-8 col-lg-7 col-6">
+              <div class="px-lg-4 px-3">
+                <p class="card-text text-dark fw-bold fs-7">{{ profile.nama }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card rounded-0">
+          <div class="row g-0 align-items-center">
+            <div class="col-xl-4 col-lg-5 col-6">
+              <div class="bg-light-blue py-3">
+                <p class="card-text text-center text-dark fw-bold fs-7">Jenis TA</p>
+              </div>
+            </div>
+            <div class="col-xl-8 col-lg-7 col-6">
+              <div class="px-lg-4 px-3">
+                <p class="card-text text-dark fw-bold fs-7">{{ profile.kontrak }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card rounded-0">
+          <div class="row g-0 align-items-center">
+            <div class="col-xl-4 col-lg-5 col-6">
+              <div class="bg-light-blue py-3">
+                <p class="card-text text-center text-dark fw-bold fs-7">Status Kemahasiswaan</p>
+              </div>
+            </div>
+            <div class="col-xl-8 col-lg-7 col-6">
+              <div class="px-lg-4 px-3">
+                <p class="card-text text-dark fw-bold fs-7">{{ profile.status }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card rounded-0">
+          <div class="row g-0 align-items-center">
+            <div class="col-xl-4 col-lg-5 col-6">
+              <div class="bg-light-blue py-3">
+                <p class="card-text text-center text-dark fw-bold fs-7">Program Studi</p>
+              </div>
+            </div>
+            <div class="col-xl-8 col-lg-7 col-6">
+              <div class="px-lg-4 px-3">
+                <p class="card-text text-dark fw-bold fs-7">{{ profile.prodi }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card rounded-0">
+          <div class="row g-0 align-items-center">
+            <div class="col-xl-4 col-lg-5 col-6">
+              <div class="bg-light-blue py-3">
+                <p class="card-text text-center text-dark fw-bold fs-7">Bulan Mulai</p>
+              </div>
+            </div>
+            <div class="col-xl-8 col-lg-7 col-6">
+              <div class="px-lg-4 px-3">
+                <p class="card-text text-dark fw-bold fs-7">{{ profile.bulan_mulai }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card rounded-0">
+          <div class="row g-0 align-items-center">
+            <div class="col-xl-4 col-lg-5 col-6">
+              <div class="bg-light-blue py-3">
+                <p class="card-text text-center text-dark fw-bold fs-7">Bulan Selesai</p>
+              </div>
+            </div>
+            <div class="col-xl-8 col-lg-7 col-6">
+              <div class="px-lg-4 px-3">
+                <p class="card-text text-dark fw-bold fs-7">{{ profile.bulan_selesai }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-5">
+        <div class="card rounded-0">
+          <div class="row mx-0">
+            <div class="pt-3 bg-light-blue">
+              <p class="text-center text-dark fw-bold fs-7">Mata Kuliah yang Disanggupi maupun Sedang Diampu</p>
+            </div>
+          </div>
+          <div class="row mx-0 max-height-profile overflow-y-scroll">
+            {% if profile.daftar_matkul %}
+            {% for matkul in profile.daftar_matkul.all %}
+            <div class="card-body ps-0 pe-3 py-3">
+              <p class="card-text ps-3 fw-bold text-black-50 fs-8">{{ matkul }}</p>
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="d-grid col-md-6 col-8 mx-auto mt-5">
+      <a href="{% url 'accounts:edit_profile' user.id %}" class="btn bg-brand">Ubah Profil</a>
+    </div>
+  
+  </div>
+</div>
+{% endblock content %}

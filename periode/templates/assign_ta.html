@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %} Assign Status TA per Periode {% endblock title%}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
+
+{% block content %}
+
+<div class="page-header pt-8 pb-6 bg-white-blue">
+  <div class="container">
+    <h2 class="text-center mb-4">Assign Status TA per Periode</h2>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row mt-2">
+          <div class="col-12">
+            <p>Periode:</p>
+            <select name="periode" class="form-select" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+              <option value="{{ periode_terpilih }}" selected disabled hidden>{{ periode_terpilih }}</option>
+              {% for periode in pilihan_periode %}
+              <option value="{% url 'periode:assign-ta' periode_id=periode.pk %}">{{ periode }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-0">
+          <table
+            class="table align-items-center mb-0"
+            aria-label="Daftar TA Kontrak"
+          >
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  Nama Asisten
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  Kontrak
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  Status
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  Aksi
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ta in daftar_ta %}
+              <tr>
+                <td>
+                  <div class="px-3 py-1">
+                    <div class="d-flex flex-column justify-content-center">
+                      <h6 class="mb-0 text-sm">{{ ta.nama }}</h6>
+                      <p class="text-xs text-secondary mb-0">@{{ ta.user }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <p class="text-center text-sm font-weight-bold mb-0">
+                    {{ ta.kontrak }}
+                  </p>
+                </td>
+                <td class="align-middle text-center text-md">
+                  {% if ta in daftar_ta_aktif %}
+                    <span class="badge bg-gradient-success">Aktif</span>
+                  {% else %}
+                    <span class="badge bg-gradient-warning">Tidak Aktif</span>
+                  {% endif %}
+                </td>
+                <td class="align-middle text-center">
+                  {% if ta in daftar_ta_aktif %}
+                    <a href="{% url 'periode:deactivate-ta' periode_id=periode_terpilih.pk ta_id=ta.pk %}" class="btn btn-danger mb-0">Nonaktifkan</a>
+                  {% else %}
+                    <a href="{% url 'periode:activate-ta' periode_id=periode_terpilih.pk ta_id=ta.pk %}" class="btn btn-success mb-0">Aktifkan</a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

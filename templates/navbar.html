@@ -1,0 +1,128 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg position-absolute z-index-3 w-100 py-2 shadow-none 
+  {% if variant == 'light' %}
+    navbar-light bg-white
+  {% else %}
+    navbar-transparent
+  {% endif %}
+">
+  <div class="container">
+    <a class="navbar-brand font-weight-bolder letter-wider fs-4 pt-1" href="{% url 'main:homepage' %}">
+      TAKIS
+    </a>
+    <button 
+      class="navbar-toggler shadow-none ms-2"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navigation"
+      aria-controls="navigation"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon mt-2">
+        <span class="navbar-toggler-bar bar1"></span>
+        <span class="navbar-toggler-bar bar2"></span>
+        <span class="navbar-toggler-bar bar3"></span>
+      </span>
+    </button>
+    <div class="collapse navbar-collapse" id="navigation">
+      <ul class="navbar-nav ms-auto">
+        {% if user.role.role == 'TA' and user.teachingassistantprofile %}
+        <li class="nav-item me-2">
+          <a class="nav-link" href="{% url 'rekapanLog:rekapan_log' user %}">
+            <em class="fa fa-clipboard-check opacity-6 me-1"></em>
+            Rekapan
+          </a>
+        </li>
+        <li class="nav-item me-2">
+          <a class="nav-link" href="{% url 'pengisianLog:daftar_log_ta' %}">
+            <em class="fa fa-file-alt opacity-6 me-1"></em>
+            Log
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <em class="fa fa-user opacity-6 me-1"></em>
+            {{ user.teachingassistantprofile }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'accounts:profile' user.id %}">Lihat Profil</a></li>
+            <li><hr class="dropdown-divider bg-dark mx-2"></hr></li>
+            <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
+            <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
+          </ul>
+        </li>
+        {% elif user.role.role == 'TA' and user.teachingassistantprofile != None %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <em class="fa fa-user opacity-6 me-1"></em>
+            Pengguna Baru
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'accounts:fill_profile' %}">Isi Profil</a></li>
+            <li><hr class="dropdown-divider bg-dark mx-2"></hr></li>
+            <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
+            <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
+          </ul>
+        </li>
+        {% elif user.role.role == 'admin' %}
+        <li class="nav-item me-2">
+          <a class="nav-link" href="{% url 'accounts:dashboard_eval' %}">
+            <em class="fa fa-th-large opacity-6 me-1"></em>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item dropdown me-2">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <em class="fa fa-clock opacity-6 me-1"></em>
+            Periode
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'periode:buat-periode' %}">Buat Periode Baru</a></li>
+            <li><a class="dropdown-item" href="{% url 'periode:edit-periode-sekarang' %}">Ubah Periode Sekarang</a></li>
+            <li><a class="dropdown-item" href="{% url 'periode:daftar-ta' %}">Daftar TA per Periode</a></li>     
+            <li><a class="dropdown-item" href="{% url 'periode:assign-ta' %}">Assign Status TA per Periode</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <em class="fa fa-user opacity-6 me-1"></em>
+            {{ user }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'authentication:change_role' %}">Atur Role Pengguna</a></li>
+            <li><hr class="dropdown-divider bg-dark mx-2"></hr></li>
+            <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
+            <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
+          </ul>
+        </li>
+        {% elif user.role.role == 'not-assign' %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+            <em class="fa fa-user opacity-6 me-1"></em>
+            {{ user }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'authentication:change_password' %}">Ubah Password</a></li>       
+            <li><a class="dropdown-item" href="{% url 'authentication:ssologout' %}">Keluar</a></li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+            <em class="fa fa-user opacity-6 me-1"></em>
+            Tamu
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'authentication:register' %}">Daftar</a></li>
+            <li><a class="dropdown-item" href="{% url 'authentication:login' %}">Masuk</a></li>
+            <li><hr class="dropdown-divider bg-dark mx-2"></hr></li>
+            <li><a class="dropdown-item" href="#">Bantuan</a></li>
+          </ul>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

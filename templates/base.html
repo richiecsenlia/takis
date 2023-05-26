@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <!-- Favicon -->
+    
+
+    <!-- Webpage Title -->
+    <title>
+      {% block title %}{% endblock %} - TA Kontrak Information System
+    </title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- CSS Files -->
+    <link id="pagestyle" href="{% static 'css/argon-dashboard.css' %}" rel="stylesheet" />
+
+    <!-- Specific CSS goes HERE -->
+    {% block stylesheets %} {% endblock stylesheets %}
+
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+
+    {% block meta %} {% endblock meta %}
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    {% block navbar %}
+      {% include 'navbar.html' with variant=variant %}
+    {% endblock navbar %}
+    <!-- End of navigation -->
+
+    <!-- Content -->
+    <main class="main-content" id="content">
+      {% block content %} {% endblock content %}
+    </main>
+    <!-- End of content -->
+
+    <!-- Core Scripts -->
+    <script src="{% static 'js/core/popper.min.js' %}"></script>
+    <script src="{% static 'js/core/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/plugins/perfect-scrollbar.min.js' %}"></script>
+    <script src="{% static 'js/plugins/smooth-scrollbar.min.js' %}"></script>
+    <script src="{% static 'js/plugins/chartjs.min.js' %}"></script>
+    <script src="{% static 'js/argon-dashboard.min.js' %}"></script>
+
+    <!-- Additional Scripts -->
+    {% block script %} {% endblock script %}
+  </body>
+</html>

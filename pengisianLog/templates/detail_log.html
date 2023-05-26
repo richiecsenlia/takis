@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %} Detail Log {% endblock title%}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
+
+{% block content %}
+
+<div class="page-header pt-8 pb-6 bg-white-blue">
+  <div class="container">
+    <div class="d-sm-flex justify-content-between align-items-center">
+      <div class="ms-2 py-2">
+        <h3>Detail Log</h3>
+      </div>
+      <div class="dropdown d-inline">
+        <a href="{% url 'pengisianLog:history_log' log.pk %}" class="btn btn-primary ms-md-2 mb-sm-1">Riwayat Perubahan</a>
+        <a href="{% url 'pengisianLog:edit_log' log.pk %}" class="btn btn-secondary ms-md-2 mb-sm-1">Ubah</a>
+        <a href="{% url 'pengisianLog:delete_log' log.pk %}" class="btn btn-danger mx-md-2 mb-sm-1">Hapus</a>
+      </div>
+    </div>
+    {% if user.role.role == 'admin' %}
+    <div class="card mb-3 shadow-sm">
+      <h5 class="card-header text-uppercase">
+        Informasi Akun
+      </h5>
+      <div class="card-body py-2">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="font-weight-bold">Username Asisten</p>
+            <p class="text-sm">{{ log.user }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Nama Asisten</p>
+            <p class="text-sm">{{ log.user.teachingassistantprofile }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <div class="card my-3 shadow-sm">
+      <h5 class="card-header text-uppercase">
+        Kegiatan
+      </h5>
+      <div class="card-body py-2">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="font-weight-bold">Mata Kuliah</p>
+            <p class="text-sm">{{ log.matkul }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Pemberi Tugas</p>
+            <p class="text-sm">{{ log.pemberi_tugas }}</p>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <p class="font-weight-bold">Kategori</p>
+            <p class="text-sm">{{ log.kategori }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Jenis Pekerjaan</p>
+            <p class="text-sm">{{ log.jenis_pekerjaan }}</p>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <p class="font-weight-bold">Detail Kegiatan</p>
+            <p class="text-sm">{{ log.detail_kegiatan }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Uraian</p>
+            <p class="text-sm">{{ log.uraian }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card my-3 shadow-sm">
+      <h5 class="card-header text-uppercase">
+        Periode Pengerjaan
+      </h5>
+      <div class="card-body py-2">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="font-weight-bold">Periode</p>
+            <p class="text-sm">{{ log.periode }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Bulan</p>
+            <p class="text-sm">{{ log.bulan_pengerjaan }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card my-3 shadow-sm">
+      <h5 class="card-header text-uppercase">
+        Perkiraan Beban Kerja Per Pekan
+      </h5>
+      <div class="card-body py-2">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="font-weight-bold">Jumlah Kinerja</p>
+            <p class="text-sm">{{ log.jumlah_rencana_kinerja }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Satuan Kinerja</p>
+            <p class="text-sm">{{ log.satuan_rencana_kinerja }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Bobot Jam Rencana Kinerja</p>
+            <p class="text-sm">{{ log.bobot_jam_rencana_kinerja }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="font-weight-bold">Konversi Rencana Jam Kerja</p>
+            <p class="text-sm">{{ log.jam_kerja_rencana }}</p>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="card my-3 shadow-sm">
+        <h5 class="card-header text-uppercase">
+          Realisasi Beban Kerja per Pekan
+        </h5>
+        <div class="card-body py-2">
+          <div class="row">
+            <div class="col-md-6">
+              <p class="font-weight-bold">Jumlah Kinerja</p>
+              <p class="text-sm">{{ log.jumlah_realisasi_kinerja }}</p>
+            </div>
+            <div class="col-md-6">
+              <p class="font-weight-bold">Satuan Kinerja</p>
+              <p class="text-sm">{{ log.satuan_realisasi_kinerja }}</p>
+            </div>
+            <div class="col-md-6">
+              <p class="font-weight-bold">Bobot Jam Rencana Kinerja</p>
+              <p class="text-sm">{{ log.bobot_jam_realisasi_kinerja }}</p>
+            </div>
+            <div class="col-md-6">
+              <p class="font-weight-bold">Konversi Rencana Jam Kerja</p>
+              <p class="text-sm">{{ log.jam_kerja_realisasi }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
