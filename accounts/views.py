@@ -118,6 +118,7 @@ def dashboard_eval(request):
     matkul_choices = MataKuliah.objects.order_by('nama')
     periode_sekarang = PeriodeSekarang.objects.all()
     ta_list = TeachingAssistantProfile.objects.filter(periode=periode_sekarang[0].periode)
+    periode_str = f"Periode {periode_sekarang[0].periode}"
 
     ta_list = apply_filter(ta_list, filter_kontrak, kontrak_choices, 'kontrak')
     ta_list = apply_filter(ta_list, filter_status, status_choices, 'status')
@@ -148,6 +149,7 @@ def dashboard_eval(request):
         'filter_prodi':filter_prodi,
         'filter_matkul':filter_matkul,
         'filter_statuslog':filter_statuslog,
+        'periode_sekarang': periode_str
     }
     
     return render(request, 'accounts/dashboard_eval.html', context)
