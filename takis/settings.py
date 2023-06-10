@@ -168,4 +168,4 @@ for directory in [*STATICFILES_DIRS, STATIC_ROOT]:
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = [f'http://{APP_NAME}.up.railway.app', f'https://{APP_NAME}.up.railway.app']
+CSRF_TRUSTED_ORIGINS = [f'http://{APP_NAME}.up.railway.app', f'https://{APP_NAME}.up.railway.app',f'http://{APP_NAME}.cs.ui.ac.id',f'https://{APP_NAME}.cs.ui.ac.id']
