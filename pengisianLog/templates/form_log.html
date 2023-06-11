@@ -16,6 +16,7 @@
       {% for message in messages %}
       <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
         {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
       {% endfor %}
       {% endif %}
@@ -28,6 +29,14 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-6">
+                <label class="form-label">Kategori</label>
+                <select name="kategori" class="form-select" required>
+                  {% for kat in kategori_choice %}
+                  <option value="{{ kat.1 }}">{{ kat.1 }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
                 <label class="form-label">Mata Kuliah</label>
                 <select name="matkul" class="form-select" required>
                   <option value = "lainnya">lainnya</option>
@@ -36,19 +45,11 @@
                   {% endfor %}
                 </select>
               </div>
-              <div class="col-md-6">
-                <label class="form-label">Pemberi Tugas</label>
-                <input type="text" class="form-control" name="pemberi_tugas" required />
-              </div>
             </div>
             <div class="row mt-2">
               <div class="col-md-6">
-                <label class="form-label">Kategori</label>
-                <select name="kategori" class="form-select"  required>
-                  {% for kat in kategori_choice %}
-                  <option value="{{ kat.1 }}">{{ kat.1 }}</option>
-                  {% endfor %}
-                </select>
+                <label class="form-label">Pemberi Tugas</label>
+                <input type="text" class="form-control" name="pemberi_tugas" required />
               </div>
               <div class="col-md-6">
                 <label class="form-label">Jenis Pekerjaan</label>
@@ -110,14 +111,15 @@
             </div>
             <div class="col-md-4">
               <label class="form-label">Bobot Jam Rencana Kinerja</label>
-              <input type="text" class="form-control" name="bobot_kinerja" placeholder="Masukkan angka (boleh desimal)" required />
+              <input type="text" class="form-control" name="bobot_kinerja" placeholder="Masukkan angka" required />
+              <small class="form-text text-muted">Gunakan titik (.) untuk angka desimal.</small>
             </div>
           </div>
         </div>
       </div>
 
       <div class="d-grid gap-2 col-6 mx-auto mt-4">
-        <button id="realisasi_btn" type="button" class="btn btn-warning" onclick="myFunction()">Buka Tab Realisasi Kinerja</button>
+        <button id="realisasi_btn" type="button" class="btn btn-warning" onclick="myFunction()">Buka atau Tutup Tab Realisasi Kinerja</button>
       </div>
 
       <div id="realisasi_form" class="card">
@@ -136,7 +138,8 @@
             </div>
             <div class="col-md-4">
               <label class="form-label">Bobot Jam Realisasi Kinerja</label>
-              <input type="text" class="form-control" name="bobot_realisasi_kinerja" placeholder="Masukkan angka (boleh desimal)"/>
+              <input type="text" class="form-control" name="bobot_realisasi_kinerja" placeholder="Masukkan angka"/>
+              <small class="form-text text-muted">Gunakan titik (.) untuk angka desimal.</small>
             </div>
           </div>
         </div>
