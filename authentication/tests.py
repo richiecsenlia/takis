@@ -13,6 +13,7 @@ from django.test import RequestFactory
 from django.contrib.auth.hashers import check_password
 from accounts.models import TeachingAssistantProfile, MataKuliah
 
+KONTRAK = "Part Time"
 # Create your tests here.
 class AuthTest(TestCase):
     
@@ -24,6 +25,7 @@ class AuthTest(TestCase):
     CHANGE_PASSWORD_URL = reverse("authentication:change_password")
     CHANGE_ROLE_URL = reverse("authentication:change_role")
     UPDATE_ROLE_URL = "authentication:update_role"
+    MAIN_HOMEPAGE_URL = reverse('main:homepage')
     def setUp(self):
         self.user = User.objects.create_superuser(
             username='username', password='password', email='username@test.com'
@@ -63,7 +65,7 @@ class AuthTest(TestCase):
     def test_login_authenticated(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(self.LOGIN_URL)
-        self.assertRedirects(response,reverse('main:homepage'),fetch_redirect_response=False)
+        self.assertRedirects(response,self.MAIN_HOMEPAGE_URL,fetch_redirect_response=False)
     
     def test_login_unsuccessfull(self):
         response = self.client.post(self.LOGIN_URL, {'username': 'username', 'password': 'password2'})
@@ -74,12 +76,12 @@ class AuthTest(TestCase):
     
     def test_login_successfull(self):
         response = self.client.post(self.LOGIN_URL, {'username': 'username', 'password': 'password'})
-        self.assertRedirects(response,reverse('main:homepage'),fetch_redirect_response=False)
+        self.assertRedirects(response,self.MAIN_HOMEPAGE_URL,fetch_redirect_response=False)
     
     def test_register_authenticated(self):
         self.client.force_login(user=self.ta_user)
         response = self.client.get(self.REGISTER_URL)
-        self.assertRedirects(response,reverse('main:homepage'),fetch_redirect_response=False)
+        self.assertRedirects(response,self.MAIN_HOMEPAGE_URL,fetch_redirect_response=False)
     
     def test_get_register(self):
         response = self.client.get(self.REGISTER_URL)
@@ -99,29 +101,27 @@ class AuthTest(TestCase):
         self.assertEquals(response.templates[0].name,"registration/register.html")
     
     def test_change_password_new_user(self):
-        user = User.objects.create(username='richie',email='richie@gmail.com')
-        self.client.force_login(user=user)
+        
+        self.client.force_login(user=self.ta_user)
         response = self.client.get(self.CHANGE_PASSWORD_URL)
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/change_password.html")
 
     
     def test_change_password_post_success(self):
-        user = User.objects.create(username='richie',email='richie@gmail.com')
-        user.role.role = "TA"
-        self.client.force_login(user=user)
+        
+        self.client.force_login(user=self.ta_user)
         response = self.client.post(self.CHANGE_PASSWORD_URL,{'password1':"senlia25",'password2':'senlia25'})
         client_user = auth.get_user(self.client)
         self.assertTrue(check_password("senlia25",client_user.password))
         self.assertTrue(client_user.is_authenticated)
-        self.assertRedirects(response,reverse('main:homepage'),fetch_redirect_response=False)
+        self.assertRedirects(response,self.MAIN_HOMEPAGE_URL,fetch_redirect_response=False)
 
     def test_change_password_form_invalid(self):
-        user = User.objects.create(username='richie',email='richie@gmail.com')
-        user.role.role = "TA"
-        self.client.force_login(user=user)
+        
+        self.client.force_login(user=self.ta_user)
         response = self.client.post(self.CHANGE_PASSWORD_URL,{'password1':"senlia",'password2':'senlia25'})
-        client_user = auth.get_user(self.client)
+        
         self.assertEquals(response.status_code,200)
         self.assertEquals(response.templates[0].name,"registration/change_password.html")
     def test_change_password_no_user(self):
@@ -200,7 +200,7 @@ class AuthTest(TestCase):
         request.user = AnonymousUser()
         res = dummy_view(request)
         self.assertEqual(res.status_code, 302)
-        self.assertEqual(res.url, reverse('authentication:login')+'?next=/foo')
+        self.assertEqual(res.url, self.LOGIN_URL+'?next=/foo')
 
     def test_ta_required_if_user_is_not_ta(self):
         @ta_required
@@ -230,7 +230,7 @@ class AuthTest(TestCase):
         request.user = AnonymousUser()
         res = dummy_view(request)
         self.assertEqual(res.status_code, 302)
-        self.assertEqual(res.url, reverse('authentication:login')+'?next=/foo')
+        self.assertEqual(res.url, self.LOGIN_URL+'?next=/foo')
 
     def test_admin_required_if_user_is_not_admin(self):
         @admin_required
@@ -253,7 +253,7 @@ class AuthTest(TestCase):
 
     def test_filter_user_change_role(self):
         self.client.force_login(user=self.admin_user)
-        response = self.client.get(reverse('authentication:change_role'))
+        response = self.client.get(reverse('authentication:change_role'),{"kontrak":KONTRAK,'status':'Lulus S1','prodi':'Ilmu Komputer'})
         self.assertEquals(response.context['kontrak_choices'], TeachingAssistantProfile.kontrak.field.choices)
         self.assertEquals(response.context['status_choices'], TeachingAssistantProfile.status.field.choices)
         self.assertEquals(response.context['prodi_choices'], TeachingAssistantProfile.prodi.field.choices)

@@ -12,13 +12,13 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from accounts.models import TeachingAssistantProfile, MataKuliah
 from periode.models import PeriodeSekarang,Periode
-
+from django.core.exceptions import ObjectDoesNotExist
 VALUE_ERROR = "Input tidak valid"
 URL_DAFTAR_LOG_TA = "pengisianLog:daftar_log_ta"
 URL_DASHBOARD = "accounts:dashboard_eval"
 
 def count_jam_kerja(profile,periode_sekarang,periode,jumlah_rencana_kinerja,bobot_jam_rencana_kinerja):
-    print(periode_sekarang.get_bulan())
+    
     semester_kuliah_divider = (len(periode_sekarang.get_bulan()))*4
     sepanjang_kontrak_divider = (len(profile.get_bulan()))*4
 
@@ -60,7 +60,10 @@ def form_log_ta(request):
             detail_kegiatan = request.POST.get('detail_kegiatan')
             pemberi_tugas = request.POST.get('pemberi_tugas')
             uraian = request.POST.get('uraian')
-            matkul = MataKuliah.objects.get(nama=request.POST.get('matkul'))
+            try :
+                matkul = MataKuliah.objects.get(nama=request.POST.get('matkul'))
+            except ObjectDoesNotExist :
+                matkul = MataKuliah.objects.create(nama="lainnya")
             periode = request.POST.get('periode')
             bulan_pengerjaan = request.POST.get('bulan_pengerjaan')
             jumlah_rencana_kinerja = int(request.POST.get('jumlah_kinerja'))
@@ -216,9 +219,9 @@ def daftar_log_ta(request):
     logs = exclude_bulan(filter_bulan, logs, bulan_choice)
     logs = exclude_kategori(filter_kategori, logs, kategori_choice)
     logs = exclude_periode(filter_periode, logs, periode_choice)
-    print(logs)
+    
     logs = exclude_matkul(filter_matkul,logs,matkul_choices)
-    print(logs)
+    
     bulan = datetime.now().month
     
     rekap = get_month_rencana(request.user,TeachingAssistantProfile.objects.get(user=request.user),periode_sekarang,bulan_choice[bulan-1][0])
@@ -258,15 +261,17 @@ def daftar_log_evaluator(request,username):
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
     filter_term = request.GET.get("term",periode_sekarang.id)
+    filter_matkul = request.GET.getlist("matkul")
     logs = LogTA.objects.filter(Q(periode_log=filter_term,user__username=username)).order_by('user', 'id')
     
     kategori_choice = LogTA.kategori.field.choices 
     periode_choice = LogTA.periode.field.choices
     bulan_choice = LogTA.bulan_pengerjaan.field.choices
+    matkul_choices = MataKuliah.objects.order_by('nama')
     logs = exclude_bulan(filter_bulan, logs, bulan_choice)
     logs = exclude_kategori(filter_kategori, logs, kategori_choice)
     logs = exclude_periode(filter_periode, logs, periode_choice)
-        
+    logs = exclude_matkul(filter_matkul,logs,matkul_choices)
     term = User.objects.get(username=username).teachingassistantprofile.periode_set.all()
 
     filter_term = Periode.objects.get(id=filter_term)
@@ -275,9 +280,11 @@ def daftar_log_evaluator(request,username):
                 'kategori_choice': kategori_choice, 
                 'periode_choice': periode_choice, 
                 'bulan_choice': bulan_choice,
+                'matkul_choices':matkul_choices,
                 'filter_bulan':filter_bulan,
                 'filter_kategori':filter_kategori,
                 'filter_periode':filter_periode,
+                'filter_matkul':filter_matkul,
                 'term':term,
                 'current':filter_term}
     return render(request, 'daftar_log.html', context)
