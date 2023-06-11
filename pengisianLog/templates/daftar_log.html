@@ -90,9 +90,9 @@
                   <td class="ps-sm-4 ps-3 text-sm font-weight-bold">{{ last_modified.history_date|date:"d M Y" }}</td>
                 {% endfor %}
                 <td>
-                  <a href="{% url 'pengisianLog:detail_log' log.pk %}" class="btn btn-primary mb-0"><i class="bi bi-search"></i>                  </a>
-                  <a href="{% url 'pengisianLog:edit_log' log.pk %}" class="btn btn-secondary mb-0"><i class="bi bi-pencil-square"></i></a>
-                  <a class="btn btn-danger mb-0" href="{% url 'pengisianLog:delete_log' log.pk %}"><i class="bi bi-trash3-fill"></i></a>
+                  <a href="{% url 'pengisianLog:detail_log' log.pk %}" class="btn btn-primary mb-0"><em class="bi bi-search"></em>                  </a>
+                  <a href="{% url 'pengisianLog:edit_log' log.pk %}" class="btn btn-secondary mb-0"><em class="bi bi-pencil-square"></em></a>
+                  <a class="btn btn-danger mb-0" href="{% url 'pengisianLog:delete_log' log.pk %}"><em class="bi bi-trash3-fill"></em></a>
                 </td>
               </tr>
               {% endfor %}
