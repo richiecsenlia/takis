@@ -78,6 +78,30 @@ def not_assign(request):
     response = {}
     return render(request,'registration/not_assign.html',response)
 
+def exclude_matkul(filter_matkul,users,matkul_choices):
+    if len(filter_matkul) != 0:
+        for matkul in matkul_choices:
+            if not (matkul.nama in filter_matkul):
+                users = users.exclude(teachingassistantprofile__daftar_matkul__id = matkul.id)
+    return users
+def exclude_kontrak(filter_kontrak,users,kontrak_choices):
+    if(len(filter_kontrak) != 0) :
+        for kontrak in kontrak_choices :
+            if not (kontrak[1] in filter_kontrak):
+                users = users.exclude(teachingassistantprofile__kontrak = kontrak[1])
+    return users
+def exclude_status(filter_status,users,status_choices):
+    if len(filter_status) !=0 :
+        for status in status_choices :
+            if not (status[1] in filter_status):
+                users = users.exclude(teachingassistantprofile__status= status[1])
+    return users
+def exclude_prodi(filter_prodi,users,prodi_choices):
+    if len(filter_prodi) != 0 :
+        for prodi in prodi_choices :
+            if not (prodi[1] in filter_prodi):
+                users = users.exclude(teachingassistantprofile__prodi = prodi[1])
+    return users
 def change_role(request):
     users = User.objects.all()
     filter_kontrak = request.GET.getlist("kontrak")
@@ -89,22 +113,11 @@ def change_role(request):
     prodi_choices = TeachingAssistantProfile.prodi.field.choices
     matkul_choices = MataKuliah.objects.order_by('nama')
 
-    if(len(filter_kontrak) != 0) :
-        for kontrak in kontrak_choices :
-            if not (kontrak[1] in filter_kontrak):
-                users = users.exclude(teachingassistantprofile__kontrak = kontrak[1])
-    if len(filter_status) !=0 :
-        for status in status_choices :
-            if not (status[1] in filter_status):
-                users = users.exclude(teachingassistantprofile__status= status[1])
-    if len(filter_prodi) != 0 :
-        for prodi in prodi_choices :
-            if not (prodi[1] in filter_prodi):
-                users = users.exclude(teachingassistantprofile__prodi = prodi[1])
-    if len(filter_matkul) != 0:
-        for matkul in matkul_choices :
-            if not (matkul.nama in filter_matkul):
-                users = users.exclude(teachingassistantprofile__daftar_matkul__id = matkul.id)
+    users = exclude_kontrak(filter_kontrak,users,kontrak_choices)
+    users = exclude_status(filter_status,users,status_choices)
+    users = exclude_prodi(filter_prodi,users,prodi_choices)
+    users = exclude_matkul(filter_matkul,users,matkul_choices)
+    
     response = {'users':users,
         'kontrak_choices': kontrak_choices,
         'status_choices': status_choices,
