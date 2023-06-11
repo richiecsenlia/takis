@@ -18,7 +18,7 @@ URL_DAFTAR_LOG_TA = "pengisianLog:daftar_log_ta"
 URL_DASHBOARD = "accounts:dashboard_eval"
 
 def count_jam_kerja(profile,periode_sekarang,periode,jumlah_rencana_kinerja,bobot_jam_rencana_kinerja):
-    print(periode_sekarang.get_bulan())
+    
     semester_kuliah_divider = (len(periode_sekarang.get_bulan()))*4
     sepanjang_kontrak_divider = (len(profile.get_bulan()))*4
 
@@ -219,9 +219,9 @@ def daftar_log_ta(request):
     logs = exclude_bulan(filter_bulan, logs, bulan_choice)
     logs = exclude_kategori(filter_kategori, logs, kategori_choice)
     logs = exclude_periode(filter_periode, logs, periode_choice)
-    print(logs)
+    
     logs = exclude_matkul(filter_matkul,logs,matkul_choices)
-    print(logs)
+    
     bulan = datetime.now().month
     
     rekap = get_month_rencana(request.user,TeachingAssistantProfile.objects.get(user=request.user),periode_sekarang,bulan_choice[bulan-1][0])
