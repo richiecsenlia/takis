@@ -1,8 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import ValidationError
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 
+def year_validator(data):
+    if len(data) != 4:
+        raise ValidationError('Harus diisi dalam format tahun (Contoh: 2023)', code="invalid_format")
+    
+    return data
 
 # Create your models here.
 class MataKuliah(models.Model):
@@ -45,7 +51,9 @@ class TeachingAssistantProfile(models.Model):
     prodi = models.CharField(max_length=30, choices=PRODI_CHOICES, verbose_name='Program Studi')
     daftar_matkul = models.ManyToManyField(MataKuliah)
     bulan_mulai = models.CharField(max_length=3,choices=BULAN_CHOICES,verbose_name='Bulan Mulai')
+    tahun_mulai = models.CharField(max_length=4,validators=[year_validator],verbose_name='Tahun Mulai')
     bulan_selesai = models.CharField(max_length=3,choices=BULAN_CHOICES,verbose_name='Bulan Selesai')
+    tahun_selesai = models.CharField(max_length=4,validators=[year_validator],verbose_name='Tahun Selesai')
     slug = models.SlugField(unique=True, verbose_name='URL Slug')
 
     def __str__(self):
