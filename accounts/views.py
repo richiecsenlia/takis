@@ -60,7 +60,7 @@ def profile(request, id):
     context = {
         'profile': profile
     }
-
+    
     return render(request, 'accounts/profile.html', context)
 
 
