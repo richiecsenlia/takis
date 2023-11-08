@@ -27,7 +27,7 @@ def process_ta_list(ta_list, period, month=None):
         total = temp['total_real']
         kontrak_limit = 20 if i.kontrak == "Part Time" else 40
         rekap.append((total, kontrak_limit - total))
-    
+        
     return rekap
 
 # Create your views here.
@@ -119,7 +119,8 @@ def dashboard_eval(request):
     periode_sekarang = PeriodeSekarang.objects.all()
     ta_list = TeachingAssistantProfile.objects.filter(periode=periode_sekarang[0].periode)
     periode_str = f"Periode {periode_sekarang[0].periode}"
-
+    bulan_choice = periode_sekarang[0].periode.get_bulan()
+    print(bulan_choice)
     ta_list = apply_filter(ta_list, filter_kontrak, kontrak_choices, 'kontrak')
     ta_list = apply_filter(ta_list, filter_status, status_choices, 'status')
     ta_list = apply_filter(ta_list, filter_prodi, prodi_choices, 'prodi')
@@ -128,7 +129,7 @@ def dashboard_eval(request):
     rekap = []
     choice = "Rata-rata"
     bulan = request.GET.get("bulan","Rata-rata")
-
+    
     if bulan == "Rata-rata":
         rekap = process_ta_list(ta_list, periode_sekarang[0].periode)
     else:
@@ -149,7 +150,8 @@ def dashboard_eval(request):
         'filter_prodi':filter_prodi,
         'filter_matkul':filter_matkul,
         'filter_statuslog':filter_statuslog,
-        'periode_sekarang': periode_str
+        'periode_sekarang': periode_str,
+        'bulan_choices':bulan_choice
     }
     
     return render(request, 'accounts/dashboard_eval.html', context)
