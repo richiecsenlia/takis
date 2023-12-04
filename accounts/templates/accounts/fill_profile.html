@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %} Isi Profil Diri {% endblock title %}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="page-header pt-8 pb-5 bg-white-blue">
+  <div class="container">
+    <h2 class="text-center mb-0">Isi Profil Akun Anda</h2>
+    <h6 class="text-center mb-3">Mulai dengan melengkapi biodata anda terlebih dahulu sebelum melanjutkan menggunakan TAKIS</h6>
+    <form method="post" class="row g-3">
+      {% csrf_token %}
+      <div class="col-md-12">
+        <label class="form-label">Nama Lengkap</label>
+        {{ form.nama }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Bulan Mulai</label>
+        {{ form.bulan_mulai }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Tahun Mulai</label>
+        {{ form.tahun_mulai }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Bulan Selesai</label>
+        {{ form.bulan_selesai }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Tahun Selesai</label>
+        {{ form.tahun_selesai }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Jenis TA</label>
+        {{ form.kontrak }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Status Kemahasiswaan</label>
+        {{ form.status }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Program Studi</label>
+        {{ form.prodi }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Mata Kuliah yang Diajar Saat Ini</label>
+        <div class="card p-2 border-gray border-1 max-height-200 overflow-y-scroll">
+          {{ form.daftar_matkul }}
+        </div>
+      </div>
+      <div class="d-grid gap-2 col-6 mx-auto mt-5">
+          <button type="submit" class="btn btn-success">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

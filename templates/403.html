@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} 403 {% endblock title%}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
+
+{% block content%}
+
+<div class="page-header py-12 bg-white-blue">
+  <div class="container">
+    <div class="d-flex flex-column text-center">
+      <h3>Oops, Anda tidak memiliki izin untuk mengakses halaman ini</h3>
+      <em class="fa fa-sad-tear text-dark text-9xl opacity-10 m-3"></em>
+      <a class="btn btn-danger mt-3 align-self-center" href="{% url 'main:homepage' %}" role="button">Kembali ke Halaman Utama</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

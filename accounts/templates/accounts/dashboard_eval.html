@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+
+{% block title %} Dashboard Evaluator {% endblock title %}
+
+{% block navbar %}
+  {% with variant='light' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="page-header pt-8 pb-12 bg-white-blue">
+  <div class="container">
+    <div class="d-sm-flex justify-content-between align-items-center">
+      <div class="py-2">
+        <h2>Dashboard Evaluator</h2>
+        <h6 class="mb-3">{{periode_sekarang}}</h6>
+      </div>
+      <div class="row">
+        <div class="col-4 me-md-0 me-sm-2 mx-0">
+          {% for kontrak in filter_kontrak %}
+          <span class="badge rounded-pill bg-info text-dark">{{kontrak}}</span>
+          {% endfor %}
+          {% for status in filter_status %}
+          <span class="badge rounded-pill bg-info text-dark">{{status}}</span>
+          {% endfor %}
+          {% for prodi in filter_prodi %}
+          <span class="badge rounded-pill bg-info text-dark">{{prodi}}</span>
+          {% endfor %}
+          {% for matkul in filter_matkul %}
+          <span class="badge rounded-pill bg-info text-dark">{{matkul}}</span>
+          {% endfor %}
+          {% if filter_statuslog != "all" %}
+            <span class="badge rounded-pill bg-info text-dark">{{filter_statuslog}}</span>
+          {% endif %}
+          <button type="button" class="btn btn-outline-brand py-2 mb-sm-2 me-2" data-bs-toggle="modal" data-bs-target="#filter">
+            +Filter
+          </button>
+        </div>
+        <div class="col-md-8 col-sm-12 col-8">
+          <form method="GET" action="">
+            {% csrf_token %}
+            <select name="bulan" class="form-select" onchange="this.form.submit()">
+              <option value="Rata-rata" selected disabled>Selected : {{ choice }}</option>
+              <option value="Rata-rata">Rata-rata</option>
+              {% for bulan in bulan_choices %}
+              <option value="{{ bulan }}">{{ bulan }}</option>
+              {% endfor %}
+            </select>
+          </form>
+        </div>
+      </div>
+
+    </div>
+    
+    <div class="card mb-4">
+      <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-0">
+          <table class="table align-items-center mb-0" aria-label="Dashboard Evaluator">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Nama Asisten</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Kontrak</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Status</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" scope="col">Keterangan</th>
+                <th class="text-secondary opacity-7" scope="col"></th>
+                <th class="text-secondary opacity-7" scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ta in ta_list %}
+                {% if ta.0.kontrak == "Part Time" %}
+                  {% if ta.1.0 > 20 %}
+                    {% if filter_statuslog == "all" or filter_statuslog == "fulfiled" %}
+                    <tr>
+                      <td>
+                        <div class="px-3 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ ta.0.nama }}</h6>
+                            <p class="text-xs text-secondary mb-0">@{{ ta.0.user }}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-center text-xs font-weight-bold mb-0">{{ ta.0.kontrak }}</p>
+                      </td>
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm bg-success">Fulfilled</span>
+                    </td>
+                  
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">TA ini sudah memenuhi beban kerja bulan ini</span>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url 'pengisianLog:daftar_log_evaluator' ta.0.user %}" class="text-primary font-weight-bold text-xs">
+                        Lihat Log
+                      </a>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url 'rekapanLog:rekapan_log' ta.0.user %}" class="text-primary font-weight-bold text-xs">
+                        Lihat Rekap
+                      </a>
+                    </td>
+                    {% endif %}
+                  {% else  %}
+                  {% if filter_statuslog == "all" or filter_statuslog == "underload" %}
+                  <tr>
+                    <td>
+                      <div class="px-3 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">{{ ta.0.nama }}</h6>
+                          <p class="text-xs text-secondary mb-0">@{{ ta.0.user }}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-center text-xs font-weight-bold mb-0">{{ ta.0.kontrak }}</p>
+                    </td>
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm bg-warning">Underload</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">TA ini memerlukan {{ta.1.1}} jam lagi untuk memenuhi beban kerja bulan ini</span>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url 'pengisianLog:daftar_log_evaluator' ta.0.user %}" class="text-primary font-weight-bold text-xs">
+                        Lihat Log
+                      </a>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url 'rekapanLog:rekapan_log' ta.0.user %}" class="text-primary font-weight-bold text-xs">
+                        Lihat Rekap
+                      </a>
+                    </td>
+                    {% endif %}
+                  {% endif %}
+                {% else %}
+                    {% if ta.1.0 > 40 %}
+                    {% if filter_statuslog == "all" or filter_statuslog == "fulfiled" %}
+                    <tr>
+                      <td>
+                        <div class="px-3 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ ta.0.nama }}</h6>
+                            <p class="text-xs text-secondary mb-0">@{{ ta.0.user }}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-center text-xs font-weight-bold mb-0">{{ ta.0.kontrak }}</p>
+                      </td>
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm bg-success">Fulfilled</span>
+                    </td>
+                  
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">TA ini sudah memenuhi beban kerja bulan ini</span>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url 'pengisianLog:daftar_log_evaluator' ta.0.user %}" class="text-primary font-weight-bold text-xs">
+                        Lihat Log
+                      </a>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url 'rekapanLog:rekapan_log' ta.0.user %}" class="text-primary font-weight-bold text-xs">
+                        Lihat Rekap
+                      </a>
+                    </td>
+                    {% endif %}
+                  {% else %}
+                  {% if filter_statuslog == "all" or filter_statuslog == "underload" %}
+                  <tr>
+                    <td>
+                      <div class="px-3 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">{{ ta.0.nama }}</h6>
+                          <p class="text-xs text-secondary mb-0">@{{ ta.0.user }}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-center text-xs font-weight-bold mb-0">{{ ta.0.kontrak }}</p>
+                    </td>
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm bg-warning">Underload</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">TA ini memerlukan {{ta.1.1}} jam lagi untuk memenuhi beban kerja bulan ini</span>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url 'pengisianLog:daftar_log_evaluator' ta.0.user %}" class="text-primary font-weight-bold text-xs">
+                        Lihat Log
+                      </a>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url 'rekapanLog:rekapan_log' ta.0.user %}" class="text-primary font-weight-bold text-xs">
+                        Lihat Rekap
+                      </a>
+                    </td>
+                  {% endif %}
+                  {% endif %} 
+                {% endif %}            
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id = "filter">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Filter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+        
+      <div class="modal-body">
+        <form method ='GET'>
+
+          <div id="kontrak" class="form-text">
+            Kontrak TA
+          </div>
+          {% for kontrak in kontrak_choices %}
+          <div class="form-check form-check-inline" id = "kontrak">
+            <input class="form-check-input" type="checkbox" value="{{kontrak.1}}" name ="kontrak" id="{{kontrak.1}}"
+              {% if kontrak.1 in filter_kontrak %}
+                checked
+              {% endif %}
+            >
+            <label class="form-check-label" for="{{kontrak.1}}">
+              {{ kontrak.1 }}
+            </label>
+          </div>
+          {% endfor %}
+
+          <div id="status" class="form-text">
+            Status Kemahasiswaan
+          </div>
+          {% for status in status_choices %}
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" value="{{status.1}}"name = "status" id="{{status.1}}"
+              {% if status.1 in filter_status %}
+                checked
+              {% endif %}
+            >
+            <label class="form-check-label" for="{{status.1}}">
+              {{ status.1 }}
+            </label>
+          </div>
+          {% endfor %}
+
+          <div id="prodi" class="form-text">
+            Program Studi
+          </div>
+          {% for prodi in prodi_choices %}
+          <div class="form-check ">
+            <input class="form-check-input" type="checkbox" value="{{prodi.1}}"name="prodi" id="{{prodi.1}}"
+              {% if prodi.1 in filter_prodi %}
+                checked
+              {% endif %}
+            >
+            <label class="form-check-label" for="{{prodi.1}}">
+              {{ prodi.1 }}
+            </label>
+          </div>
+          {% endfor %}
+
+          <div id="matkul" class="form-text">
+            Mata Kuliah
+          </div>
+          {% for matkul in matkul_choices %}
+          <div class="form-check ">
+            <input class="form-check-input" type="checkbox" value="{{matkul.nama}}"name="matkul" id="{{matkul.nama}}"
+              {% if matkul.1 in filter_matkul %}
+                checked
+              {% endif %}
+            >
+            <label class="form-check-label" for="{{matkul.nama}}">
+              {{ matkul.nama }}
+            </label>
+          </div>
+          {% endfor %}
+          <div id="kerja" class="form-text">
+            status log
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="statuslog" id="flexRadioDefault1" value="underload"
+            {% if filter_statuslog == "underload" %}
+                checked
+              {% endif %}>
+            <label class="form-check-label" for="flexRadioDefault1">
+              Underload
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="statuslog" id="flexRadioDefault2"value="fulfiled"
+            {% if filter_statuslog == "fulfiled" %}
+                checked
+              {% endif %}>
+            <label class="form-check-label" for="flexRadioDefault2">
+              Fulfiled
+            </label>
+          </div>
+          <input type="hidden" value ="{{choice}}" name="bulan">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
