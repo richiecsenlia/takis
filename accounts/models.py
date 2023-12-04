@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.forms import ValidationError
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-
+from authentication.models import UnivChoices
 def year_validator(data):
     if len(data) != 4:
         raise ValidationError('Harus diisi dalam format tahun (Contoh: 2023)', code="invalid_format")
@@ -13,7 +13,7 @@ def year_validator(data):
 # Create your models here.
 class MataKuliah(models.Model):
     nama = models.CharField(max_length=30)
-
+    
     def __str__(self):
         return self.nama
 

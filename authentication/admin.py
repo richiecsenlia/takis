@@ -1,4 +1,6 @@
 from django.contrib import admin
-from .models import Role
+from .models import *
 # Register your models here.
 admin.site.register(Role)
+admin.site.register(UnivChoices)
+admin.site.register(Univ)

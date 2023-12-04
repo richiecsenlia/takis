@@ -3,7 +3,7 @@ from django.db import models
 from django.forms import ValidationError
 from accounts.models import TeachingAssistantProfile
 from itertools import cycle, islice
-
+from authentication.models import UnivChoices
 def tahun_ajaran_validator(data):
     pattern = r"\d{4}/\d{4}"
     if not re.match(pattern, data):
@@ -50,7 +50,7 @@ class Periode(models.Model):
         choices=SEMESTER_CHOICES,
         default=GANJIL,
     )
-
+    univ = models.ForeignKey(UnivChoices,on_delete=models.CASCADE)
     bulan_mulai = models.CharField(max_length=3,choices=BULAN_CHOICES, default=BULAN_CHOICES[0][0])
     bulan_selesai = models.CharField(max_length=3,choices=BULAN_CHOICES, default=BULAN_CHOICES[4][0])
 
@@ -59,7 +59,7 @@ class Periode(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['tahun_ajaran', 'semester'], name='unique_migration_host_combination'
+                fields=['tahun_ajaran', 'semester','univ'], name='unique_migration_host_combination'
             )
         ]
 
@@ -84,6 +84,6 @@ class PeriodeSekarang(models.Model):
         Periode,
         on_delete=models.CASCADE
     )
-
+    univ = models.ForeignKey(UnivChoices,on_delete=models.CASCADE)
     def __str__(self):
         return str(self.periode)

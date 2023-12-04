@@ -14,13 +14,17 @@ from .forms import PeriodeForm, PeriodeSekarangForm
 def create_periode(request):
     if request.method == "POST":
         form = PeriodeForm(request.POST)
+        print(form)
         if form.is_valid():
             form.save()
+            
             return redirect(reverse("periode:edit-periode-sekarang"))
 
     else:
         form = PeriodeForm()
-
+        
+    form.fields['univ'].initial = request.user.univ.univ
+    form.fields['univ'].label = "univ"
     return render(request, "buat_periode.html", {"form": form})
 
 @admin_required
@@ -30,7 +34,8 @@ def edit_periode_sekarang(request):
         form = PeriodeSekarangForm(request.POST)
         if form.is_valid():
             new = form.cleaned_data['periode']
-            curr = PeriodeSekarang.objects.all()
+            user = request.user
+            curr = PeriodeSekarang.objects.filter(univ=user.univ.univ)
 
             if curr.exists():
                 curr.update(periode = new)
@@ -41,11 +46,14 @@ def edit_periode_sekarang(request):
             return redirect(reverse("periode:edit-periode-sekarang"))
 
     else:
+        user = request.user
         form = PeriodeSekarangForm()
-        periode_sekarang = PeriodeSekarang.objects.all()
+        queryset = Periode.objects.filter(univ=user.univ.univ).order_by('-tahun_ajaran', 'semester')
+        periode_sekarang = PeriodeSekarang.objects.filter(univ=user.univ.univ)
         initial = None if not periode_sekarang.exists() else periode_sekarang.first().periode
-        form.fields['periode'].initial = initial
 
+    form.fields['periode'].initial = initial
+    form.fields['periode'].queryset = queryset
     return render(request, "edit_periode_sekarang.html", {"form": form})
 
 @admin_required
@@ -57,9 +65,9 @@ def daftar_ta(request):
     else:
         periode_terpilih = PeriodeSekarang.objects.first().periode
 
-    daftar_ta = TeachingAssistantProfile.objects.all()
-    daftar_ta_aktif = periode_terpilih.daftar_ta.all()
-    pilihan_periode = Periode.objects.all().order_by('-id')
+    daftar_ta = TeachingAssistantProfile.objects.filter(user__univ__univ=request.user.univ.univ)
+    daftar_ta_aktif = periode_terpilih.daftar_ta.filter(user__univ__univ=request.user.univ.univ)
+    pilihan_periode = Periode.objects.filter(univ=request.user.univ.univ).order_by('-id')
 
     context = {'daftar_ta': daftar_ta,
                'daftar_ta_aktif': daftar_ta_aktif,
@@ -70,14 +78,15 @@ def daftar_ta(request):
 @require_GET
 @admin_required
 def assign_ta(request, periode_id):
+    user = request.user
     if periode_id is None:
         periode_terpilih = PeriodeSekarang.objects.first().periode
     else:
         periode_terpilih = Periode.objects.get(id=periode_id)
 
-    daftar_ta = TeachingAssistantProfile.objects.all()
-    daftar_ta_aktif = periode_terpilih.daftar_ta.all()
-    pilihan_periode = Periode.objects.all().order_by('-id')
+    daftar_ta = TeachingAssistantProfile.objects.filter(user__univ__univ=user.univ.univ)
+    daftar_ta_aktif = periode_terpilih.daftar_ta.filter(user__univ__univ=user.univ.univ)
+    pilihan_periode = Periode.objects.filter(univ=request.user.univ.univ).order_by('-id')
 
     context = {'daftar_ta': daftar_ta,
                'daftar_ta_aktif': daftar_ta_aktif,

@@ -13,11 +13,21 @@ class Role(models.Model):
     def __str__(self):
         return self.role
 
+class UnivChoices(models.Model):
+    nama = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.nama
+
+class Univ(models.Model):
+    univ = models.ForeignKey(UnivChoices,on_delete=models.CASCADE,blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 @receiver(post_save, sender=User)
 def create_user_role(instance, created, **kwargs):
     """Create user profile if user object was just created."""
     if created:
+        
         Role.objects.create(user=instance)
 
 

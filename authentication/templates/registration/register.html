@@ -35,6 +35,9 @@
           <form action="" method="POST">
             {% csrf_token %}
             <div class="mb-3">
+              {{ form.univ }}
+            </div>
+            <div class="mb-3">
               {{ form.username }}
             </div>
             <div class="mb-3">

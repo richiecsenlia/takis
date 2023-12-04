@@ -14,14 +14,18 @@
     <h2 class="text-center mb-3">Buat Periode Akademik</h2>
       <form method="post">
         {% csrf_token %}
-
+        <!-- <input type ="hidden" value = {{request.user.univ.univ}} name="univ" id="univ"> -->
         <div class="card my-2">
           <div class="card-body">
             <div class="row mt-2">
               {% for field in form %}
                 <div class="col-md-6">
                   <div class="fieldWrapper">
+                      {% if field.label != "univ" %}
                       {{ field.label_tag }} {{ field }}
+                      {% else %}
+                      {{field}}
+                      {% endif %}
                   </div>
                   {{ field.errors }}
                 </div>

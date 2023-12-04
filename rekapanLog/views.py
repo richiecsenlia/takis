@@ -161,7 +161,7 @@ def get_month_rencana(user_, profile, periode, month):
 @login_required(login_url=reverse_lazy("authentication:login"))
 def rekap_page(request, name):
     profile = TeachingAssistantProfile.objects.get(user=User.objects.get(username=name))
-    periode_sekarang = PeriodeSekarang.objects.get().periode
+    periode_sekarang = PeriodeSekarang.objects.get(univ = request.user.univ.univ).periode
 
     if request.method == 'GET':
         rekapAvg = get_all_rencana(User.objects.get(username=name),profile,periode_sekarang)

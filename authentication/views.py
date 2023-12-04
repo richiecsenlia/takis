@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test, login_required
-
+from .models import UnivChoices,Univ
 from accounts.models import TeachingAssistantProfile, MataKuliah
 from authentication.forms import UserCreateForm, PasswordForm
 
@@ -51,9 +51,13 @@ def register(request):
         return HttpResponseRedirect(reverse('main:homepage'))
     form = UserCreateForm()
     if request.method == "POST" :
+        print(request.POST)
         form = UserCreateForm(request.POST)
         if (form.is_valid()):
             form.save()
+            newuser = User.objects.get(username=request.POST['username'])
+            newuser.univ = Univ.objects.create(user = newuser,univ = UnivChoices.objects.get(id=int(request.POST["univ"])))
+            newuser.save()
             return HttpResponseRedirect(reverse('authentication:login'))
     response = {'form':form}
     return render(request,'registration/register.html',response)
@@ -103,7 +107,7 @@ def exclude_prodi(filter_prodi,users,prodi_choices):
                 users = users.exclude(teachingassistantprofile__prodi = prodi[1])
     return users
 def change_role(request):
-    users = User.objects.all()
+    users = User.objects.filter(univ__univ=request.user.univ.univ)
     filter_kontrak = request.GET.getlist("kontrak")
     filter_status = request.GET.getlist("status")
     filter_prodi = request.GET.getlist("prodi")

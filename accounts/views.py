@@ -105,6 +105,7 @@ def edit_profile(request, id):
 
 @admin_required
 def dashboard_eval(request):
+    user = request.user
     filter_kontrak = request.GET.getlist("kontrak")
     filter_status = request.GET.getlist("status")
     filter_prodi = request.GET.getlist("prodi")
@@ -116,10 +117,10 @@ def dashboard_eval(request):
     prodi_choices = TeachingAssistantProfile.prodi.field.choices
     
     matkul_choices = MataKuliah.objects.order_by('nama')
-    periode_sekarang = PeriodeSekarang.objects.all()
-    ta_list = TeachingAssistantProfile.objects.filter(periode=periode_sekarang[0].periode)
-    periode_str = f"Periode {periode_sekarang[0].periode}"
-    bulan_choice = periode_sekarang[0].periode.get_bulan()
+    periode_sekarang = PeriodeSekarang.objects.get(univ=user.univ.univ)
+    ta_list = TeachingAssistantProfile.objects.filter(periode=periode_sekarang.periode,user__univ__univ=user.univ.univ)
+    periode_str = f"Periode {periode_sekarang.periode}"
+    bulan_choice = periode_sekarang.periode.get_bulan()
     print(bulan_choice)
     ta_list = apply_filter(ta_list, filter_kontrak, kontrak_choices, 'kontrak')
     ta_list = apply_filter(ta_list, filter_status, status_choices, 'status')
@@ -131,9 +132,9 @@ def dashboard_eval(request):
     bulan = request.GET.get("bulan","Rata-rata")
     
     if bulan == "Rata-rata":
-        rekap = process_ta_list(ta_list, periode_sekarang[0].periode)
+        rekap = process_ta_list(ta_list, periode_sekarang.periode)
     else:
-        rekap = process_ta_list(ta_list, periode_sekarang[0].periode, bulan)
+        rekap = process_ta_list(ta_list, periode_sekarang.periode, bulan)
         choice = bulan
     
     temp = zip(ta_list, rekap)

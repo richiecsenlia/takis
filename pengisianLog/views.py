@@ -42,8 +42,9 @@ def form_log_ta(request):
                 'bulan_choice': LogTA.bulan_pengerjaan.field.choices,
                 'matkul_choice': [matkul.nama for matkul in profile.daftar_matkul.all()]})
         else:
+            user = request.user
             profile = TeachingAssistantProfile.objects.get(user=request.user)
-            periode_sekarang = PeriodeSekarang.objects.get().periode
+            periode_sekarang = PeriodeSekarang.objects.get(univ=user.univ.univ).periode
 
             jumlah_realisasi_kinerja_validasi = 0
             bobot_jam_realisasi_kinerja_validasi = 0
@@ -109,8 +110,9 @@ def form_log_ta(request):
 def edit_log_ta(request, id):
     try:
         log = LogTA.objects.get(pk=id)
+        user = request.user
         profile = TeachingAssistantProfile.objects.get(user=log.user)
-        periode_sekarang = PeriodeSekarang.objects.get().periode
+        periode_sekarang = PeriodeSekarang.objects.get(univ=user.univ.univ).periode
 
 
         context = {'log': log,
@@ -201,9 +203,9 @@ def check_active_or_not(user, daftar_ta_periode_sekarang):
 
 @ta_required
 def daftar_log_ta(request):
-    
-    periode_sekarang_all = PeriodeSekarang.objects.all()
-    periode_sekarang = periode_sekarang_all[0].periode
+    user = request.user
+    periode_sekarang_all = PeriodeSekarang.objects.get(univ=user.univ.univ)
+    periode_sekarang = periode_sekarang_all.periode
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
@@ -255,8 +257,9 @@ def daftar_log_ta(request):
 @require_GET
 @admin_required
 def daftar_log_evaluator(request,username):
-    periode_sekarang_all = PeriodeSekarang.objects.all()
-    periode_sekarang = periode_sekarang_all[0].periode
+    user = request.user
+    periode_sekarang_all = PeriodeSekarang.objects.get(univ=user.univ.univ)
+    periode_sekarang = periode_sekarang_all.periode
     filter_bulan = request.GET.getlist("bulan")
     filter_kategori = request.GET.getlist("kategori")
     filter_periode = request.GET.getlist("periode")
